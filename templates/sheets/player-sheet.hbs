@@ -1,0 +1,89 @@
+<form class="{{cssClass}} charsheet" autocomplete="off">
+  <header class="sheet-header">
+    <img src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64"/>
+    <h1><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+  </header>
+<!--
+<input type="radio" name="attr_tab" class="tab tab1" value="1" checked="checked"><span title="Main"></span>
+<input type="radio" name="attr_tab" class="tab tab2" value="2" style="top: -56px;left: 235px;" ><span title="Background"></span>
+<input type="radio" name="attr_tab" class="tab tab3" value="3" style="top: -88px;left: 392px;" ><span title="Settings"></span>
+  -->
+
+<div class="tab-buttons middle center">
+    <button type="action" name="act_character" >Character</button>
+    <button type="action" name="act_background" >Background</button>
+    <button type="action" name="act_settings" >Settings</button>
+</div>
+
+
+<span class="version bold">Sheet Version: 1.70</span>
+
+<input type="hidden" class="tabstoggle" name="attr_sheetTab"  value="character">
+
+<!--  --------------------------------------------------------------------------------- -->
+<!--  --------------------------- PAGE 1 ---------------------------------------------- -->
+<!--  --------------------------------------------------------------------------------- -->
+<main class="character tab-content tab1 page1">
+
+<!-- NAME SECTION -->
+  <section class="name columnflex nowrap">
+
+    <div class="rowflex nowrap spaced">
+
+      <div class="columnflex nowrap">
+        <label style="width:100px;">Character name</label>
+        <input name="attr_character_name" type="text">
+      </div>
+      <div class="columnflex nowrap">
+        <label style="width:80px;">Player name</label>
+        <input name="attr_player_name" type="text">
+      </div>
+      <div class="columnflex nowrap">
+        <label>Campaign</label>
+        <input name="attr_campaign" type="text">
+      </div>
+
+    </div>
+
+    <div class="rowflex nowrap spaced">
+
+      <div class="columnflex nowrap">
+        <label>Race</label>
+        <input name="attr_race" list="race" placeholder="race" type="text">
+      </div>
+      <div class="columnflex nowrap">
+        <label>Origin</label>
+        <input name="attr_origin" list="origin" placeholder="origin" type="text">
+      </div>
+      <div class="columnflex nowrap">
+        <label>Class</label>
+        <input name="attr_class" list="rpgclass" placeholder="class" type="text">
+      </div>
+      <div class="columnflex nowrap">
+        <label class="w40" title="@{rank}">Level</label>
+        <input name="attr_rank" title="@{rank}" type="number" placeholder="1" class="w40">
+      </div>
+      <div class="columnflex nowrap">
+        <label class="w40" title="Hit Dice">HD</label>
+        <input name="attr_hd" type="text" placeholder="d8" title="Hit Dice: @{hd}" class="w40">
+      </div>
+      <div class="columnflex nowrap">
+        <label class="w30">MP</label>
+        <input name="attr_mp" type="number" placeholder="" title="Mission Points" class="w40">
+      </div>
+      <div class="columnflex nowrap">
+        <label class="w70" title="@{td}">Tension Die</label>
+        <select name="attr_td">
+          <option value="d4">d4</option>
+          <option value="d6" selected>d6</option>
+          <option value="d8">d8</option>
+          <option value="d10">d10</option>
+          <option value="d12">d12</option>
+        </select>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+</form>

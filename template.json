@@ -1,0 +1,35 @@
+{
+    "Actor": {
+        "types": ["player", "enemy"],
+        "templates": {
+            "background": {
+                "biography": ""
+            },
+            "attributes": {
+                "health": {
+                    "value": 20,
+                    "max": 20
+                }
+            }
+        },
+
+        "player": {
+            "templates": ["background", "attributes"]
+        },
+
+        "enemy": {
+            "templates": ["attributes"]
+        }
+    },
+
+    "Item": {
+        "types": ["weapon"],
+        "templates": {},
+
+        "weapon": {
+            "damage": "1d6",
+            "proficiency": "",
+            "special": "blunt"
+        }
+    }
+}

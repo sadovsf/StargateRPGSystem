@@ -1,0 +1,36 @@
+{
+    "name": "stargate_rpg_system",
+    "title": "StarGate RPG",
+    "description": "Many details here.",
+    "version": "0.0.1",
+    "templateVersion": 2,
+    "author": "Filip Sádovský",
+    "minimumCoreVersion": "0.8.6",
+    "scripts": [
+    ],
+    "esmodules": [
+        "stargate_rpg_system.js"
+    ],
+    "styles": [
+        "styles/player-sheet.css"
+    ],
+    "packs": [],
+    "dependencies": [],
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json"
+        }
+    ],
+    "socket": false,
+    "initiative": "1d20",
+    "gridDistance": 1,
+    "gridUnits": "m",
+    "primaryTokenAttribute": "attributes.health",
+    "secondaryTokenAttribute": null,
+    "url": "https://github.com/sadovsf/StarGateRPGSystem",
+    "manifest": "https://raw.githubusercontent.com/sadovsf/StarGateRPGSystem/master/system.json",
+    "download": "https://your/packaged/download/archive.zip"
+}
+
