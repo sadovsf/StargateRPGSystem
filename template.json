@@ -45,103 +45,103 @@
             "skills": {
                 "acrobatics": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "dex"
                 },
                 "animalhandling": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "wis"
                 },
                 "athletics": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "str"
                 },
                 "culture": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "wis"
                 },
                 "deception": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "cha"
                 },
                 "engineering": {
                     "value": 0,
-                    "proficient": 0,
+                    "proficient": false,
                     "skill_mod": "int"
                 },
                 "history": {
                     "value": 0,
-                    "proficient": 0,
+                    "proficient": false,
                     "skill_mod": "int"
                 },
                 "insight": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "wis"
                 },
                 "intimidation": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "cha"
                 },
                 "investigation": {
                     "value": 0,
-                    "proficient": 0,
+                    "proficient": false,
                     "skill_mod": "int"
                 },
                 "medicine": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "wis"
                 },
                 "nature": {
                     "value": 0,
-                    "proficient": 0,
+                    "proficient": false,
                     "skill_mod": "int"
                 },
                 "perception": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "wis"
                 },
                 "performance": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "cha"
                 },
                 "persuasion": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "cha"
                 },
                 "pilot": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "dex"
                 },
                 "science": {
                     "value": 0,
-                    "proficient": 0,
+                    "proficient": false,
                     "skill_mod": "int"
                 },
-                "sleightofhand": {
+                "sleight": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "dex"
                 },
                 "stealth": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "dex"
                 },
                 "survival": {
                     "value": 0,
-                    "proficient": 0,
-                    "skill_mod": "int"
+                    "proficient": false,
+                    "skill_mod": "wis"
                 }
 
 
