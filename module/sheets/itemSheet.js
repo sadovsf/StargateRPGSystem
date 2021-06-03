@@ -11,5 +11,5 @@ export default class SGItemSheet extends ItemSheet {
         data.item = itemData;
         data.data = itemData.data;
         return data;
-      }
+    }
 }

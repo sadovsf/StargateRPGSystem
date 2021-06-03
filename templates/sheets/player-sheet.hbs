@@ -1,12 +1,11 @@
 <form class="{{cssClass}} charsheet" autocomplete="off">
   <header class="sheet-header">
-    <img src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64"/>
-    <h1><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+    <span class="version bold">Sheet Version: 1.70</span>
   </header>
 <!--
-<input type="radio" name="attr_tab" class="tab tab1" value="1" checked="checked"><span title="Main"></span>
-<input type="radio" name="attr_tab" class="tab tab2" value="2" style="top: -56px;left: 235px;" ><span title="Background"></span>
-<input type="radio" name="attr_tab" class="tab tab3" value="3" style="top: -88px;left: 392px;" ><span title="Settings"></span>
+<input type="radio" name="data.tab" class="tab tab1"  checked="checked"><span title="Main"></span>
+<input type="radio" name="data.tab" class="tab tab2"  style="top: -56px;left: 235px;" ><span title="Background"></span>
+<input type="radio" name="data.tab" class="tab tab3"  style="top: -88px;left: 392px;" ><span title="Settings"></span>
   -->
 
 <div class="tab-buttons middle center">
@@ -16,9 +15,7 @@
 </div>
 
 
-<span class="version bold">Sheet Version: 1.70</span>
-
-<input type="hidden" class="tabstoggle" name="attr_sheetTab"  value="character">
+<input type="hidden" class="tabstoggle" name="data.sheetTab" value="character">
 
 <!--  --------------------------------------------------------------------------------- -->
 <!--  --------------------------- PAGE 1 ---------------------------------------------- -->
@@ -31,16 +28,16 @@
     <div class="rowflex nowrap spaced">
 
       <div class="columnflex nowrap">
-        <label style="width:100px;">Character name</label>
-        <input name="attr_character_name" type="text">
+        <label style="width:100px;">Character name:</label>
+        <input name="name" type="text" value="{{item.name}}">
       </div>
       <div class="columnflex nowrap">
         <label style="width:80px;">Player name</label>
-        <input name="attr_player_name" type="text">
+        <input name="data.playername" type="text" value="{{data.playername}}">
       </div>
       <div class="columnflex nowrap">
         <label>Campaign</label>
-        <input name="attr_campaign" type="text">
+        <input name="data.campaign" type="text" value="{{data.campaign}}">
       </div>
 
     </div>
@@ -49,41 +46,701 @@
 
       <div class="columnflex nowrap">
         <label>Race</label>
-        <input name="attr_race" list="race" placeholder="race" type="text">
+        <input name="data.race" list="race" placeholder="race" type="text" value="{{data.race}}">
       </div>
       <div class="columnflex nowrap">
         <label>Origin</label>
-        <input name="attr_origin" list="origin" placeholder="origin" type="text">
+        <input name="data.origin" list="origin" placeholder="origin" type="text" value="{{data.origin}}">
       </div>
       <div class="columnflex nowrap">
         <label>Class</label>
-        <input name="attr_class" list="rpgclass" placeholder="class" type="text">
+        <input name="data.class" list="rpgclass" placeholder="class" type="text" value="{{data.class}}">
       </div>
       <div class="columnflex nowrap">
         <label class="w40" title="@{rank}">Level</label>
-        <input name="attr_rank" title="@{rank}" type="number" placeholder="1" class="w40">
+        <input name="data.rank" title="@{rank}" type="number" placeholder="1" class="w40" value="{{data.rank}}">
       </div>
       <div class="columnflex nowrap">
         <label class="w40" title="Hit Dice">HD</label>
-        <input name="attr_hd" type="text" placeholder="d8" title="Hit Dice: @{hd}" class="w40">
+        <input name="data.hd" type="text" placeholder="d8" title="Hit Dice: @{hd}" class="w40" value="{{data.hd}}">
       </div>
       <div class="columnflex nowrap">
         <label class="w30">MP</label>
-        <input name="attr_mp" type="number" placeholder="" title="Mission Points" class="w40">
+        <input name="data.mp" type="number" placeholder="" title="Mission Points" class="w40" value="{{data.mp}}">
       </div>
       <div class="columnflex nowrap">
-        <label class="w70" title="@{td}">Tension Die</label>
-        <select name="attr_td">
-          <option value="d4">d4</option>
-          <option value="d6" selected>d6</option>
-          <option value="d8">d8</option>
-          <option value="d10">d10</option>
-          <option value="d12">d12</option>
+        <label class="w70">Tension Die</label>
+        <select name="data.tension_die" value="{{data.tension_die}}">
+          <option >d4</option>
+          <option >d6</option>
+          <option >d8</option>
+          <option >d10</option>
+          <option >d12</option>
         </select>
       </div>
     </div>
 
   </section>
+
+
+<!-- ATTRIBUTES SECTION -->
+
+  <div class="attr columnflex nowrap spaced center">
+    <div class="stat columnflex nowrap center middle">
+      <button name="roll_str" title="%{str}" type="roll"  class="txt-btn large">STR</button>
+      <input name="data.str" type="number" value="{{data.str}}">
+      <span class="mod" name="data.str_mod" title="@{str_mod}"></span>
+    </div>
+    <div class="stat columnflex nowrap center middle">
+      <button name="roll_dex" type="roll" title="%{dex}"  class="txt-btn large">DEX</button>
+      <input name="data.dex" type="number" value="{{data.dex}}">
+      <span class="mod" name="data.dex_mod" title="@{dex_mod}"></span>
+    </div>
+    <div class="stat columnflex nowrap center middle">
+      <button name="roll_con" type="roll" title="%{con}"  class="txt-btn large">CON</button>
+      <input name="data.con" type="number" value="{{data.con}}">
+      <span class="mod" name="data.con_mod" title="@{con_mod}"></span>
+    </div>
+    <div class="stat columnflex nowrap center middle">
+      <button name="roll_int" type="roll" title="%{int}"  class="txt-btn large">INT</button>
+      <input name="data.int" type="number" value="{{data.int}}">
+      <span class="mod" name="data.int_mod" title="@{int_mod}"></span>
+    </div>
+    <div class="stat columnflex nowrap center middle">
+      <button name="roll_wis" type="roll" title="%{wis}"  class="txt-btn large">WIS</button>
+      <input name="data.wis" type="number" value="{{data.wis}}">
+      <span class="mod" name="data.wis_mod" title="@{wis_mod}"></span>
+    </div>
+    <div class="stat columnflex nowrap center middle">
+      <button name="roll_cha" type="roll" title="%{cha}"  class="txt-btn large">CHA</button>
+      <input name="data.cha" type="number" value="{{data.cha}}">
+      <span class="mod" name="data.cha_mod" title="@{cha_mod}"></span>
+    </div>
+
+  </div>
+
+
+<!-- Skills (20)-->
+
+  <section class="skills columnflex nowrap spaced">
+    <h3>Skills</h3>
+
+    <div class="rowflex nowrap">
+      <input name="data.acrobatics_c" type="checkbox"  value="{{data.acrobatics_c}}">
+      <input name="data.acrobatics" type="number" title="@{acrobatics}"  class="w30" value="{{data.acrobatics}}">
+      <button name="roll_acrobatics" type="roll" class="txt-btn" >Acrobatics</button>
+      <span>(dex)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.animalhandling_c" type="checkbox"  value="{{data.animalhandling_c}}">
+      <input name="data.animalhandling" type="number" title="@{animalhandling}"  class="w30" value="{{data.animalhandling}}">
+      <button name="roll_animalhandling" type="roll" class="txt-btn" >Animal Handling</button>
+      <span>(wis)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.athletics_c" type="checkbox"  value="{{data.athletics_c}}">
+      <input name="data.athletics" type="number" title="@{athletics}"  class="w30" value="{{data.athletics}}">
+      <button name="roll_athletics" type="roll" class="txt-btn" >Athletics</button>
+      <span>(str)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.culture_c" type="checkbox"  value="{{data.culture_c}}">
+      <input name="data.culture" type="number" title="@{culture}"  class="w30" value="{{data.culture}}">
+      <button name="roll_culture" type="roll" class="txt-btn" >Culture</button>
+      <span>(wis)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.deception_c" type="checkbox"  value="{{data.deception_c}}">
+      <input name="data.deception" type="number" title="@{deception}"  class="w30" value="{{data.deception}}">
+      <button name="roll_deception" type="roll" class="txt-btn" >Deception</button>
+      <span>(cha)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.engineering_c" type="checkbox"  value="{{data.engineering_c}}">
+      <input name="data.engineering" type="number" title="@{engineering}"  class="w30" value="{{data.engineering}}">
+      <button name="roll_engineering" type="roll" class="txt-btn" >engineering</button>
+      <span>(int)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.history_c" type="checkbox"  value="{{data.history_c}}">
+      <input name="data.history" type="number" title="@{history}"  class="w30" value="{{data.history}}">
+      <button name="roll_history" type="roll" class="txt-btn" >history</button>
+      <span>(int)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.insight_c" type="checkbox"  value="{{data.insight_c}}">
+      <input name="data.insight" type="number" title="@{insight}"  class="w30" value="{{data.insight}}">
+      <button name="roll_insight" type="roll" class="txt-btn" >insight</button>
+      <span>(wis)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.intimidation_c" type="checkbox"  value="{{data.intimidation_c}}">
+      <input name="data.intimidation" type="number" title="@{intimidation}"  class="w30" value="{{data.intimidation}}">
+      <button name="roll_intimidation" type="roll" class="txt-btn" >intimidation</button>
+      <span>(cha)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.investigation_c" type="checkbox"  value="{{data.investigation_c}}">
+      <input name="data.investigation" type="number" title="@{investigation}"  class="w30" value="{{data.investigation}}">
+      <button name="roll_investigation" type="roll" class="txt-btn" >investigation</button>
+      <span>(int)</span>
+    </div>
+
+
+
+    <div class="rowflex nowrap">
+      <input name="data.medicine_c" type="checkbox"  value="{{data.medicine_c}}">
+      <input name="data.medicine" type="number" title="@{medicine}"  class="w30" value="{{data.medicine}}">
+      <button name="roll_medicine" type="roll" class="txt-btn" >medicine</button>
+      <span>(wis)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.nature_c" type="checkbox"  value="{{data.nature_c}}">
+      <input name="data.nature" type="number" title="@{nature}"  class="w30" value="{{data.nature}}">
+      <button name="roll_nature" type="roll" class="txt-btn" >nature</button>
+      <span>(int)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.perception_c" type="checkbox"  value="{{data.perception_c}}">
+      <input name="data.perception" type="number" title="@{perception}"  class="w30" value="{{data.perception}}">
+      <button name="roll_perception" type="roll" class="txt-btn" >perception</button>
+      <span>(wis)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.performance_c" type="checkbox"  value="{{data.performance_c}}">
+      <input name="data.performance" type="number" title="@{performance}"  class="w30" value="{{data.performance}}">
+      <button name="roll_performance" type="roll" class="txt-btn" >performance</button>
+      <span>(cha)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.persuasion_c" type="checkbox"  value="{{data.persuasion_c}}">
+      <input name="data.persuasion" type="number" title="@{persuasion}"  class="w30" value="{{data.persuasion}}">
+      <button name="roll_persuasion" type="roll" class="txt-btn" >persuasion</button>
+      <span>(cha)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.pilot_c" type="checkbox"  value="{{data.pilot_c}}">
+      <input name="data.pilot" type="number" title="@{}"  class="w30" value="{{data.pilot}}">
+      <button name="roll_pilot" type="roll" class="txt-btn" >pilot</button>
+      <span>(dex)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.science_c" type="checkbox"  value="{{data.science_c}}">
+      <input name="data.science" type="number" title="@{science}"  class="w30" value="{{data.science}}">
+      <button name="roll_science" type="roll" class="txt-btn" >science</button>
+      <span>(int)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.sleight_c" type="checkbox"  value="{{data.sleight_c}}">
+      <input name="data.sleight" type="number" title="@{sleight}"  class="w30" value="{{data.sleight}}">
+      <button name="roll_sleight" type="roll" class="txt-btn" >Sleight of Hand</button>
+      <span>(dex)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.stealth_c" type="checkbox"  value="{{data.stealth_c}}">
+      <input name="data.stealth" type="number" title="@{stealth}"  class="w30" value="{{data.stealth}}">
+      <button name="roll_stealth" type="roll" class="txt-btn" >stealth</button>
+      <span>(dex)</span>
+    </div>
+
+    <div class="rowflex nowrap">
+      <input name="data.survival_c" type="checkbox"  value="{{data.survival_c}}">
+      <input name="data.survival" type="number" title="@{survival}"  class="w30" value="{{data.survival}}">
+      <button name="roll_survival" type="roll" class="txt-btn" >survival</button>
+      <span>(wis)</span>
+    </div>
+
+  </section>
+
+
+<!-- hp -->
+
+  <section class="hp rowflex nowrap">
+    <div class="section columnflex nowrap middle center">
+      <label class="txtcenter" title="Hit Points">HP</label>
+      <div class="rowflex nowrap">
+        <input name="data.health.value" type="number" value="{{data.health.value}}" placeholder="20" class="stat w40" data-dtype="Number" value="{{data.health}}">
+        <span class="slash">/</span>
+        <input name="data.health.max" type="number" value="{{data.health.max}}" placeholder="20" class="stat w40" data-dtype="Number" value="{{data.health}}">
+      </div>
+
+    </div>
+    <div class="section columnflex nowrap middle center determ">
+      <label class="txtcenter" title="Temporary Hit Points">Temp HP</label>
+      <div class="rowflex nowrap">
+        <input name="data.hp_temp" type="number"  title="@{hp_temp}" class="stat w40" value="{{data.hp_temp}}">
+        <span class="slash">/</span>
+        <input name="data.hp_temp_max" type="number"  title="@{hp_temp|max}" class="stat w40" value="{{data.hp_temp_max}}">
+      </div>
+    </div>
+  </section>
+
+
+<!-- condition -->
+
+  <section class="condition columnflex nowrap spaced">
+    <h3 class="txtcenter" title="@{condition}" >CONDITION</h3>
+    <div class="rowflex nowrap">
+      <input name="data.condition" type="radio"  checked="true" value="{{data.condition}}">
+      <span>Normal</span>
+    </div>
+    <div class="rowflex nowrap">
+      <input name="data.condition" type="radio"  value="{{data.condition}}">
+      <span>Disadv ability checks</span>
+    </div>
+    <div class="rowflex nowrap">
+      <input name="data.condition" type="radio"  value="{{data.condition}}">
+      <span>speed halved</span>
+    </div>
+    <div class="rowflex nowrap">
+      <input name="data.condition" type="radio"  value="{{data.condition}}">
+      <span>disadv attacks, saves</span>
+    </div>
+    <div class="rowflex nowrap">
+      <input name="data.condition" type="radio"  value="{{data.condition}}">
+      <span>HP max halved</span>
+    </div>
+    <div class="rowflex nowrap">
+      <input name="data.condition" type="radio"  value="{{data.condition}}">
+      <span>speed zero</span>
+    </div>
+    <div class="rowflex nowrap">
+      <input name="data.condition" type="radio"  value="{{data.condition}}">
+      <span>death</span>
+    </div>
+  </section>
+
+
+<!-- prof -->
+
+  <div class="prof rowflex nowrap">
+    <div class="section columnflex nowrap middle center">
+      <label class="wide" title="Proficiency Bonus">Prof Bonus</label>
+      <input name="data.prof" type="number"  class="stat w40" title="Proficiency Bonus: @{prof}" value="{{data.prof}}">
+    </div>
+    <div class="section columnflex nowrap middle center init">
+      <button name="roll_init" type="roll" title="%{init}" class="txt-btn">Initiative</button>
+      <input name="data.init" type="number" title="@{init}" class="stat w40" value="{{data.init}}">
+    </div>
+    <div class="section columnflex nowrap middle center moxie">
+      <button name="roll_moxie" type="roll" class="txt-btn" title="Social Initiative: %{moxie}" >Moxie</button>
+      <input name="data.moxie" type="number" class="stat w40" title="Social Initiative: @{moxie}" value="{{data.moxie}}">
+    </div>
+  </div>
+
+
+<!-- ac -->
+
+  <div class="ac rowflex nowrap">
+    <div class="section columnflex nowrap middle center">
+      <label class="wide">Armor Class</label>
+      <input name="data.ac" type="number" class="stat w70" value="{{data.ac}}">
+    </div>
+    <div class="section columnflex nowrap middle center">
+      <label class="wide">determination</label>
+      <div class="rowflex nowrap">
+        <input name="data.determination" type="number" title="@{determination}" class="stat w40" value="{{data.determination}}">
+        <span class="slash">/</span>
+        <input name="data.determination_max" type="number" title="@{determination|max}" class="stat w40" value="{{data.determination_max}}">
+      </div>
+    </div>
+  </div>
+
+
+<!-- speed -->
+
+  <div class="speed rowflex nowrap">
+    <div class="section columnflex nowrap middle center">
+      <label class="bold txtcenter">Speed</label>
+      <input name="data.speed" type="text" class="w70 stat" value="{{data.speed}}">
+    </div>
+    <div class="section death columnflex nowrap middle center">
+      <button name="roll_deathsave" type="roll" title="%{deathsave}" class="txt-btn large">Death Save</button>
+      <div class="rowflex nowrap">
+        <input name="data.death_success1" type="checkbox" value="{{data.death_success1}}">
+        <input name="data.death_success2" type="checkbox" value="{{data.death_success2}}">
+        <input name="data.death_success3" type="checkbox" value="{{data.death_success3}}">
+        <span>Sucesses</span>
+      </div>
+      <div class="rowflex nowrap">
+        <input name="data.death_failure1" type="checkbox"  value="{{data.death_failure1}}">
+        <input name="data.death_failure2" type="checkbox"  value="{{data.death_failure2}}">
+        <input name="data.death_failure3" type="checkbox"  value="{{data.death_failure3}}">
+        <span>Failures</span>
+      </div>
+    </div>
+  </div>
+
+
+<!-- saves -->
+
+  <section class="saves columnflex nowrap">
+    <h3>Saves</h3>
+    <div class="rowflex nowrap">
+      <input name="data.str_save_c" type="checkbox"  value="{{data.str_save_c}}">
+      <input name="data.str_save" title="@{str_save}" type="number"  title="@{str_save}" class="w30" value="{{data.str_save}}">
+      <button name="roll_str_save" title="%{str_save}" type="roll" class="txt-btn"  title="%{str_save}">Strength</button>
+    </div>
+    <div class="rowflex nowrap">
+      <input name="data.dex_save_c" type="checkbox"  value="{{data.dex_save_c}}">
+      <input name="data.dex_save" type="number"  title="@{dex_save}" class="w30" value="{{data.dex_save}}">
+      <button name="roll_dex_save" type="roll" class="txt-btn" >Dexterity</button>
+    </div>
+    <div class="rowflex nowrap">
+      <input name="data.con_save_c" type="checkbox"  value="{{data.con_save_c}}">
+      <input name="data.con_save" type="number"  class="w30" value="{{data.con_save}}">
+      <button name="roll_con_save" type="roll" class="txt-btn" >Constitution</button>
+    </div>
+    <div class="rowflex nowrap">
+      <input name="data.int_save_c" type="checkbox"  value="{{data.int_save_c}}">
+      <input name="data.int_save" type="number"  class="w30" value="{{data.int_save}}">
+      <button name="roll_int_save" type="roll" class="txt-btn" >Intelligence</button>
+    </div>
+    <div class="rowflex nowrap">
+      <input name="data.wis_save_c" type="checkbox"  value="{{data.wis_save_c}}">
+      <input name="data.wis_save" type="number"  class="w30" value="{{data.wis_save}}">
+      <button name="roll_wis_save" type="roll" class="txt-btn" >Wisdom</button>
+    </div>
+    <div class="rowflex nowrap mb20">
+      <input name="data.cha_save_c" type="checkbox"  value="{{data.cha_save_c}}">
+      <input name="data.cha_save" type="number"  class="w30" value="{{data.cha_save}}">
+      <button name="roll_cha_save" type="roll" class="txt-btn" >Charisma</button>
+    </div>
+  </section>
+
+
+<!-- bulk -->
+
+  <section class="bulk columnflex nowrap middle center">
+      <h3>Tactical Vest Bulk</h3>
+      <input name="data.bulk" type="number"  class="stat w40" value="{{data.bulk}}">
+  </section>
+
+<!-- ammo -->
+
+
+
+<!-- inventory mini -->
+
+  <section class="inventory columnflex nowrap center">
+    <h4>Inventory</h4>
+    <textarea name="data.inventory" title="@{inventory}"></textarea>
+  </section>
+
+<!-- attacks -->
+
+  <section class="attacks">
+    <span class="name bold">Attack/Action Name</span>
+    <span class="bold">to hit</span>
+    <span class="bold pl20">dmg</span>
+    <span class="bold dmg-type">type</span>
+    <span class="bold">range</span>
+    <span class="bold">Cap/Reload</span>
+    <span class="bold pl20">special</span>
+
+<!-- attack1 -->
+    <div class="rowflex nowrap">
+      <button name="roll_attack1" type="roll" title="%{attack1}" ></button>
+      <input name="data.attack1" type="text" class="ml15" placeholder="Sidearm(Beretta M9)" value="{{data.attack1}}">
+    </div>
+    <div>
+      <input name="data.attack1_to_hit" type="text" class="w40" placeholder="4" value="{{data.attack1_to_hit}}">
+    </div>
+    <div>
+      <input name="data.attack1_dmg" type="text" class="w70 mr15" placeholder="1d6" value="{{data.attack1_dmg}}">
+    </div>
+    <div>
+      <input name="data.attack1_dmgtype" type="text" class="w50" placeholder="piercing" value="{{data.attack1_dmgtype}}">
+    </div>
+    <div>
+      <input name="data.attack1_range" type="text" class="w50" placeholder="50/100" value="{{data.attack1_range}}">
+    </div>
+    <div>
+      <input name="data.attack1_reload" type="text" class="w50" placeholder="15/1" value="{{data.attack1_reload}}">
+    </div>
+    <div>
+      <input name="data.attack1_special" type="text" class="w110 mr15" value="{{data.attack1_special}}">
+    </div>
+
+<!-- attack2 -->
+    <div class="rowflex nowrap">
+      <button name="roll_attack2" type="roll" title="%{attack2}" ></button>
+      <input name="data.attack2" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack2}}">
+    </div>
+    <div>
+      <input name="data.attack2_to_hit" type="text" class="w40" placeholder="4" value="{{data.attack2_to_hit}}">
+    </div>
+    <div>
+      <input name="data.attack2_dmg" type="text" class="w70 mr15" placeholder="1d6" value="{{data.attack2_dmg}}">
+    </div>
+    <div>
+      <input name="data.attack2_dmgtype" type="text" class="w50" value="{{data.attack2_dmgtype}}">
+    </div>
+    <div>
+      <input name="data.attack2_range" type="text" class="w50" value="{{data.attack2_range}}">
+    </div>
+    <div>
+      <input name="data.attack2_reload" type="text" class="w50" value="{{data.attack2_reload}}">
+    </div>
+    <div>
+      <input name="data.attack2_special" type="text" class="w110 mr15" value="{{data.attack2_special}}">
+    </div>
+
+<!-- attack3 -->
+    <div class="rowflex nowrap">
+      <button name="roll_attack3" type="roll" title="%{attack3}" ></button>
+      <input name="data.attack3" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack3}}">
+    </div>
+    <div>
+      <input name="data.attack3_to_hit" type="text" class="w40" placeholder="4" value="{{data.attack3_to_hit}}">
+    </div>
+    <div>
+      <input name="data.attack3_dmg" type="text" class="w70 mr15" placeholder="1d6" value="{{data.attack3_dmg}}">
+    </div>
+    <div>
+      <input name="data.attack3_dmgtype" type="text" class="w50" value="{{data.attack3_dmgtype}}">
+    </div>
+    <div>
+      <input name="data.attack3_range" type="text" class="w50" value="{{data.attack3_range}}">
+    </div>
+    <div>
+      <input name="data.attack3_reload" type="text" class="w50" value="{{data.attack3_reload}}">
+    </div>
+    <div>
+      <input name="data.attack3_special" type="text" class="w110 mr15" value="{{data.attack3_special}}">
+    </div>
+
+<!-- attack4 -->
+    <div class="rowflex nowrap">
+      <button name="roll_attack4" type="roll" title="%{attack4}" ></button>
+      <input name="data.attack4" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack4}}">
+    </div>
+    <div>
+      <input name="data.attack4_to_hit" type="text" class="w40" placeholder="4" value="{{data.attack4_to_hit}}">
+    </div>
+    <div>
+      <input name="data.attack4_dmg" type="text" class="w70 mr15" placeholder="1d6" value="{{data.attack4_dmg}}">
+    </div>
+    <div>
+      <input name="data.attack4_dmgtype" type="text" class="w50" value="{{data.attack4_dmgtype}}">
+    </div>
+    <div>
+      <input name="data.attack4_range" type="text" class="w50" value="{{data.attack4_range}}">
+    </div>
+    <div>
+      <input name="data.attack4_reload" type="text" class="w50" value="{{data.attack4_reload}}">
+    </div>
+    <div>
+      <input name="data.attack4_special" type="text" class="w110 mr15" value="{{data.attack4_special}}">
+    </div>
+
+<!-- attack5 -->
+    <div class="rowflex nowrap">
+      <button name="roll_attack5" type="roll" title="%{attack5}" ></button>
+      <input name="data.attack5" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack5}}">
+    </div>
+    <div>
+      <input name="data.attack5_to_hit" type="text" class="w40" placeholder="4" value="{{data.attack5_to_hit}}">
+    </div>
+    <div>
+      <input name="data.attack5_dmg" type="text" class="w70 mr15" placeholder="1d6+@{td}" value="{{data.attack5_dmg}}">
+    </div>
+    <div>
+      <input name="data.attack5_dmgtype" type="text" class="w50" value="{{data.attack5_dmgtype}}">
+    </div>
+    <div>
+      <input name="data.attack5_range" type="text" class="w50" value="{{data.attack5_range}}">
+    </div>
+    <div>
+      <input name="data.attack5_reload" type="text" class="w50" value="{{data.attack5_reload}}">
+    </div>
+    <div>
+      <input name="data.attack5_special" type="text" class="w110 mr15" value="{{data.attack5_special}}">
+    </div>
+
+  </section>
+
+</main>
+
+<!--  --------------------------------------------------------------------------------- -->
+<!--  --------------------------- PAGE 2 ---------------------------------------------- -->
+<!--  --------------------------------------------------------------------------------- -->
+<main class="background tab-content tab2 page2">
+
+  <section class="racial_abilities columnflex nowrap center">
+    <label>Racial Abilities</label>
+    <textarea name="data.racial"></textarea>
+  </section>
+
+  <section class="feats columnflex nowrap center">
+    <label>Feats</label>
+    <textarea name="data.feats"></textarea>
+  </section>
+
+  <section class="class columnflex nowrap center">
+    <label>Class Abilities</label>
+    <textarea name="data.class_abilities"></textarea>
+  </section>
+
+  <section class="equipment columnflex nowrap center">
+    <label>Equipment</label>
+    <textarea name="data.equipment"></textarea>
+  </section>
+
+  <section class="prof columnflex nowrap center">
+    <label>Proficiencies</label>
+    <textarea name="data.proficiencies"></textarea>
+  </section>
+
+  <section class="notes columnflex nowrap center">
+    <label>Notes</label>
+    <textarea name="data.notes"></textarea>
+  </section>
+
+
+</main>
+
+<!--  --------------------------------------------------------------------------------- -->
+<!--  --------------------------- PAGE 3 ---------------------------------------------- -->
+<!--  --------------------------------------------------------------------------------- -->
+
+
+<main class="settings tab-content tab3 page3">
+
+  <section class="settings columnflex nowrap center">
+    <label>Settings</label>
+
+    <div class="rowflex nowrap">
+      <span title="@{whisper}">Whisper rolls?</span>
+      <input name="data.whisper" title="@{whisper}" type="checkbox"  value="{{data.whisper}}">
+    </div>
+
+    <div class="rowflex nowrap">
+      <span title="@{show_name}">Show name in rolls?</span>
+      <select name="data.show_name" title="@{show_name}">
+        <option >Yes</option>
+        <option >No</option>
+      </select>
+    </div>
+
+    <div class="rowflex nowrap">
+      <button name="roll_hd" type="roll" title="%{hd}" >Short Rest</button>
+      <button name="roll_longrest" type="roll" title="%{longrest}" >Long Rest</button>
+      <button name="roll_td" type="roll" title="%{td}" >Tension Dice</button>
+    </div>
+    <div class="rowflex nowrap">
+      <label>Custom roll</label>
+    </div>
+    <div class="rowflex nowrap">
+      <button name="roll_custom1" type="roll" value="@{whisper}@{custom1}"></button>
+      <input type="text" name="data.custom1" >
+    </div>
+    <div class="rowflex nowrap">
+      <button name="roll_custom2" type="roll" value="@{whisper}@{custom2}"></button>
+      <input type="text" name="data.custom2" >
+    </div>
+    <div class="rowflex nowrap">
+      <button name="roll_custom3" type="roll" value="@{whisper}@{custom3}"></button>
+      <input type="text" name="data.custom3" >
+    </div>
+    <div class="rowflex nowrap">
+      <button name="roll_custom4" type="roll" value="@{whisper}@{custom4}"></button>
+      <input type="text" name="data.custom4" >
+    </div>
+  </section>
+
+  <section class="other columnflex nowrap center">
+    <label>Other stats</label>
+    <div class="rowflex nowrap">
+      <span>Eureka Points:</span>
+      <input name="data.eureka" type="number" placeholder="" title="Eureka Points: @{eureka}"  class="w40" value="{{data.eureka}}">
+      /
+      <input name="data.eureka_max" type="number" placeholder="" title="Max Eureka Points: @{eureka|max}" class="w40" value="{{data.eureka_max}}">
+    </div>
+    <div class="columnflex nowrap">
+      <span>Wounds/Ability Damage</span>
+      <textarea name="data.ability_damage" class="dmg"></textarea>
+    </div>
+  </section>
+
+  <section class="changelog columnflex nowrap center">
+    <img class="sheet-phoenix" src="https://raw.githubusercontent.com/Anduh/roll20-character-sheets/stargate-147/Stargate-RPG/images/SG-phoenix.png" alt="Stargate Phoenix logo">
+    <button name="roll_help" type="roll" class="txt-btn" >More Info</button>
+    <label>Changelog v.1.55(Nov. 3rd)</label>
+    <span>* more stats to track on Settings page</span>
+    <label>Changelog v.1.50(Oct. 20th)</label>
+    <span>* add Stargate Phoenix image to roll template<br>
+      * integrate ChatSetAttr commands to Short/Long Rest buttons<br>
+      * added whisper toggle to Saves<br>
+      * Link to sheet wiki page (button on settings page)</span>
+  </section>
+
+
+  <div class="ammo">
+    <div class="section columnflex nowrap">
+      <label class=" other">NPC stuff</label>
+      <div class="rowflex nowrap">
+        <span>CR:</span>
+        <input name="data.cr" type="number" placeholder="" title="Challenge Rating: @{cr}"  class="w40" value="{{data.cr}}">
+        <span>Speed</span>
+        <input name="data.speed_npc" type="text" style="width:200px" placeholder="1m Fly(6m)" title="@{speed_npc}"  class="w40" value="{{data.speed_npc}}">
+      </div>
+      <div class="rowflex nowrap">
+        <span>Type:</span>
+        <input name="data.type" type="text" style="width:350px" placeholder="Medium Humanoid(Scout 2)" title="Challenge Rating: @{type}"  class="w40" value="{{data.type}}">
+      </div>
+    </div>
+
+    <div class="section columnflex nowrap">
+      <label class=" other">Living Series</label>
+      <div class="rowflex nowrap">
+        <span>Stargaterpg.com username</span>
+        <input name="data.living_series_user" type="text" placeholder=""  class="w40" style="width:100px" value="{{data.living_series_user}}">
+        <span title="You can see your Roll20 id by going to your Roll20 profile page, and copying the numbers in the URL">Roll20 ID</span>
+        <input name="data.roll20id" type="text" style="width:100px" title="You can see your Roll20 id by going to your Roll20 profile page, and copying the numbers in the URL"  class="w40" value="{{data.roll20id}}">
+      </div>
+      <div class="rowflex nowrap">
+        <span>Stargaterpg.com character link</span>
+        <input name="data.cahracter_link" type="text" style="width:350px" placeholder="The url to your character sheet"  class="w40" value="{{data.cahracter_link}}">
+      </div>
+    </div>
+
+    <div class="ammo grid">
+      <div class="section columnflex nowrap middle center">
+        <label>Ammo Weapon 1</label>
+        <input name="data.ammo1" type="number"  value="{{data.ammo1}}">
+      </div>
+      <div class="section columnflex nowrap middle center">
+        <label>Ammo Weapon 2</label>
+        <input name="data.ammo2" type="number"  value="{{data.ammo2}}">
+      </div>
+      <div class="section columnflex nowrap middle center">
+        <label>Ammo Weapon 3</label>
+        <input name="data.ammo3" type="number"  value="{{data.ammo3}}">
+      </div>
+      <div class="section columnflex nowrap middle center">
+        <label>Ammo Weapon 4</label>
+        <input name="data.ammo4" type="number"  value="{{data.ammo4}}">
+      </div>
+    </div>
+  </div>
 
 </main>
 </form>

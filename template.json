@@ -1,35 +1,228 @@
 {
     "Actor": {
-        "types": ["player", "enemy"],
+        "types": [ "player", "enemy" ],
         "templates": {
             "background": {
-                "biography": ""
+                "playername": "",
+                "biography": "",
+                "campaign": "",
+                "race": "",
+                "origin": "",
+                "class": "",
+                "rank": 1,
+                "hd": "",
+                "mp": 0,
+                "tension_die": "d6"
             },
             "attributes": {
                 "health": {
                     "value": 20,
                     "max": 20
+                },
+                "str": 10,
+                "str_mod": 0,
+                "dex": 10,
+                "dex_mod": 0,
+                "con": 10,
+                "con_mod": 0,
+                "int": 10,
+                "int_mod": 0,
+                "wis": 10,
+                "wis_mod": 0,
+                "cha": 10,
+                "cha_mod": 0,
+
+                "profbonus": 0,
+                "initiative": 0,
+                "bulk": 0,
+                "ac": 0,
+                "speed": 0,
+
+                "inventory": 0
+
+
+            },
+            "skills": {
+                "acrobatics": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "animalhandling": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "athletics": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "culture": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "deception": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "engineering": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "history": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "insight": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "intimidation": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "investigation": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "medicine": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "nature": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "perception": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "performance": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "persuasion": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "pilot": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "science": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "sleightofhand": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "stealth": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
+                },
+                "survival": {
+                    "value": 0,
+                    "proficient": 0,
+                    "skill_mod": "int"
                 }
+
+
+
+            },
+            "conditions": {
+                "normal": false,
+                "disadvabilitychecks": false,
+                "speedhalved": false,
+                "disadvattackssaves": false,
+                "hpmaxhalved": false,
+                "speedzero": false,
+                "death": false
             }
         },
 
         "player": {
-            "templates": ["background", "attributes"]
+            "templates": [ "background", "attributes", "skills", "conditions" ]
         },
 
         "enemy": {
-            "templates": ["attributes"]
+            "templates": [ "attributes" ]
         }
     },
 
     "Item": {
-        "types": ["weapon"],
+        "types": [ "weapon" ],
         "templates": {},
 
-        "weapon": {
-            "damage": "1d6",
-            "proficiency": "",
-            "special": "blunt"
+        "weapons": {
+            "0": {
+                "name": "beretta m9",
+                "tohit": "5",
+                "damage": "2d8+2",
+                "type": "piercing",
+                "range": "50/100",
+                "capreload": "15/1",
+                "proficiency": "yes",
+                "special": "pistol"
+            },
+            "1": {
+                "name": "knife",
+                "tohit": "0",
+                "damage": "1d6+1d10",
+                "type": "slsh/piercing",
+                "range": "closecmbt",
+                "capreload": "5",
+                "proficiency": "yes",
+                "special": "poison"
+            },
+            "2": {
+                "name": "attack/action name",
+                "tohit": "4",
+                "damage": "1d6",
+                "type": "",
+                "range": "",
+                "cap_reload": "",
+                "proficiency": "",
+                "special": ""
+            },
+            "3": {
+                "name": "attack/action name",
+                "tohit": "4",
+                "damage": "1d6",
+                "type": "",
+                "range": "",
+                "cap_reload": "",
+                "proficiency": "",
+                "special": ""
+            },
+            "4": {
+                "name": "attack/action name",
+                "tohit": "4",
+                "damage": "1d6+@{td}",
+                "type": "",
+                "range": "",
+                "cap_reload": "",
+                "proficiency": "",
+                "special": ""
+            }
         }
+
     }
 }

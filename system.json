@@ -16,13 +16,7 @@
     ],
     "packs": [],
     "dependencies": [],
-    "languages": [
-        {
-            "lang": "en",
-            "name": "English",
-            "path": "lang/en.json"
-        }
-    ],
+    "languages": [],
     "socket": false,
     "initiative": "1d20",
     "gridDistance": 1,
