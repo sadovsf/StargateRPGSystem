@@ -2,6 +2,140 @@
     "Actor": {
         "types": [ "player", "enemy" ],
         "templates": {
+            "common": {
+                "health": {
+                    "value": 20,
+                    "max": 20
+                },
+
+                "profbonus": 0,
+                "initiative": 0,
+                "bulk": 0,
+                "ac": 0,
+                "speed": 0,
+
+                "attributes": {
+                    "str": 10,
+                    "dex": 10,
+                    "con": 10,
+                    "int": 10,
+                    "wis": 10,
+                    "cha": 10
+                },
+
+                "conditions": {
+                    "normal": false,
+                    "disadvabilitychecks": false,
+                    "speedhalved": false,
+                    "disadvattackssaves": false,
+                    "hpmaxhalved": false,
+                    "speedzero": false,
+                    "death": false
+                },
+
+                "skills": {
+                    "acrobatics": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "dex"
+                    },
+                    "animalhandling": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "wis"
+                    },
+                    "athletics": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "str"
+                    },
+                    "culture": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "wis"
+                    },
+                    "deception": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "cha"
+                    },
+                    "engineering": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "int"
+                    },
+                    "history": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "int"
+                    },
+                    "insight": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "wis"
+                    },
+                    "intimidation": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "cha"
+                    },
+                    "investigation": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "int"
+                    },
+                    "medicine": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "wis"
+                    },
+                    "nature": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "int"
+                    },
+                    "perception": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "wis"
+                    },
+                    "performance": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "cha"
+                    },
+                    "persuasion": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "cha"
+                    },
+                    "pilot": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "dex"
+                    },
+                    "science": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "int"
+                    },
+                    "sleight": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "dex"
+                    },
+                    "stealth": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "dex"
+                    },
+                    "survival": {
+                        "value": 0,
+                        "proficient": false,
+                        "mod": "wis"
+                    }
+                }
+            },
             "background": {
                 "playername": "",
                 "biography": "",
@@ -13,157 +147,15 @@
                 "hd": "",
                 "mp": 0,
                 "tension_die": "d6"
-            },
-            "attributes": {
-                "health": {
-                    "value": 20,
-                    "max": 20
-                },
-                "str": 10,
-                "str_mod": 0,
-                "dex": 10,
-                "dex_mod": 0,
-                "con": 10,
-                "con_mod": 0,
-                "int": 10,
-                "int_mod": 0,
-                "wis": 10,
-                "wis_mod": 0,
-                "cha": 10,
-                "cha_mod": 0,
-
-                "profbonus": 0,
-                "initiative": 0,
-                "bulk": 0,
-                "ac": 0,
-                "speed": 0,
-
-                "inventory": 0
-
-
-            },
-            "skills": {
-                "acrobatics": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "dex"
-                },
-                "animalhandling": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "wis"
-                },
-                "athletics": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "str"
-                },
-                "culture": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "wis"
-                },
-                "deception": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "cha"
-                },
-                "engineering": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "int"
-                },
-                "history": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "int"
-                },
-                "insight": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "wis"
-                },
-                "intimidation": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "cha"
-                },
-                "investigation": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "int"
-                },
-                "medicine": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "wis"
-                },
-                "nature": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "int"
-                },
-                "perception": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "wis"
-                },
-                "performance": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "cha"
-                },
-                "persuasion": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "cha"
-                },
-                "pilot": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "dex"
-                },
-                "science": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "int"
-                },
-                "sleight": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "dex"
-                },
-                "stealth": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "dex"
-                },
-                "survival": {
-                    "value": 0,
-                    "proficient": false,
-                    "skill_mod": "wis"
-                }
-
-
-
-            },
-            "conditions": {
-                "normal": false,
-                "disadvabilitychecks": false,
-                "speedhalved": false,
-                "disadvattackssaves": false,
-                "hpmaxhalved": false,
-                "speedzero": false,
-                "death": false
             }
         },
 
         "player": {
-            "templates": [ "background", "attributes", "skills", "conditions" ]
+            "templates": [ "common", "background" ]
         },
 
         "enemy": {
-            "templates": [ "attributes" ]
+            "templates": [ "common" ]
         }
     },
 

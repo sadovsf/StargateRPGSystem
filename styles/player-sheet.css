@@ -118,7 +118,7 @@
     -moz-appearance: textfield;
 }
 .charsheet button[type="roll"].txt-btn {
-    height: 19px;
+    height: 25px;
     line-height: unset;
     font-size:14px;
     border: 2px solid black;
@@ -132,7 +132,6 @@
 }
 .charsheet button[type="roll"].txt-btn:hover {
     background-color: #87afc7;
-    border-radius: 10px;
     background-position: 0 -28px;
 }
 .charsheet .version {
@@ -296,6 +295,8 @@
     border-width: 2px;
     text-align: center;
     font-weight: bold;
+    position: relative;
+    top: 8px;
 }
 .charsheet .attr input[type="number"] {
     width: 2em;
@@ -313,6 +314,7 @@
     margin-right: auto;
     text-align: center;
     line-height: 15px;
+    text-transform: uppercase;
 }
 .charsheet section.skills {
     grid-area: skills;
