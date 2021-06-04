@@ -7,132 +7,183 @@
                     "value": 20,
                     "max": 20
                 },
-
-                "profbonus": 0,
-                "initiative": 0,
-                "bulk": 0,
-                "ac": 0,
-                "speed": 0,
-
-                "attributes": {
-                    "str": 10,
-                    "dex": 10,
-                    "con": 10,
-                    "int": 10,
-                    "wis": 10,
-                    "cha": 10
+                "temp_health": {
+                    "value": 0,
+                    "max": 0
                 },
 
-                "conditions": {
-                    "normal": false,
-                    "disadvabilitychecks": false,
-                    "speedhalved": false,
-                    "disadvattackssaves": false,
-                    "hpmaxhalved": false,
-                    "speedzero": false,
-                    "death": false
+                "determination": {
+                    "value": 2,
+                    "max": 2
+                },
+
+                "condition": "normal",
+                "prof": 2,
+                "initiative": 0,
+                "bulk": 8,
+                "ac": 10,
+                "speed": 6,
+
+                "attributes": {
+                    "str": {
+                        "value": 10,
+                        "mod": "+0"
+                    },
+                    "dex": {
+                        "value": 10,
+                        "mod": "+0"
+                    },
+                    "con": {
+                        "value": 10,
+                        "mod": "+0"
+                    },
+                    "int": {
+                        "value": 10,
+                        "mod": "+0"
+                    },
+                    "wis": {
+                        "value": 10,
+                        "mod": "+0"
+                    },
+                    "cha": {
+                        "value": 10,
+                        "mod": "+0"
+                    }
                 },
 
                 "skills": {
                     "acrobatics": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "dex"
                     },
                     "animalhandling": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "wis"
                     },
                     "athletics": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "str"
                     },
                     "culture": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "wis"
                     },
                     "deception": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "cha"
                     },
                     "engineering": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "int"
                     },
                     "history": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "int"
                     },
                     "insight": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "wis"
                     },
                     "intimidation": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "cha"
                     },
                     "investigation": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "int"
                     },
                     "medicine": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "wis"
                     },
                     "nature": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "int"
                     },
                     "perception": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "wis"
                     },
                     "performance": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "cha"
                     },
                     "persuasion": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "cha"
                     },
                     "pilot": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "dex"
                     },
                     "science": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "int"
                     },
                     "sleight": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "dex"
                     },
                     "stealth": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "dex"
                     },
                     "survival": {
-                        "value": 0,
+                        "value": "+0",
                         "proficient": false,
                         "mod": "wis"
+                    }
+                },
+
+                "saves": {
+                    "str": {
+                        "value": "+0",
+                        "proficient": false,
+                        "mod": "str"
+                    },
+                    "dex": {
+                        "value": "+0",
+                        "proficient": false,
+                        "mod": "dex"
+                    },
+                    "con": {
+                        "value": "+0",
+                        "proficient": false,
+                        "mod": "con"
+                    },
+                    "int": {
+                        "value": "+0",
+                        "proficient": false,
+                        "mod": "int"
+                    },
+                    "wis": {
+                        "value": "+0",
+                        "proficient": false,
+                        "mod": "wis"
+                    },
+                    "cha": {
+                        "value": "+0",
+                        "proficient": false,
+                        "mod": "cha"
                     }
                 }
             },
@@ -146,7 +197,16 @@
                 "rank": 1,
                 "hd": "",
                 "mp": 0,
-                "tension_die": "d6"
+                "tension_dice": "d6",
+
+                "abilities": {
+                    "racial": "",
+                    "feats": "",
+                    "class": "",
+                    "equipment": "",
+                    "proficiencies": "",
+                    "notes": ""
+                }
             }
         },
 
@@ -160,61 +220,6 @@
     },
 
     "Item": {
-        "types": [ "weapon" ],
-        "templates": {},
-
-        "weapons": {
-            "0": {
-                "name": "beretta m9",
-                "tohit": "5",
-                "damage": "2d8+2",
-                "type": "piercing",
-                "range": "50/100",
-                "capreload": "15/1",
-                "proficiency": "yes",
-                "special": "pistol"
-            },
-            "1": {
-                "name": "knife",
-                "tohit": "0",
-                "damage": "1d6+1d10",
-                "type": "slsh/piercing",
-                "range": "closecmbt",
-                "capreload": "5",
-                "proficiency": "yes",
-                "special": "poison"
-            },
-            "2": {
-                "name": "attack/action name",
-                "tohit": "4",
-                "damage": "1d6",
-                "type": "",
-                "range": "",
-                "cap_reload": "",
-                "proficiency": "",
-                "special": ""
-            },
-            "3": {
-                "name": "attack/action name",
-                "tohit": "4",
-                "damage": "1d6",
-                "type": "",
-                "range": "",
-                "cap_reload": "",
-                "proficiency": "",
-                "special": ""
-            },
-            "4": {
-                "name": "attack/action name",
-                "tohit": "4",
-                "damage": "1d6+@{td}",
-                "type": "",
-                "range": "",
-                "cap_reload": "",
-                "proficiency": "",
-                "special": ""
-            }
-        }
 
     }
 }

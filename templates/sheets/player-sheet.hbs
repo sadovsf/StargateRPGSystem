@@ -1,26 +1,17 @@
 <form class="{{cssClass}} charsheet" autocomplete="off">
-  <header class="sheet-header">
-    <span class="version bold">Sheet Version: 1.70</span>
-  </header>
-<!--
-<input type="radio" name="data.tab" class="tab tab1"  checked="checked"><span title="Main"></span>
-<input type="radio" name="data.tab" class="tab tab2"  style="top: -56px;left: 235px;" ><span title="Background"></span>
-<input type="radio" name="data.tab" class="tab tab3"  style="top: -88px;left: 392px;" ><span title="Settings"></span>
-  -->
 
-<div class="tab-buttons middle center">
-    <button type="action" name="act_character" >Character</button>
-    <button type="action" name="act_background" >Background</button>
-    <button type="action" name="act_settings" >Settings</button>
-</div>
+<nav class="sheet-navigation tabs" data-group="primary">
+    <a class="item active" data-tab="character">Character</a>
+    <a class="item" data-tab="background">Background</a>
+    <!-- <a class="item" data-tab="settings">Settings</a> NOT IMPLEMENTED YET-->
+</nav>
 
 
-<input type="hidden" class="tabstoggle" name="data.sheetTab" value="character">
-
+<div class="sg-sheet-body">
 <!--  --------------------------------------------------------------------------------- -->
 <!--  --------------------------- PAGE 1 ---------------------------------------------- -->
 <!--  --------------------------------------------------------------------------------- -->
-<main class="character tab-content tab1 page1">
+<main class="character tab-content tab1 page1 tab" data-tab="character">
 
 <!-- NAME SECTION -->
   <section class="name columnflex nowrap">
@@ -39,7 +30,9 @@
         <label>Campaign</label>
         <input name="data.campaign" type="text" value="{{data.campaign}}">
       </div>
-
+      <div class="columnflex nowrap">
+        <label>Sheet version: 1.0</label>
+      </div>
     </div>
 
     <div class="rowflex nowrap spaced">
@@ -70,12 +63,8 @@
       </div>
       <div class="columnflex nowrap">
         <label class="w70">Tension Die</label>
-        <select name="data.tension_die" value="{{data.tension_die}}">
-          <option >d4</option>
-          <option >d6</option>
-          <option >d8</option>
-          <option >d10</option>
-          <option >d12</option>
+        <select name="data.tension_dice">
+          {{selectOptions config.tensionDice selected=data.tension_dice localize=false}}
         </select>
       </div>
     </div>
@@ -86,11 +75,11 @@
 <!-- ATTRIBUTES SECTION -->
 
   <div class="attr columnflex nowrap spaced center">
-    {{#each data.attributes as |attr_val a|}}
-      <div class="stat columnflex nowrap center middle">
-        <button type="roll" class="txt-btn large" data-bonus="attributeMods.{{a}}">{{a}}</button>
-        <input name="data.attributes.{{a}}" type="number" value="{{attr_val}}">
-        <span class="mod">{{lookup ../attributeMods a}}</span>
+    {{#each data.attributes as |attr a|}}
+      <div class="stat columnflex nowrap center middle" data-attr="{{a}}">
+        <a type="roll" class="txt-btn large" data-bonus="data.attributes.{{a}}.mod">{{a}}</a>
+        <input name="data.attributes.{{a}}.value" type="number" value="{{attr.value}}">
+        <span class="mod">{{attr.mod}}</span>
       </div>
     {{/each}}
   </div>
@@ -102,10 +91,10 @@
     <h3>Skills</h3>
 
     {{#each data.skills as |skill s|}}
-      <div class="rowflex nowrap">
+      <div class="rowflex nowrap" data-skill="{{s}}">
         <input name="data.skills.{{s}}.proficient" type="checkbox" {{checked skill.proficient}}>
-        <input name="data.skills.{{s}}.value" type="number" class="w30" value="{{skill.value}}">
-        <button type="roll" class="txt-btn" data-bonus="data.skills.{{s}}.value">{{s}}</button>
+        <input name="data.skills.{{s}}.value" class="w30" value="{{skill.value}}">
+        <a type="roll" class="txt-btn" data-bonus="data.skills.{{s}}.value">{{s}}</a>
         <span>({{skill.mod}})</span>
       </div>
     {{/each}}
@@ -128,9 +117,9 @@
     <div class="section columnflex nowrap middle center determ">
       <label class="txtcenter" title="Temporary Hit Points">Temp HP</label>
       <div class="rowflex nowrap">
-        <input name="data.hp_temp" type="number"  title="@{hp_temp}" class="stat w40" value="{{data.hp_temp}}">
+        <input name="data.temp_health.value" type="number"  class="stat w40" value="{{data.temp_health.value}}">
         <span class="slash">/</span>
-        <input name="data.hp_temp_max" type="number"  title="@{hp_temp|max}" class="stat w40" value="{{data.hp_temp_max}}">
+        <input name="data.temp_health.max" type="number"  class="stat w40" value="{{data.temp_health.max}}">
       </div>
     </div>
   </section>
@@ -139,35 +128,8 @@
 <!-- condition -->
 
   <section class="condition columnflex nowrap spaced">
-    <h3 class="txtcenter" title="@{condition}" >CONDITION</h3>
-    <div class="rowflex nowrap">
-      <input name="data.condition" type="radio"  checked="true" value="{{data.condition}}">
-      <span>Normal</span>
-    </div>
-    <div class="rowflex nowrap">
-      <input name="data.condition" type="radio"  value="{{data.condition}}">
-      <span>Disadv ability checks</span>
-    </div>
-    <div class="rowflex nowrap">
-      <input name="data.condition" type="radio"  value="{{data.condition}}">
-      <span>speed halved</span>
-    </div>
-    <div class="rowflex nowrap">
-      <input name="data.condition" type="radio"  value="{{data.condition}}">
-      <span>disadv attacks, saves</span>
-    </div>
-    <div class="rowflex nowrap">
-      <input name="data.condition" type="radio"  value="{{data.condition}}">
-      <span>HP max halved</span>
-    </div>
-    <div class="rowflex nowrap">
-      <input name="data.condition" type="radio"  value="{{data.condition}}">
-      <span>speed zero</span>
-    </div>
-    <div class="rowflex nowrap">
-      <input name="data.condition" type="radio"  value="{{data.condition}}">
-      <span>death</span>
-    </div>
+    <h3 class="txtcenter" >CONDITION</h3>
+    {{radioBoxes "data.condition" config.conditions checked=data.condition localize=false}}
   </section>
 
 
@@ -176,15 +138,15 @@
   <div class="prof rowflex nowrap">
     <div class="section columnflex nowrap middle center">
       <label class="wide" title="Proficiency Bonus">Prof Bonus</label>
-      <input name="data.prof" type="number"  class="stat w40" title="Proficiency Bonus: @{prof}" value="{{data.prof}}">
+      <input name="data.prof" type="number" class="stat w40" value="{{data.prof}}">
     </div>
     <div class="section columnflex nowrap middle center init">
-      <button name="roll_init" type="roll" title="%{init}" class="txt-btn">Initiative</button>
-      <input name="data.init" type="number" title="@{init}" class="stat w40" value="{{data.init}}">
+      <a name="roll_init" type="roll" class="txt-btn">Initiative</a>
+      <input name="data.init" type="number" class="stat w40" value="{{data.init}}">
     </div>
     <div class="section columnflex nowrap middle center moxie">
-      <button name="roll_moxie" type="roll" class="txt-btn" title="Social Initiative: %{moxie}" >Moxie</button>
-      <input name="data.moxie" type="number" class="stat w40" title="Social Initiative: @{moxie}" value="{{data.moxie}}">
+      <a name="roll_moxie" type="roll" class="txt-btn">Moxie</a>
+      <input name="data.moxie" type="number" class="stat w40"value="{{data.moxie}}">
     </div>
   </div>
 
@@ -199,9 +161,9 @@
     <div class="section columnflex nowrap middle center">
       <label class="wide">determination</label>
       <div class="rowflex nowrap">
-        <input name="data.determination" type="number" title="@{determination}" class="stat w40" value="{{data.determination}}">
+        <input name="data.determination.value" type="number" class="stat w40" value="{{data.determination.value}}">
         <span class="slash">/</span>
-        <input name="data.determination_max" type="number" title="@{determination|max}" class="stat w40" value="{{data.determination_max}}">
+        <input name="data.determination.max" type="number" class="stat w40" value="{{data.determination.max}}">
       </div>
     </div>
   </div>
@@ -215,7 +177,7 @@
       <input name="data.speed" type="text" class="w70 stat" value="{{data.speed}}">
     </div>
     <div class="section death columnflex nowrap middle center">
-      <button name="roll_deathsave" type="roll" title="%{deathsave}" class="txt-btn large">Death Save</button>
+      <a name="roll_deathsave" type="roll" title="%{deathsave}" class="txt-btn large">Death Save</a>
       <div class="rowflex nowrap">
         <input name="data.death_success1" type="checkbox" value="{{data.death_success1}}">
         <input name="data.death_success2" type="checkbox" value="{{data.death_success2}}">
@@ -236,36 +198,13 @@
 
   <section class="saves columnflex nowrap">
     <h3>Saves</h3>
-    <div class="rowflex nowrap">
-      <input name="data.str_save_c" type="checkbox"  value="{{data.str_save_c}}">
-      <input name="data.str_save" title="@{str_save}" type="number"  title="@{str_save}" class="w30" value="{{data.str_save}}">
-      <button name="roll_str_save" title="%{str_save}" type="roll" class="txt-btn"  title="%{str_save}">Strength</button>
-    </div>
-    <div class="rowflex nowrap">
-      <input name="data.dex_save_c" type="checkbox"  value="{{data.dex_save_c}}">
-      <input name="data.dex_save" type="number"  title="@{dex_save}" class="w30" value="{{data.dex_save}}">
-      <button name="roll_dex_save" type="roll" class="txt-btn" >Dexterity</button>
-    </div>
-    <div class="rowflex nowrap">
-      <input name="data.con_save_c" type="checkbox"  value="{{data.con_save_c}}">
-      <input name="data.con_save" type="number"  class="w30" value="{{data.con_save}}">
-      <button name="roll_con_save" type="roll" class="txt-btn" >Constitution</button>
-    </div>
-    <div class="rowflex nowrap">
-      <input name="data.int_save_c" type="checkbox"  value="{{data.int_save_c}}">
-      <input name="data.int_save" type="number"  class="w30" value="{{data.int_save}}">
-      <button name="roll_int_save" type="roll" class="txt-btn" >Intelligence</button>
-    </div>
-    <div class="rowflex nowrap">
-      <input name="data.wis_save_c" type="checkbox"  value="{{data.wis_save_c}}">
-      <input name="data.wis_save" type="number"  class="w30" value="{{data.wis_save}}">
-      <button name="roll_wis_save" type="roll" class="txt-btn" >Wisdom</button>
-    </div>
-    <div class="rowflex nowrap mb20">
-      <input name="data.cha_save_c" type="checkbox"  value="{{data.cha_save_c}}">
-      <input name="data.cha_save" type="number"  class="w30" value="{{data.cha_save}}">
-      <button name="roll_cha_save" type="roll" class="txt-btn" >Charisma</button>
-    </div>
+    {{#each data.saves as |save s|}}
+      <div class="rowflex nowrap" data-save="{{s}}">
+        <input name="data.saves.{{s}}.proficient" type="checkbox" {{checked save.proficient}}>
+        <input name="data.saves.{{s}}.value" class="w30" value="{{save.value}}">
+        <a type="roll" class="txt-btn" data-bonus="data.saves.{{s}}.value">{{lookup ../config.saves s}}</a>
+      </div>
+    {{/each}}
   </section>
 
 
@@ -300,7 +239,7 @@
 
 <!-- attack1 -->
     <div class="rowflex nowrap">
-      <button name="roll_attack1" type="roll" title="%{attack1}" ></button>
+      <a name="roll_attack1" type="roll" title="%{attack1}" ></a>
       <input name="data.attack1" type="text" class="ml15" placeholder="Sidearm(Beretta M9)" value="{{data.attack1}}">
     </div>
     <div>
@@ -324,7 +263,7 @@
 
 <!-- attack2 -->
     <div class="rowflex nowrap">
-      <button name="roll_attack2" type="roll" title="%{attack2}" ></button>
+      <a name="roll_attack2" type="roll" title="%{attack2}" ></a>
       <input name="data.attack2" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack2}}">
     </div>
     <div>
@@ -348,7 +287,7 @@
 
 <!-- attack3 -->
     <div class="rowflex nowrap">
-      <button name="roll_attack3" type="roll" title="%{attack3}" ></button>
+      <a name="roll_attack3" type="roll" title="%{attack3}" ></a>
       <input name="data.attack3" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack3}}">
     </div>
     <div>
@@ -372,7 +311,7 @@
 
 <!-- attack4 -->
     <div class="rowflex nowrap">
-      <button name="roll_attack4" type="roll" title="%{attack4}" ></button>
+      <a name="roll_attack4" type="roll" title="%{attack4}" ></a>
       <input name="data.attack4" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack4}}">
     </div>
     <div>
@@ -396,7 +335,7 @@
 
 <!-- attack5 -->
     <div class="rowflex nowrap">
-      <button name="roll_attack5" type="roll" title="%{attack5}" ></button>
+      <a name="roll_attack5" type="roll" title="%{attack5}" ></a>
       <input name="data.attack5" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack5}}">
     </div>
     <div>
@@ -425,36 +364,36 @@
 <!--  --------------------------------------------------------------------------------- -->
 <!--  --------------------------- PAGE 2 ---------------------------------------------- -->
 <!--  --------------------------------------------------------------------------------- -->
-<main class="background tab-content tab2 page2">
+<main class="background tab-content tab2 page2 tab" data-tab="background">
 
   <section class="racial_abilities columnflex nowrap center">
     <label>Racial Abilities</label>
-    <textarea name="data.racial"></textarea>
+    {{editor content=data.abilities.racial target="data.abilities.racial" button=true owner=owner editable=editable rollData=rollData}}
   </section>
 
   <section class="feats columnflex nowrap center">
     <label>Feats</label>
-    <textarea name="data.feats"></textarea>
+    {{editor content=data.abilities.feats target="data.abilities.feats" button=true owner=owner editable=editable rollData=rollData}}
   </section>
 
   <section class="class columnflex nowrap center">
     <label>Class Abilities</label>
-    <textarea name="data.class_abilities"></textarea>
+    {{editor content=data.abilities.class target="data.abilities.class" button=true owner=owner editable=editable rollData=rollData}}
   </section>
 
   <section class="equipment columnflex nowrap center">
     <label>Equipment</label>
-    <textarea name="data.equipment"></textarea>
+    {{editor content=data.abilities.equipment target="data.abilities.equipment" button=true owner=owner editable=editable rollData=rollData}}
   </section>
 
   <section class="prof columnflex nowrap center">
     <label>Proficiencies</label>
-    <textarea name="data.proficiencies"></textarea>
+    {{editor content=data.abilities.proficiencies target="data.abilities.proficiencies" button=true owner=owner editable=editable rollData=rollData}}
   </section>
 
-  <section class="notes columnflex nowrap center">
+  <section class="bg_notes columnflex nowrap center">
     <label>Notes</label>
-    <textarea name="data.notes"></textarea>
+    {{editor content=data.abilities.notes target="data.abilities.notes" button=true owner=owner editable=editable rollData=rollData}}
   </section>
 
 
@@ -464,8 +403,9 @@
 <!--  --------------------------- PAGE 3 ---------------------------------------------- -->
 <!--  --------------------------------------------------------------------------------- -->
 
-
-<main class="settings tab-content tab3 page3">
+<!--
+  
+<main class="settings tab-content tab3 page3 tab" data-tab="settings">
 
   <section class="settings columnflex nowrap center">
     <label>Settings</label>
@@ -484,27 +424,27 @@
     </div>
 
     <div class="rowflex nowrap">
-      <button name="roll_hd" type="roll" title="%{hd}" >Short Rest</button>
-      <button name="roll_longrest" type="roll" title="%{longrest}" >Long Rest</button>
-      <button name="roll_td" type="roll" title="%{td}" >Tension Dice</button>
+      <a name="roll_hd" type="roll" title="%{hd}" >Short Rest</a>
+      <a name="roll_longrest" type="roll" title="%{longrest}" >Long Rest</a>
+      <a name="roll_td" type="roll" title="%{td}" >Tension Dice</a>
     </div>
     <div class="rowflex nowrap">
       <label>Custom roll</label>
     </div>
     <div class="rowflex nowrap">
-      <button name="roll_custom1" type="roll" value="@{whisper}@{custom1}"></button>
+      <a name="roll_custom1" type="roll" value="@{whisper}@{custom1}"></a>
       <input type="text" name="data.custom1" >
     </div>
     <div class="rowflex nowrap">
-      <button name="roll_custom2" type="roll" value="@{whisper}@{custom2}"></button>
+      <a name="roll_custom2" type="roll" value="@{whisper}@{custom2}"></a>
       <input type="text" name="data.custom2" >
     </div>
     <div class="rowflex nowrap">
-      <button name="roll_custom3" type="roll" value="@{whisper}@{custom3}"></button>
+      <a name="roll_custom3" type="roll" value="@{whisper}@{custom3}"></a>
       <input type="text" name="data.custom3" >
     </div>
     <div class="rowflex nowrap">
-      <button name="roll_custom4" type="roll" value="@{whisper}@{custom4}"></button>
+      <a name="roll_custom4" type="roll" value="@{whisper}@{custom4}"></a>
       <input type="text" name="data.custom4" >
     </div>
   </section>
@@ -524,15 +464,7 @@
   </section>
 
   <section class="changelog columnflex nowrap center">
-    <img class="sheet-phoenix" src="https://raw.githubusercontent.com/Anduh/roll20-character-sheets/stargate-147/Stargate-RPG/images/SG-phoenix.png" alt="Stargate Phoenix logo">
-    <button name="roll_help" type="roll" class="txt-btn" >More Info</button>
-    <label>Changelog v.1.55(Nov. 3rd)</label>
-    <span>* more stats to track on Settings page</span>
-    <label>Changelog v.1.50(Oct. 20th)</label>
-    <span>* add Stargate Phoenix image to roll template<br>
-      * integrate ChatSetAttr commands to Short/Long Rest buttons<br>
-      * added whisper toggle to Saves<br>
-      * Link to sheet wiki page (button on settings page)</span>
+
   </section>
 
 
@@ -586,4 +518,6 @@
   </div>
 
 </main>
+-->
+</div>
 </form>

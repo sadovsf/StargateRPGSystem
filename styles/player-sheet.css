@@ -19,7 +19,7 @@
 .charsheet input[type="number"].progress-bar {
     border: 2px solid black;
 }
-.charsheet button.hidden {
+.charsheet a.hidden {
     display: none;
 }
 .charsheet .bold {
@@ -110,27 +110,27 @@
 .charsheet textarea:focus, .charsheet input[type="text"]:focus, .charsheet input[type="number"]:focus {
     background-color: #ccc;
 }
-.charsheet input[type=number]::-webkit-inner-spin-button, .charsheet input[type=number]::-webkit-outer-spin-button, .charsheet input[type=number].txtfield::-webkit-inner-spin-button, .charsheet input[type=number].txtfield::-webkit-outer-spin-button {
+.charsheet input[type=number]::-webkit-inner-spin-a, .charsheet input[type=number]::-webkit-outer-spin-a, .charsheet input[type=number].txtfield::-webkit-inner-spin-a, .charsheet input[type=number].txtfield::-webkit-outer-spin-a {
     -webkit-appearance: none;
     margin: 0;
 }
 .charsheet input[type=number], .charsheet input[type=number].txtfield {
     -moz-appearance: textfield;
 }
-.charsheet button[type="roll"].txt-btn {
+.charsheet a[type="roll"].txt-btn {
     height: 25px;
     line-height: unset;
-    font-size:14px;
+    font-size: 14px;
     border: 2px solid black;
     background-color: transparent;
     margin-left: 5px;
     font-weight: bold;
-    /* padding: 2px 5px 4px 5px; */
+    padding: 2px 5px 4px 5px;
 }
-.charsheet button[type="roll"].txt-btn:before {
+.charsheet a[type="roll"].txt-btn:before {
     content: ' ';
 }
-.charsheet button[type="roll"].txt-btn:hover {
+.charsheet a[type="roll"].txt-btn:hover {
     background-color: #87afc7;
     background-position: 0 -28px;
 }
@@ -250,7 +250,7 @@
 .charsheet input.tabstoggle[value="character"] ~ main.character, .charsheet input.tabstoggle[value="background"] ~ main.background, .charsheet input.tabstoggle[value="settings"] ~ main.settings {
     display: grid;
 }
-.charsheet div.tab-buttons {
+.charsheet div.tab-as {
     display: flex;
     gap: 10px;
 }
@@ -264,7 +264,7 @@
     padding-left: 10px;
 }
 .charsheet section.name div select {
-    width: 50px;
+    width: 60px;
     margin-left: 14px;
 }
 .charsheet section.name input[type="number"] {
@@ -305,7 +305,7 @@
     font-weight: bold;
     font-size: 1.5em;
 }
-.charsheet .attr button[type="roll"].large {
+.charsheet .attr a[type="roll"].large {
     font-size: 16px;
     margin-top: -5px;
     border-radius: 15px;
@@ -344,7 +344,7 @@
 .charsheet section.skills .mod {
     margin: 0px 4px 0px 4px;
 }
-.charsheet section.skills button[type="roll"] {
+.charsheet section.skills a[type="roll"] {
     margin-right: 0px;
     text-transform: uppercase;
     /* font-size: 1.2em; */
@@ -418,7 +418,7 @@
     padding-left: 2px;
     padding-right: 2px;
 }
-.charsheet div.prof .init button {
+.charsheet div.prof .init a {
     width: 63px;
     margin-left: 0px;
     padding-right: 7px;
@@ -539,7 +539,7 @@
 .charsheet section.attacks span {
     height: 25px;
 }
-.charsheet section.attacks div button[type="roll"] {
+.charsheet section.attacks div a[type="roll"] {
     height: 20px;
 }
 .charsheet section.attacks div input[type="text"] {
@@ -604,4 +604,19 @@
 }
 .charsheet div.ammo div {
     margin: 7px 1px 7px 1px;
+}
+
+.charsheet .tab[data-tab].active {
+    display: grid;
+}
+
+.charsheet section.condition label {
+    font-size: 0.9em;
+    font-weight: bold;
+    width: unset;
+}
+
+.charsheet main.background div.editor {
+    width: 100%;
+    height: 100%;
 }
