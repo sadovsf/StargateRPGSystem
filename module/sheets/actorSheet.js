@@ -179,7 +179,7 @@ export default class SGActorSheet extends ActorSheet {
     _onItemEdit(event) {
         event.preventDefault();
         const div = event.currentTarget.parentElement.parentElement;
-        const item = this.actor.items.get(div.dataset.itemid);
+        const item = this.actor.items.get(div.dataset.itemId);
         return item.sheet.render(true);
     }
 
@@ -193,7 +193,7 @@ export default class SGActorSheet extends ActorSheet {
     _onItemDelete(event) {
         event.preventDefault();
         const div = event.currentTarget.parentElement.parentElement;
-        const item = this.actor.items.get(div.dataset.itemid);
+        const item = this.actor.items.get(div.dataset.itemId);
         if ( item ) return item.delete();
     }
 
@@ -302,7 +302,7 @@ export default class SGActorSheet extends ActorSheet {
     }
 
     async _roll_attack(event) {
-        const weaponId = event.currentTarget.parentElement.parentElement.dataset.itemid;
+        const weaponId = event.currentTarget.parentElement.parentElement.dataset.itemId;
         const item = this.actor.items.get(weaponId);
         if (! item) {
             throw new Error("No item selected!");
