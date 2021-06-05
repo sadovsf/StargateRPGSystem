@@ -1,9 +1,83 @@
-<form class="{{cssClass}}" autocomplete="off">
+<form class="{{cssClass}} flexcol itemsheet" autocomplete="off">
+    {{!-- Sheet Header --}}
     <header class="sheet-header">
-        <img src="{{item.img}}" data-edit="img" title="{{item.name}}" height="64" width="64"/>
-        <h1><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        {{!-- Header stuff goes here --}}
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            <div class="resources grid grid-2col">
+                <div class="resource flex-group-center">
+                    <label for="data.dmg" class="resource-label">Damage</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.dmg" value="{{data.dmg}}" data-dtype="String"/>
+                    </div>
+                </div>
+                <div class="resource flex-group-center">
+                    <label for="data.toHit" class="resource-label">To hit</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.toHit" value="{{data.toHit}}" data-dtype="String"/>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
-    <div>
-        DAMAGE: {{data.damage}}
-    </div>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item active" data-tab="description">Description</a>
+        <a class="item" data-tab="details">Details</a>
+    </nav>
+
+    <section class="sheet-body flexrow">
+        <div class="tab flexrow details" data-tab="details">
+            <div class="grid grid-2col">
+                <div class="flexcol details-column">
+                    {{!-- Attack details left column --}}
+                    <div class="details-entry grid grid-2col">
+                        <label class="attribute-label" for="data.details.type">Attack type</label>
+                        <select name="data.details.type">
+                            {{selectOptions config.attackTypes selected=data.details.type localize=false}}
+                        </select>
+                    </div>
+
+                    <div class="details-entry grid grid-2col">
+                        <label class="attribute-label" for="data.attackAbility">Attack mod</label>
+                        <select name="data.attackAbility">
+                            {{selectOptions config.abilities selected=data.attackAbility localize=false}}
+                        </select>
+                    </div>
+
+                    <div class="details-entry grid grid-2col">
+                        <label class="attribute-label" for="data.details.range.normal">Range</label>
+                        <div class="flexrow flex-center flex-between">
+                            <input type="text" name="data.details.range.normal" value="{{data.details.range.normal}}" data-dtype="Number"/>
+                            <span> / </span>
+                            <input type="text" name="data.details.range.max" value="{{data.details.range.max}}" data-dtype="Number"/>
+                        </div>
+                    </div>
+                    <div class="flex1"></div>
+                </div>
+
+                <div class="flexcol details-column">
+                    {{!-- Attack details right column --}}
+                    <div class="details-entry grid grid-2col">
+                        <label class="attribute-label" for="data.details.special">Special</label>
+                        <input type="text" name="data.details.special" value="{{data.details.special}}" data-dtype="String"/>
+                    </div>
+
+                    <div class="details-entry grid grid-2col">
+                        <label class="attribute-label" for="data.ammo">Ammo</label>
+                        <input type="text" name="data.ammo" value="{{data.ammo}}" data-dtype="Number"/>
+                    </div>
+                    <div class="details-entry grid grid-2col">
+                        <label class="attribute-label" for="data.isProficient">Has proficiency</label>
+                        <input type="checkbox" name="data.isProficient" {{checked data.isProficient}} />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab flexrow description" data-tab="description">
+            {{editor content=data.description target="data.description" button=true owner=owner editable=editable rollData=rollData}}
+        </div>
+    </section>
 </form>

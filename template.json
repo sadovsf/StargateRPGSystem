@@ -20,9 +20,15 @@
                 "condition": "normal",
                 "prof": 2,
                 "initiative": 0,
+                "moxie": 0,
                 "bulk": 8,
                 "ac": 10,
                 "speed": 6,
+
+                "deathSaves": {
+                    "sucesses": 0,
+                    "fails": 0
+                },
 
                 "attributes": {
                     "str": {
@@ -220,6 +226,31 @@
     },
 
     "Item": {
+        "types": ["weapon"],
+        "templates": {
+            "common": {
+                "description": "",
+                "bulk": 1,
+                "isProficient": true
+            },
+            "attack": {
+                "attackAbility": "dex",
+                "toHit": "4",
+                "dmg": "1d6",
+                "ammo": 10,
+                "details": {
+                    "type": "piercing",
+                    "range": {
+                        "normal": 50,
+                        "max": 100
+                    },
+                    "special": ""
+                }
+            }
+        },
 
+        "weapon": {
+            "templates": ["common", "attack"]
+        }
     }
 }

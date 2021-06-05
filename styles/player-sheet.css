@@ -117,7 +117,7 @@
 .charsheet input[type=number], .charsheet input[type=number].txtfield {
     -moz-appearance: textfield;
 }
-.charsheet a[type="roll"].txt-btn {
+.charsheet a[type^="roll"].txt-btn {
     height: 25px;
     line-height: unset;
     font-size: 14px;
@@ -127,10 +127,10 @@
     font-weight: bold;
     padding: 2px 5px 4px 5px;
 }
-.charsheet a[type="roll"].txt-btn:before {
+.charsheet a[type^="roll"].txt-btn:before {
     content: ' ';
 }
-.charsheet a[type="roll"].txt-btn:hover {
+.charsheet a[type^="roll"].txt-btn:hover {
     background-color: #87afc7;
     background-position: 0 -28px;
 }
@@ -619,4 +619,18 @@
 .charsheet main.background div.editor {
     width: 100%;
     height: 100%;
+}
+
+.charsheet .item-image {
+    width: 28px;
+    height: 28px;
+    background-color: black;
+    padding: 2px;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+.charsheet .inventory-item {
+    line-height: 1.9em;
+    margin: 0px;
 }

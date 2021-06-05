@@ -9,16 +9,17 @@
     "scripts": [
     ],
     "esmodules": [
-        "stargate_rpg_system.js"
+        "sgrpg.js"
     ],
     "styles": [
-        "styles/player-sheet.css"
+        "styles/player-sheet.css",
+        "styles/item-sheet.css"
     ],
     "packs": [],
     "dependencies": [],
     "languages": [],
     "socket": false,
-    "initiative": "1d20",
+    "initiative": "1d20 + @initiative",
     "gridDistance": 1,
     "gridUnits": "m",
     "primaryTokenAttribute": "attributes.health",

@@ -141,11 +141,11 @@
       <input name="data.prof" type="number" class="stat w40" value="{{data.prof}}">
     </div>
     <div class="section columnflex nowrap middle center init">
-      <a name="roll_init" type="roll" class="txt-btn">Initiative</a>
-      <input name="data.init" type="number" class="stat w40" value="{{data.init}}">
+      <a type="roll_init" class="txt-btn">Initiative</a>
+      <input name="data.initiative" type="number" class="stat w40" value="{{data.init}}">
     </div>
     <div class="section columnflex nowrap middle center moxie">
-      <a name="roll_moxie" type="roll" class="txt-btn">Moxie</a>
+      <a type="roll_moxie" class="txt-btn">Moxie</a>
       <input name="data.moxie" type="number" class="stat w40"value="{{data.moxie}}">
     </div>
   </div>
@@ -177,17 +177,17 @@
       <input name="data.speed" type="text" class="w70 stat" value="{{data.speed}}">
     </div>
     <div class="section death columnflex nowrap middle center">
-      <a name="roll_deathsave" type="roll" title="%{deathsave}" class="txt-btn large">Death Save</a>
+      <a type="roll_deathsave" class="txt-btn large">Death Save</a>
       <div class="rowflex nowrap">
-        <input name="data.death_success1" type="checkbox" value="{{data.death_success1}}">
-        <input name="data.death_success2" type="checkbox" value="{{data.death_success2}}">
-        <input name="data.death_success3" type="checkbox" value="{{data.death_success3}}">
+        <input class="death-save-checkbox sucess" type="checkbox" {{checked death_success1}}>
+        <input class="death-save-checkbox sucess" type="checkbox" {{checked death_success2}}>
+        <input class="death-save-checkbox sucess" type="checkbox" {{checked death_success3}}>
         <span>Sucesses</span>
       </div>
       <div class="rowflex nowrap">
-        <input name="data.death_failure1" type="checkbox"  value="{{data.death_failure1}}">
-        <input name="data.death_failure2" type="checkbox"  value="{{data.death_failure2}}">
-        <input name="data.death_failure3" type="checkbox"  value="{{data.death_failure3}}">
+        <input type="checkbox" class="death-save-checkbox fail" {{checked death_failure1}}>
+        <input type="checkbox" class="death-save-checkbox fail" {{checked death_failure2}}>
+        <input type="checkbox" class="death-save-checkbox fail" {{checked death_failure3}}>
         <span>Failures</span>
       </div>
     </div>
@@ -221,142 +221,58 @@
 
 <!-- inventory mini -->
 
-  <section class="inventory columnflex nowrap center">
-    <h4>Inventory</h4>
-    <textarea name="data.inventory" title="@{inventory}"></textarea>
+  <section class="inventory flexcol nowrap center">
+    <h4 class="flex0">Notes</h4>
+    <div class="flexrow flex1" style="width: 100%">
+      <textarea name="data.abilities.notes">{{data.abilities.notes}}</textarea>
+    </div>
   </section>
 
 <!-- attacks -->
 
   <section class="attacks">
-    <span class="name bold">Attack/Action Name</span>
-    <span class="bold">to hit</span>
-    <span class="bold pl20">dmg</span>
-    <span class="bold dmg-type">type</span>
-    <span class="bold">range</span>
-    <span class="bold">Cap/Reload</span>
-    <span class="bold pl20">special</span>
-
-<!-- attack1 -->
-    <div class="rowflex nowrap">
-      <a name="roll_attack1" type="roll" title="%{attack1}" ></a>
-      <input name="data.attack1" type="text" class="ml15" placeholder="Sidearm(Beretta M9)" value="{{data.attack1}}">
-    </div>
-    <div>
-      <input name="data.attack1_to_hit" type="text" class="w40" placeholder="4" value="{{data.attack1_to_hit}}">
-    </div>
-    <div>
-      <input name="data.attack1_dmg" type="text" class="w70 mr15" placeholder="1d6" value="{{data.attack1_dmg}}">
-    </div>
-    <div>
-      <input name="data.attack1_dmgtype" type="text" class="w50" placeholder="piercing" value="{{data.attack1_dmgtype}}">
-    </div>
-    <div>
-      <input name="data.attack1_range" type="text" class="w50" placeholder="50/100" value="{{data.attack1_range}}">
-    </div>
-    <div>
-      <input name="data.attack1_reload" type="text" class="w50" placeholder="15/1" value="{{data.attack1_reload}}">
-    </div>
-    <div>
-      <input name="data.attack1_special" type="text" class="w110 mr15" value="{{data.attack1_special}}">
+    <div class="header grid grid-8col">
+      <span class="bold">Weapon</span>
+      <span class="bold">To hit</span>
+      <span class="bold">DMG</span>
+      <span class="bold">Type</span>
+      <span class="bold">Range</span>
+      <span class="bold">Special</span>
+      <span class="bold">Ammo</span>
+      <span></span>
     </div>
 
-<!-- attack2 -->
-    <div class="rowflex nowrap">
-      <a name="roll_attack2" type="roll" title="%{attack2}" ></a>
-      <input name="data.attack2" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack2}}">
+<!-- attacks -->
+    {{#each items as |item|}}
+    <div class="grid grid-8col inventory-item" data-itemId="{{item._id}}">
+      <div class="rowflex nowrap">
+        <img class="item-image" src="{{item.img}}">
+        <a type="roll_attack">{{item.name}}</a>
+      </div>
+      <div>
+        <span>{{item.data.toHit}}</span>
+      </div>
+      <div>
+        <span>{{item.data.dmg}}</span>
+      </div>
+      <div>
+        <span>{{item.data.details.type}}</span>
+      </div>
+      <div>
+        <span>{{item.data.details.range.normal}}/{{item.data.details.range.max}}</span>
+      </div>
+      <div>
+        <span>{{item.data.details.special}}</span>
+      </div>
+      <div>
+        <span>{{item.data.ammo}}</span>
+      </div>
+      <div>
+        <a class="item-control item-edit"><i class="fas fa-edit"></i></a>
+        <a class="item-control item-delete"><i class="fas fa-trash"></i></a>
+      </div>
     </div>
-    <div>
-      <input name="data.attack2_to_hit" type="text" class="w40" placeholder="4" value="{{data.attack2_to_hit}}">
-    </div>
-    <div>
-      <input name="data.attack2_dmg" type="text" class="w70 mr15" placeholder="1d6" value="{{data.attack2_dmg}}">
-    </div>
-    <div>
-      <input name="data.attack2_dmgtype" type="text" class="w50" value="{{data.attack2_dmgtype}}">
-    </div>
-    <div>
-      <input name="data.attack2_range" type="text" class="w50" value="{{data.attack2_range}}">
-    </div>
-    <div>
-      <input name="data.attack2_reload" type="text" class="w50" value="{{data.attack2_reload}}">
-    </div>
-    <div>
-      <input name="data.attack2_special" type="text" class="w110 mr15" value="{{data.attack2_special}}">
-    </div>
-
-<!-- attack3 -->
-    <div class="rowflex nowrap">
-      <a name="roll_attack3" type="roll" title="%{attack3}" ></a>
-      <input name="data.attack3" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack3}}">
-    </div>
-    <div>
-      <input name="data.attack3_to_hit" type="text" class="w40" placeholder="4" value="{{data.attack3_to_hit}}">
-    </div>
-    <div>
-      <input name="data.attack3_dmg" type="text" class="w70 mr15" placeholder="1d6" value="{{data.attack3_dmg}}">
-    </div>
-    <div>
-      <input name="data.attack3_dmgtype" type="text" class="w50" value="{{data.attack3_dmgtype}}">
-    </div>
-    <div>
-      <input name="data.attack3_range" type="text" class="w50" value="{{data.attack3_range}}">
-    </div>
-    <div>
-      <input name="data.attack3_reload" type="text" class="w50" value="{{data.attack3_reload}}">
-    </div>
-    <div>
-      <input name="data.attack3_special" type="text" class="w110 mr15" value="{{data.attack3_special}}">
-    </div>
-
-<!-- attack4 -->
-    <div class="rowflex nowrap">
-      <a name="roll_attack4" type="roll" title="%{attack4}" ></a>
-      <input name="data.attack4" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack4}}">
-    </div>
-    <div>
-      <input name="data.attack4_to_hit" type="text" class="w40" placeholder="4" value="{{data.attack4_to_hit}}">
-    </div>
-    <div>
-      <input name="data.attack4_dmg" type="text" class="w70 mr15" placeholder="1d6" value="{{data.attack4_dmg}}">
-    </div>
-    <div>
-      <input name="data.attack4_dmgtype" type="text" class="w50" value="{{data.attack4_dmgtype}}">
-    </div>
-    <div>
-      <input name="data.attack4_range" type="text" class="w50" value="{{data.attack4_range}}">
-    </div>
-    <div>
-      <input name="data.attack4_reload" type="text" class="w50" value="{{data.attack4_reload}}">
-    </div>
-    <div>
-      <input name="data.attack4_special" type="text" class="w110 mr15" value="{{data.attack4_special}}">
-    </div>
-
-<!-- attack5 -->
-    <div class="rowflex nowrap">
-      <a name="roll_attack5" type="roll" title="%{attack5}" ></a>
-      <input name="data.attack5" type="text" class="ml15" placeholder="attack/action name" value="{{data.attack5}}">
-    </div>
-    <div>
-      <input name="data.attack5_to_hit" type="text" class="w40" placeholder="4" value="{{data.attack5_to_hit}}">
-    </div>
-    <div>
-      <input name="data.attack5_dmg" type="text" class="w70 mr15" placeholder="1d6+@{td}" value="{{data.attack5_dmg}}">
-    </div>
-    <div>
-      <input name="data.attack5_dmgtype" type="text" class="w50" value="{{data.attack5_dmgtype}}">
-    </div>
-    <div>
-      <input name="data.attack5_range" type="text" class="w50" value="{{data.attack5_range}}">
-    </div>
-    <div>
-      <input name="data.attack5_reload" type="text" class="w50" value="{{data.attack5_reload}}">
-    </div>
-    <div>
-      <input name="data.attack5_special" type="text" class="w110 mr15" value="{{data.attack5_special}}">
-    </div>
-
+    {{/each}}
   </section>
 
 </main>
@@ -391,11 +307,6 @@
     {{editor content=data.abilities.proficiencies target="data.abilities.proficiencies" button=true owner=owner editable=editable rollData=rollData}}
   </section>
 
-  <section class="bg_notes columnflex nowrap center">
-    <label>Notes</label>
-    {{editor content=data.abilities.notes target="data.abilities.notes" button=true owner=owner editable=editable rollData=rollData}}
-  </section>
-
 
 </main>
 
@@ -404,7 +315,7 @@
 <!--  --------------------------------------------------------------------------------- -->
 
 <!--
-  
+
 <main class="settings tab-content tab3 page3 tab" data-tab="settings">
 
   <section class="settings columnflex nowrap center">

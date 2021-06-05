@@ -8,11 +8,24 @@ export default class SGActorSheet extends ActorSheet {
         });
 
         // https://foundryvtt.wiki/en/development/guides/SD-tutorial/SD07-Extending-the-ActorSheet-class
-
     }
 
     get template() {
         return `systems/stargate_rpg_system/templates/sheets/${this.actor.data.type}-sheet.hbs`;
+    }
+
+
+    /**
+     * Prepare Character type specific data
+     */
+    _prepareCharacterData(actorData) {
+        const data = actorData.data;
+
+        // Loop through ability scores, and add their modifiers to our sheet output.
+        for (let [key, ability] of Object.entries(data.attributes)) {
+            // Calculate the modifier using d20 rules.
+            ability.mod = Math.floor((ability.value - 10) / 2);
+        }
     }
 
     getData(options) {
@@ -26,7 +39,6 @@ export default class SGActorSheet extends ActorSheet {
           isCharacter: this.actor.type === "character",
           isNPC: this.actor.type === "npc",
           isVehicle: this.actor.type === 'vehicle',
-          config: CONFIG.DND5E,
           rollData: this.actor.getRollData.bind(this.actor)
         };
 
@@ -34,6 +46,17 @@ export default class SGActorSheet extends ActorSheet {
         const actorData = this.actor.data.toObject(false);
         data.actor = actorData;
         data.data = actorData.data;
+
+        data.items = actorData.items;
+        data.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+
+        data.death_success1 = data.data.deathSaves.sucesses > 0;
+        data.death_success2 = data.data.deathSaves.sucesses > 1;
+        data.death_success3 = data.data.deathSaves.sucesses > 2;
+
+        data.death_failure1 = data.data.deathSaves.fails > 0;
+        data.death_failure2 = data.data.deathSaves.fails > 1;
+        data.death_failure3 = data.data.deathSaves.fails > 2;
 
         data.config = {
             tensionDice: {
@@ -52,17 +75,10 @@ export default class SGActorSheet extends ActorSheet {
                 speedzero: "Speed zero",
                 death: "Death"
             },
-            saves: {
-                str: "Strength",
-                dex: "Dexterity",
-                con: "Constitution",
-                int: "Inteligence",
-                wis: "Wisdom",
-                cha: "Charisma"
-            }
+            saves: CONFIG.SGRPG.abilities
         },
 
-        console.log(data.data);
+        console.log(data);
         return data;
     }
 
@@ -76,10 +92,20 @@ export default class SGActorSheet extends ActorSheet {
 
         // Rollable skill checks
         html.find('a.txt-btn[type="roll"]').click(event => this._onRollCheck(event));
+        html.find('a.txt-btn[type="roll_deathsave"]').click(event => this._onRollDeathSave(event));
+        html.find('a.txt-btn[type="roll_init"]').click(event => this._roll_initiative(event));
+        html.find('a.txt-btn[type="roll_moxie"]').click(event => this._roll_moxie(event));
+        html.find('a[type="roll_attack"]').click(event => this._roll_attack(event));
+
         html.find('div.attr input').change(this._onChangeAttrValue.bind(this));
-        html.find('section.skills div input[type="checkbox"]').click(event => this._onToggleAbilityProficiency(event))
-        html.find('section.saves div input[type="checkbox"]').click(event => this._onToggleAbilityProficiency(event))
-        html.find('div.prof div.section input[name="data.prof"]').change(event => this._onProfChanged(event))
+        html.find('section.skills div input[type="checkbox"]').click(event => this._onToggleAbilityProficiency(event));
+        html.find('section.saves div input[type="checkbox"]').click(event => this._onToggleAbilityProficiency(event));
+        html.find('div.prof div.section input[name="data.prof"]').change(event => this._onProfChanged(event));
+
+        html.find('.item-edit').click(event => this._onItemEdit(event));
+        html.find('.item-delete').click(event => this._onItemDelete(event));
+
+        html.find(".death-save-checkbox").change(event => this._onDeathSaveCheckboxChanged(event));
     }
 
     async _onChangeAttrValue(event) {
@@ -146,11 +172,37 @@ export default class SGActorSheet extends ActorSheet {
     }
 
     /**
+     * Handle editing an existing Owned Item for the Actor
+     * @param {Event} event   The originating click event
+     * @private
+     */
+    _onItemEdit(event) {
+        event.preventDefault();
+        const div = event.currentTarget.parentElement.parentElement;
+        const item = this.actor.items.get(div.dataset.itemid);
+        return item.sheet.render(true);
+    }
+
+    /* -------------------------------------------- */
+
+    /**
+     * Handle deleting an existing Owned Item for the Actor
+     * @param {Event} event   The originating click event
+     * @private
+     */
+    _onItemDelete(event) {
+        event.preventDefault();
+        const div = event.currentTarget.parentElement.parentElement;
+        const item = this.actor.items.get(div.dataset.itemid);
+        if ( item ) return item.delete();
+    }
+
+    /**
      * Handle toggling Ability score proficiency level
      * @param {Event} event     The originating click event
      * @private
      */
-     _onRollCheck(event) {
+     async _onRollCheck(event) {
         event.preventDefault();
 
         let actorData = this.getData();
@@ -162,15 +214,142 @@ export default class SGActorSheet extends ActorSheet {
             rollData = "+" + rollData;
         }
 
-        let r = new Roll("1d20 @prof", {prof: rollData});
-        // Execute the roll.
-        r.evaluate();
+
+        let r = new CONFIG.Dice.D20Roll("1d20 @prof", {prof: rollData});
+        const configured = await r.configureDialog({
+            title: `Roll check for ${event.currentTarget.innerText}`,
+            defaultRollMode: "normal"
+        });
+        if (configured === null) {
+            return;
+        }
 
         // Print roll to console.
         r.toMessage({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             flavor: event.currentTarget.innerText
         });
+    }
+
+    _onRollDeathSave(event) {
+        event.preventDefault();
+
+        let r = new Roll("1d20");
+        r.evaluate();
+        const rollResult = r.total;
+
+        const data = this.actor.data.data.deathSaves;
+        const curSucess = parseInt(data.sucesses);
+        const curFails = parseInt(data.fails);
+        const curHealth = parseInt(this.actor.data.data.health.value);
+
+        if (rollResult == 1) {
+            // 2 fails.
+            if (curHealth == 0 && curFails >= 1) {
+                this.actor.update({
+                    "data.deathSaves.fails": curFails + 2,
+                    "data.condition": "death"
+                });
+            } else {
+                this.actor.update({["data.deathSaves.fails"]: curFails + 2 });
+            }
+        }
+        else if(rollResult == 20) {
+            // sucess + heal.
+            const maxHealth = parseInt(this.actor.data.data.health.max);
+            this.actor.update({
+                "data.deathSaves.fails": 0,
+                "data.deathSaves.sucesses": 0,
+                "data.health.value": curHealth+1 <= maxHealth ? curHealth+1 : curHealth
+            });
+        }
+        else if (rollResult >= 10) {
+            // sucess.
+            if (curSucess >= 2) {
+                this.actor.update({
+                    "data.deathSaves.fails": 0,
+                    "data.deathSaves.sucesses": 0
+                });
+            }
+            else {
+                this.actor.update({[`data.deathSaves.sucesses`]: curSucess + 1 });
+            }
+        }
+        else {
+            // fail.
+            if (curHealth == 0 && curFails >= 2) {
+                this.actor.update({
+                    "data.deathSaves.fails": curFails + 1,
+                    "data.condition": "death"
+                });
+            } else {
+                this.actor.update({["data.deathSaves.fails"]: curFails + 1 });
+            }
+        }
+
+        r.toMessage({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            flavor: "Death save"
+        });
+    }
+
+    _roll_initiative(event) {
+        return this.actor.rollInitiative({createCombatants: true});
+    }
+
+    _roll_moxie(event) {
+        
+    }
+
+    async _roll_attack(event) {
+        const weaponId = event.currentTarget.parentElement.parentElement.dataset.itemid;
+        const item = this.actor.items.get(weaponId);
+        if (! item) {
+            throw new Error("No item selected!");
+        }
+        const abilityName = item.data.data.attackAbility;
+        console.log(abilityName);
+        const abilityMod = this.actor.data.data.attributes[abilityName].mod;
+
+        const isProf = item.data.data.isProficient;
+
+        let rollMacro = `1d20 + @abilityMod`;
+        if (isProf) {
+            rollMacro += " + @profBonus "
+        }
+
+        const r = new CONFIG.Dice.D20Roll(rollMacro, {abilityMod: abilityMod, profBonus: this.actor.data.data.prof});
+        const configured = await r.configureDialog({
+            title: `Attack by ${item.data.name}`,
+            defaultRollMode: "normal"
+        });
+        if (configured === null) {
+            return;
+        }
+        
+        r.toMessage({
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            flavor: "Attacks using " + item.data.name
+        });
+    }
+
+    _onDeathSaveCheckboxChanged(event) {
+        event.preventDefault();
+
+        const isSucess = event.currentTarget.classList.contains("sucess");
+        const chbs = $(event.currentTarget.parentElement).find('input[type="checkbox"]');
+
+        let val = 0;
+        chbs.each((i, cb) => {
+            if (cb.checked) val++;
+        });
+
+        if (isSucess) {
+            return this.actor.update({"data.deathSaves.sucesses": val});
+        }
+        else {
+            return this.actor.update({"data.deathSaves.fails": val});
+        }
     }
 
     /**
