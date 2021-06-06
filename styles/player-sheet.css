@@ -633,4 +633,9 @@
 .charsheet .inventory-item {
     line-height: 1.9em;
     margin: 0px;
+    width: 100%;
+}
+
+.charsheet .inventory-item div {
+    flex: 0 0 auto;
 }

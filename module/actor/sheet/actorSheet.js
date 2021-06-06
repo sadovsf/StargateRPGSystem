@@ -50,7 +50,12 @@ export default class SGActorSheet extends ActorSheet {
         data.data = actorData.data;
 
         data.items = actorData.items;
+        for ( let i of data.items ) {
+          const item = this.actor.items.get(i._id);
+          i.labels = item.labels;
+        }
         data.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+        this._prepareItemData(data);
 
         data.death_success1 = data.data.deathSaves.sucesses > 0;
         data.death_success2 = data.data.deathSaves.sucesses > 1;
@@ -111,6 +116,25 @@ export default class SGActorSheet extends ActorSheet {
         html.find('a.config-button').click(this._onConfigMenu.bind(this));
 
         html.find(".death-save-checkbox").change(event => this._onDeathSaveCheckboxChanged(event));
+    }
+
+    _prepareItemData(data) {
+        let inventory = {
+            weapons: [],
+            equip: []
+        };
+
+        for(const it of data.items) {
+            switch(it.type) {
+                case "weapon":
+                    inventory.weapons.push(it);
+                    break;
+                case "equip":
+                    inventory.equip.push(it);
+                    break;
+            }
+        }
+        data.items = inventory;
     }
 
     async _onChangeAttrValue(event) {

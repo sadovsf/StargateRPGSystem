@@ -1,14 +1,18 @@
 import { SGRPG } from "./module/config.js";
-import { _getInitiativeFormula } from "./module/combat.js";
-import SGItemSheet from "./module/item/sheet/itemSheet.js";
-import SGActorSheet from "./module/actor/sheet/actorSheet.js";
-import D20Roll from "./module/dice/d20-roll.js";
-import DamageRoll from "./module/dice/damage-roll.js"
+
 import ItemSg from "./module/item/entity.js"
 import ActorSg from "./module/actor/entity.js"
 
+import SGItemSheet from "./module/item/sheet/itemSheet.js";
+import SGActorSheet from "./module/actor/sheet/actorSheet.js";
+
+import D20Roll from "./module/dice/d20-roll.js";
+import DamageRoll from "./module/dice/damage-roll.js"
+
 import * as chat from "./module/chat.js"
 import * as macros from "./module/macros.js"
+import { _getInitiativeFormula } from "./module/combat.js";
+import { preloadHandlebarsTemplates } from "./module/templates.js";
 
 Hooks.once("init", function(){
     console.log("Initializing StarGate systems");
@@ -35,6 +39,8 @@ Hooks.once("init", function(){
 
     Actors.unregisterSheet("core", ActorSheet);
     Actors.registerSheet("sgrpg", SGActorSheet, {makeDefault: true});
+
+    preloadHandlebarsTemplates()
 });
 
 Hooks.once("ready", function() {

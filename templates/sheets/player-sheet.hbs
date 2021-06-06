@@ -220,7 +220,7 @@
 
 
 
-<!-- inventory mini -->
+<!-- mini notes -->
 
   <section class="inventory flexcol nowrap center">
     <h4 class="flex0">Notes</h4>
@@ -244,7 +244,7 @@
     </div>
 
 <!-- attacks -->
-    {{#each items as |item|}}
+    {{#each items.weapons as |item|}}
     <div class="item grid grid-8col inventory-item" data-item-id="{{item._id}}" draggable="true">
       <div class="rowflex nowrap">
         <img class="item-image" src="{{item.img}}">
@@ -299,13 +299,32 @@
   </section>
 
   <section class="equipment columnflex nowrap center">
-    <label>Equipment</label>
+    <label>Equipment notes</label>
     {{editor content=data.abilities.equipment target="data.abilities.equipment" button=true owner=owner editable=editable rollData=rollData}}
   </section>
 
   <section class="prof columnflex nowrap center">
     <label>Proficiencies</label>
     {{editor content=data.abilities.proficiencies target="data.abilities.proficiencies" button=true owner=owner editable=editable rollData=rollData}}
+  </section>
+
+  <section class="equipment columnflex nowrap center item-list">
+    <label>Inventory</label>
+    {{#each items.equip as |item|}}
+    <div class="inventory-item flexrow" data-item-id="{{item._id}}">
+      <div>
+        <img class="item-image" src="{{item.img}}">
+      </div>
+      <div style="flex: 1">
+        {{item.name}}
+      </div>
+      <div>
+        <a class="item-control item-edit"><i class="fas fa-edit"></i></a>
+        <a class="item-control item-delete"><i class="fas fa-trash"></i></a>
+      </div>
+    </div>
+    {{/each}}
+    <div class="flex1"></div>
   </section>
 
 

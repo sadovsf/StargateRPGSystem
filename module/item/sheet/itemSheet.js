@@ -9,7 +9,7 @@ export default class SGItemSheet extends ItemSheet {
       }
 
     get template() {
-        return `systems/sgrpg/templates/sheets/${this.item.data.type}-sheet.hbs`;
+        return `systems/sgrpg/templates/sheets/item-sheet.hbs`;
     }
 
     getData(options) {
@@ -21,7 +21,8 @@ export default class SGItemSheet extends ItemSheet {
           editable: this.isEditable,
           cssClass: isOwner ? "editable" : "locked",
           rollData: this.item.getRollData.bind(this.item),
-          config: CONFIG.SGRPG
+          config: CONFIG.SGRPG,
+          isWeapon: this.item.type == "weapon"
         };
 
         // The Actor's data

@@ -226,7 +226,7 @@
     },
 
     "Item": {
-        "types": ["weapon"],
+        "types": ["weapon", "equip"],
         "templates": {
             "common": {
                 "description": "",
@@ -251,6 +251,10 @@
 
         "weapon": {
             "templates": ["common", "attack"]
+        },
+
+        "equip": {
+            "templates": ["common"]
         }
     }
 }
