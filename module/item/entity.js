@@ -1,7 +1,16 @@
-import {simplifyRollFormula} from "../dice/dice.js";
+import AbilityTemplate from "../pixi/ability-template.js";
 
 
 export default class ItemSg extends Item {
+
+    /**
+     * Does the Item have an area of effect target
+     * @type {boolean}
+     */
+    get hasAreaTarget() {
+        const target = this.data.data.target;
+        return target && (target.type in CONFIG.SGRPG.areaTargetTypes);
+    }
 
     async roll() {
         this.displayCard();
@@ -9,9 +18,15 @@ export default class ItemSg extends Item {
 
     async rollAttack() {
         const abilityName = this.data.data.attackAbility;
+        const hasAmmo = this.data.data.ammo !== null;
 
         if (! this.actor) {
             return ui.notifications.warn("You can only roll for owned items!");
+        }
+
+        if (hasAmmo && parseInt(this.data.data.ammo) == 0) {
+            // Item is using ammo but no ammunition is left.
+            return ui.notifications.warn("No more ammo for this item!");
         }
 
         const abilityMod = this.actor.data.data.attributes[abilityName].mod;
@@ -32,6 +47,16 @@ export default class ItemSg extends Item {
         });
         if (configured === null) {
             return;
+        }
+
+        // If item has some ammunition defined, consume 1.
+        if (hasAmmo) {
+            const remainingAmmo = parseInt(this.data.data.ammo);
+            if (remainingAmmo <= 0) {
+                // Double check that ammo count did not change while in dialog.
+                return ui.notifications.warn("No more ammo for this item!");
+            }
+            await this.update({"data.ammo": remainingAmmo - 1});
         }
 
         r.toMessage({
@@ -73,6 +98,7 @@ export default class ItemSg extends Item {
             tokenId: token?.uuid || null,
             item: this.data,
             data: this.getChatData(),
+            hasAreaTarget: game.user.can("TEMPLATE_CREATE") && this.hasAreaTarget,
         };
         const html = await renderTemplate("systems/sgrpg/templates/chat/item-card.html", templateData);
 
@@ -158,11 +184,14 @@ export default class ItemSg extends Item {
           case "attack":
             await item.rollAttack(event); break;
           case "damage":
-          case "versatile":
             await item.rollDamage({
               critical: event.altKey,
               event: event,
             });
+            break;
+          case "placeTemplate":
+            const template = AbilityTemplate.fromItem(item);
+            if ( template ) template.drawPreview();
             break;
         }
 

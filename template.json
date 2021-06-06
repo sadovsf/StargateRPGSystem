@@ -250,6 +250,11 @@
                         "max": 100
                     },
                     "special": ""
+                },
+                "target": {
+                    "value": null,
+                    "width": null,
+                    "type": ""
                 }
             }
         },

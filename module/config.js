@@ -30,6 +30,44 @@ SGRPG.sizes = {
 }
 
 
+/**
+ * This Object defines the types of single or area targets which can be applied
+ * @type {Object}
+ */
+ SGRPG.targetTypes = {
+  "none": "None",
+  "self": "Self",
+  "creature": "Creature",
+  "ally": "Ally",
+  "enemy": "Enemy",
+  "space": "Space",
+  "radius": "Radius",
+  "sphere": "Sphere",
+  "cylinder": "Cylinder",
+  "cone": "Cone",
+  "square": "Square",
+  "cube": "Cube",
+  "line": "Line",
+  "wall": "Wall"
+};
+
+/**
+ * Map the subset of target types which produce a template area of effect
+ * The keys are SGRPG target types and the values are MeasuredTemplate shape types
+ * @type {Object}
+ */
+ SGRPG.areaTargetTypes = {
+  cone: "cone",
+  cube: "rect",
+  cylinder: "circle",
+  line: "ray",
+  radius: "circle",
+  sphere: "circle",
+  square: "rect",
+  wall: "ray"
+};
+
+
 // Configure Optional Character Flags
 SGRPG.characterFlags = {
   "initiativeAdv": {

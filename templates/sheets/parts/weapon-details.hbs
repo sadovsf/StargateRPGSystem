@@ -23,6 +23,22 @@
                 <input type="text" name="data.details.range.max" value="{{data.details.range.max}}" data-dtype="Number"/>
             </div>
         </div>
+
+
+        <div class="details-entry grid grid-2col">
+            <label>Target</label>
+            <div class="form-fields">
+                <input type="text" name="data.target.value" style="width: 25%" value="{{data.target.value}}" data-dtype="Number" placeholder="-"/>
+                <select name="data.target.type" style="width: 75%">
+                    {{#select data.target.type}}
+                        <option value=""></option>
+                        {{#each config.targetTypes as |name key|}}
+                            <option value="{{key}}">{{name}}</option>
+                        {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+        </div>
         <div class="flex1"></div>
     </div>
 

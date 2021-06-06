@@ -26,6 +26,9 @@ Hooks.once("init", function(){
     CONFIG.Item.documentClass = ItemSg;
     CONFIG.Actor.documentClass = ActorSg;
 
+    // 5e cone RAW should be 53.13 degrees
+    CONFIG.MeasuredTemplate.defaults.angle = 53.13;
+
     CONFIG.Dice.D20Roll = D20Roll;
     CONFIG.Dice.DamageRoll = DamageRoll;
     CONFIG.Dice.rolls.push(D20Roll);

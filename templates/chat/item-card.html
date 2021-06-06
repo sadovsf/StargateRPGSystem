@@ -11,5 +11,8 @@
     <div class="card-buttons">
         <button data-action="attack">Attack</button>
         <button data-action="damage">Damage</button>
+        {{#if hasAreaTarget}}
+            <button data-action="placeTemplate">Place template</button>
+        {{/if}}
     </div>
 </div>
