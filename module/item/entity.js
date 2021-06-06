@@ -1,4 +1,4 @@
-
+import {simplifyRollFormula} from "../dice/dice.js";
 
 
 export default class ItemSg extends Item {
@@ -17,12 +17,15 @@ export default class ItemSg extends Item {
         const abilityMod = this.actor.data.data.attributes[abilityName].mod;
         const isProf = this.data.data.isProficient;
 
-        let rollMacro = `1d20 + @abilityMod`;
-        if (isProf) {
-            rollMacro += " + @profBonus "
+        let rollMacro = "1d20 + " + this.data.data.toHit;
+        if (abilityMod != 0) {
+            rollMacro += " + " + abilityMod;
+        }
+        if (isProf != 0) {
+            rollMacro += " + " + this.actor.data.data.prof;
         }
 
-        const r = new CONFIG.Dice.D20Roll(rollMacro, {abilityMod: abilityMod, profBonus: this.actor.data.data.prof});
+        const r = new CONFIG.Dice.D20Roll(rollMacro, this.actor.data.data);
         const configured = await r.configureDialog({
             title: `Attack by ${this.data.name}`,
             defaultRollMode: "normal"

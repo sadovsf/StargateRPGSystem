@@ -203,7 +203,7 @@
                 "rank": 1,
                 "hd": "",
                 "mp": 0,
-                "tension_dice": "d6",
+                "tensionDice": "d6",
 
                 "abilities": {
                     "racial": "",
