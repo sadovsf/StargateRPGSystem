@@ -1,4 +1,5 @@
 import { SGRPG } from "./module/config.js";
+import { _getInitiativeFormula } from "./module/combat.js";
 import SGItemSheet from "./module/item/sheet/itemSheet.js";
 import SGActorSheet from "./module/actor/sheet/actorSheet.js";
 import D20Roll from "./module/dice/d20-roll.js";
@@ -26,11 +27,14 @@ Hooks.once("init", function(){
     CONFIG.Dice.rolls.push(D20Roll);
     CONFIG.Dice.rolls.push(DamageRoll);
 
+    CONFIG.Combat.initiative.formula = "1d20 + @initiative";
+    Combatant.prototype._getInitiativeFormula = _getInitiativeFormula;
+
     Items.unregisterSheet("core", ItemSheet);
-    Items.registerSheet("stargate_rpg_system", SGItemSheet, {makeDefault: true});
+    Items.registerSheet("sgrpg", SGItemSheet, {makeDefault: true});
 
     Actors.unregisterSheet("core", ActorSheet);
-    Actors.registerSheet("stargate_rpg_system", SGActorSheet, {makeDefault: true});
+    Actors.registerSheet("sgrpg", SGActorSheet, {makeDefault: true});
 });
 
 Hooks.once("ready", function() {

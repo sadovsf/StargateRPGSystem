@@ -1,3 +1,5 @@
+import ActorSheetFlags from "../../apps/actor-flags.js";
+
 export default class SGActorSheet extends ActorSheet {
     /** @override */
     static get defaultOptions() {
@@ -11,7 +13,7 @@ export default class SGActorSheet extends ActorSheet {
     }
 
     get template() {
-        return `systems/stargate_rpg_system/templates/sheets/${this.actor.data.type}-sheet.hbs`;
+        return `systems/sgrpg/templates/sheets/${this.actor.data.type}-sheet.hbs`;
     }
 
 
@@ -105,6 +107,8 @@ export default class SGActorSheet extends ActorSheet {
         html.find('.item-edit').click(event => this._onItemEdit(event));
         html.find('.item-delete').click(event => this._onItemDelete(event));
         html.find('.item-roll').click(event => this._onItemRoll(event));
+
+        html.find('a.config-button').click(this._onConfigMenu.bind(this));
 
         html.find(".death-save-checkbox").change(event => this._onDeathSaveCheckboxChanged(event));
     }
@@ -307,6 +311,24 @@ export default class SGActorSheet extends ActorSheet {
 
     _roll_moxie(event) {
 
+    }
+
+    /**
+     * Handle spawning the TraitSelector application which allows a checkbox of multiple trait options
+     * @param {Event} event   The click event which originated the selection
+     * @private
+     */
+    _onConfigMenu(event) {
+        event.preventDefault();
+        const button = event.currentTarget;
+        let app;
+        console.log(button.dataset.action)
+        switch ( button.dataset.action ) {
+        case "flags":
+            app = new ActorSheetFlags(this.object);
+            break;
+        }
+        app?.render(true);
     }
 
     _onDeathSaveCheckboxChanged(event) {

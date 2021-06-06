@@ -74,7 +74,7 @@ export default class ItemSg extends Item {
             item: this.data,
             data: this.getChatData(),
         };
-        const html = await renderTemplate("systems/stargate_rpg_system/templates/chat/item-card.html", templateData);
+        const html = await renderTemplate("systems/sgrpg/templates/chat/item-card.html", templateData);
 
         // Create the ChatMessage data object
         const chatData = {

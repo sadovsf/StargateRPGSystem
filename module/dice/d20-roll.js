@@ -21,7 +21,7 @@ export default class D20Roll extends Roll {
         DISADVANTAGE: -1,
     }
 
-    static EVALUATION_TEMPLATE = "systems/stargate_rpg_system/templates/chat/roll-dialog.html";
+    static EVALUATION_TEMPLATE = "systems/sgrpg/templates/chat/roll-dialog.html";
 
     /**
      * A convenience reference for whether this D20Roll has advantage

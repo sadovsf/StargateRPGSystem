@@ -16,3 +16,14 @@ SGRPG.attackTypes = {
     piercing: "Piercing",
     bludgeoning: "Bludgeoning",
 }
+
+
+// Configure Optional Character Flags
+SGRPG.characterFlags = {
+  "initiativeAdv": {
+    name: "Advantage on initiative",
+    hint: "Provided by feats or items",
+    section: "Feats",
+    type: Boolean
+  }
+};

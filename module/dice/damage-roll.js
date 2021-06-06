@@ -20,7 +20,7 @@ export default class DamageRoll extends Roll {
    * The HTML template path used to configure evaluation of this Roll
    * @type {string}
    */
-  static EVALUATION_TEMPLATE = "systems/stargate_rpg_system/templates/chat/roll-dialog.html";
+  static EVALUATION_TEMPLATE = "systems/sgrpg/templates/chat/roll-dialog.html";
 
   /* -------------------------------------------- */
 

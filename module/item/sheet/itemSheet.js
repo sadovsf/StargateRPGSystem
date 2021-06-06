@@ -9,7 +9,7 @@ export default class SGItemSheet extends ItemSheet {
       }
 
     get template() {
-        return `systems/stargate_rpg_system/templates/sheets/${this.item.data.type}-sheet.hbs`;
+        return `systems/sgrpg/templates/sheets/${this.item.data.type}-sheet.hbs`;
     }
 
     getData(options) {
