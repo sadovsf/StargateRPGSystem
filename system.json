@@ -12,6 +12,7 @@
         "sgrpg.js"
     ],
     "styles": [
+        "styles/sgrpg.css",
         "styles/player-sheet.css",
         "styles/item-sheet.css"
     ],

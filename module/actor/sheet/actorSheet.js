@@ -104,6 +104,7 @@ export default class SGActorSheet extends ActorSheet {
 
         html.find('.item-edit').click(event => this._onItemEdit(event));
         html.find('.item-delete').click(event => this._onItemDelete(event));
+        html.find('.item-roll').click(event => this._onItemRoll(event));
 
         html.find(".death-save-checkbox").change(event => this._onDeathSaveCheckboxChanged(event));
     }
@@ -195,6 +196,13 @@ export default class SGActorSheet extends ActorSheet {
         const div = event.currentTarget.parentElement.parentElement;
         const item = this.actor.items.get(div.dataset.itemId);
         if ( item ) return item.delete();
+    }
+
+    _onItemRoll(event) {
+        event.preventDefault();
+        const div = event.currentTarget.parentElement.parentElement;
+        const item = this.actor.items.get(div.dataset.itemId);
+        if ( item ) return item.roll()
     }
 
     /**
@@ -298,39 +306,7 @@ export default class SGActorSheet extends ActorSheet {
     }
 
     _roll_moxie(event) {
-        
-    }
 
-    async _roll_attack(event) {
-        const weaponId = event.currentTarget.parentElement.parentElement.dataset.itemId;
-        const item = this.actor.items.get(weaponId);
-        if (! item) {
-            throw new Error("No item selected!");
-        }
-        const abilityName = item.data.data.attackAbility;
-        console.log(abilityName);
-        const abilityMod = this.actor.data.data.attributes[abilityName].mod;
-
-        const isProf = item.data.data.isProficient;
-
-        let rollMacro = `1d20 + @abilityMod`;
-        if (isProf) {
-            rollMacro += " + @profBonus "
-        }
-
-        const r = new CONFIG.Dice.D20Roll(rollMacro, {abilityMod: abilityMod, profBonus: this.actor.data.data.prof});
-        const configured = await r.configureDialog({
-            title: `Attack by ${item.data.name}`,
-            defaultRollMode: "normal"
-        });
-        if (configured === null) {
-            return;
-        }
-        
-        r.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: "Attacks using " + item.data.name
-        });
     }
 
     _onDeathSaveCheckboxChanged(event) {

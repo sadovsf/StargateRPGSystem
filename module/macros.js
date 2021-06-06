@@ -11,7 +11,6 @@
  * @returns {Promise}
  */
  export async function createSgMacro(data, slot) {
-    console.log(data);
     if ( data.type !== "Item" ) return;
     if (!( "data" in data ) ) return ui.notifications.warn("You can only create macro buttons for owned Items");
     const item = data.data;
@@ -56,7 +55,6 @@
     }
     const item = items[0];
 
-    // Trigger the item roll
-    // todo roll item.
-    //return item.roll();
+    // Trigger the item roll action.
+    return item.roll();
   }
