@@ -334,7 +334,7 @@ export default class SGActorSheet extends ActorSheet {
     }
 
     _roll_moxie(event) {
-
+        return ui.notifications.warn("Moxie combat is not implemented, please use different way");
     }
 
     /**
