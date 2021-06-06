@@ -15,6 +15,18 @@ SGRPG.abilities = {
 SGRPG.attackTypes = {
     piercing: "Piercing",
     bludgeoning: "Bludgeoning",
+    fire: "Fire",
+    paralyze: "Paralyze",
+    psychic: "Psychic",
+    blunt: "Blunt",
+    force: "Force"
+};
+
+SGRPG.sizes = {
+  tiny: "Tiny",
+  small: "Small",
+  medium: "Medium",
+  large: "Large"
 }
 
 

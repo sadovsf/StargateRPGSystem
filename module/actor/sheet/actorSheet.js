@@ -65,7 +65,7 @@ export default class SGActorSheet extends ActorSheet {
         data.death_failure2 = data.data.deathSaves.fails > 1;
         data.death_failure3 = data.data.deathSaves.fails > 2;
 
-        data.config = {
+        data.config = mergeObject(CONFIG.SGRPG, {
             tensionDice: {
                 d4: "d4",
                 d6: "d6",
@@ -83,7 +83,7 @@ export default class SGActorSheet extends ActorSheet {
                 death: "Death"
             },
             saves: CONFIG.SGRPG.abilities
-        },
+        });
 
         console.log(data);
         return data;

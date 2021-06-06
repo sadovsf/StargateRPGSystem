@@ -520,14 +520,14 @@
     height: 95%;
     margin-bottom: 0px;
 }
-.charsheet section.attacks {
+.charsheet .attacks {
     grid-area: attacks;
     display: unset;
     grid-template-columns: 3.5fr repeat(5, 1fr) 2fr;
     grid-template-rows: repeat(5, 1fr);
     margin: 0px 20px 10px 5px;
 }
-.charsheet section.attacks img {
+.charsheet .attacks img {
     vertical-align: middle;
 }
 
@@ -540,6 +540,9 @@
     margin-right: 5px;
 }
 
+.charsheet .background section {
+    max-height: 350px;
+}
 
 .charsheet section.settings {
     grid-area: settings;
@@ -616,4 +619,11 @@
 
 .charsheet .inventory-item div {
     flex: 0 0 auto;
+}
+
+
+table.inventory img {
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
 }

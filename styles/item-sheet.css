@@ -139,13 +139,25 @@
   margin-bottom: 10px;
 }
 
+.itemsheet .sheet-header .image-col{
+  flex: 0;
+  margin-right: 10px;
+}
+
 .itemsheet .sheet-header .profile-img {
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 100px;
-  flex: 0 0 100px;
-  height: 115px;
-  margin-right: 10px;
-  margin-bottom: 15px;
+  -ms-flex: 0 0 50px;
+  flex: 0 0 50px;
+  height: 70px;
+  margin-bottom: 5px;
+}
+
+.itemsheet .sheet-header .tech-level {
+  flex: 0;
+}
+
+.itemsheet .sheet-header .tech-level label {
+  font-size: 12px;
 }
 
 .itemsheet .sheet-header .header-fields {

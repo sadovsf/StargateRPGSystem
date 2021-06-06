@@ -1,0 +1,25 @@
+<div class="grid grid-2col">
+    <div class="flexcol details-column">
+        {{!-- Details left column --}}
+        <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.size">Size</label>
+            <select name="data.size">
+                {{selectOptions config.sizes selected=data.size localize=false}}
+            </select>
+        </div>
+        <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.speed">Speed</label>
+            <input name="data.speed" value="{{data.speed}}" data-dtype="Number" />
+        </div>
+        <div class="flex1"></div>
+    </div>
+
+    <div class="flexcol details-column">
+        {{!-- Details right column --}}
+        <div style="flex: 0">
+            <label>Item inventory</label>
+            {{> "systems/sgrpg/templates/sheets/parts/actor-equip-inventory.hbs"}}
+        </div>
+        <div class="flex1"></div>
+    </div>
+</div>

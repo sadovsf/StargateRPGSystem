@@ -40,6 +40,7 @@ Hooks.once("init", function(){
     Actors.unregisterSheet("core", ActorSheet);
     Actors.registerSheet("sgrpg", SGActorSheet, {makeDefault: true});
 
+
     preloadHandlebarsTemplates()
 });
 

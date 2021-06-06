@@ -1,6 +1,6 @@
 {
     "Actor": {
-        "types": [ "player", "enemy" ],
+        "types": [ "player", "vehicle" ],
         "templates": {
             "common": {
                 "health": {
@@ -220,8 +220,12 @@
             "templates": [ "common", "background" ]
         },
 
-        "enemy": {
-            "templates": [ "common" ]
+        "vehicle": {
+            "templates": ["common"],
+            "techLevel": 3,
+            "size": "medium",
+            "description": "",
+            "handling": 10
         }
     },
 
@@ -231,7 +235,8 @@
             "common": {
                 "description": "",
                 "bulk": 1,
-                "isProficient": true
+                "isProficient": true,
+                "techLevel": 2
             },
             "attack": {
                 "attackAbility": "dex",
