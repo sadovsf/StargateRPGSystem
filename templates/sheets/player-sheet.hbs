@@ -17,8 +17,7 @@
   <section class="name columnflex nowrap">
 
     <div class="rowflex nowrap spaced">
-      <a class="config-button" title="Configure feat details" data-action="flags"><i class="fa fa-cog"></i></a>
-
+      <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="50" width="50"/>
       <div class="columnflex nowrap">
         <label style="width:100px;">Character name:</label>
         <input name="name" type="text" value="{{actor.name}}">
@@ -34,6 +33,7 @@
       <div class="columnflex nowrap">
         <label>Sheet version: 1.0</label>
       </div>
+      <a class="config-button" title="Configure feat details" data-action="flags"><i class="fa fa-cog"></i></a>
     </div>
 
     <div class="rowflex nowrap spaced">
@@ -232,48 +232,43 @@
 <!-- attacks -->
 
   <section class="attacks item-list">
-    <div class="header grid grid-8col">
-      <span class="bold">Weapon</span>
-      <span class="bold">To hit</span>
-      <span class="bold">DMG</span>
-      <span class="bold">Type</span>
-      <span class="bold">Range</span>
-      <span class="bold">Special</span>
-      <span class="bold">Ammo</span>
-      <span></span>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th class="bold">Weapon</th>
+          <th class="bold">To hit</th>
+          <th class="bold">DMG</th>
+          <th class="bold">Type</th>
+          <th class="bold">Range</th>
+          <th class="bold">Special</th>
+          <th class="bold">Ammo</th>
+          <th></th>
+        </tr>
+      </thead>
 
 <!-- attacks -->
-    {{#each items.weapons as |item|}}
-    <div class="item grid grid-8col inventory-item" data-item-id="{{item._id}}" draggable="true">
-      <div class="rowflex nowrap">
-        <img class="item-image" src="{{item.img}}">
-        <a class="item-control item-roll">{{item.name}}</a>
-      </div>
-      <div>
-        <span>{{item.data.toHit}}</span>
-      </div>
-      <div>
-        <span>{{item.data.dmg}}</span>
-      </div>
-      <div>
-        <span>{{item.data.details.type}}</span>
-      </div>
-      <div>
-        <span>{{item.data.details.range.normal}}/{{item.data.details.range.max}}</span>
-      </div>
-      <div>
-        <span>{{item.data.details.special}}</span>
-      </div>
-      <div>
-        <span>{{item.data.ammo}}</span>
-      </div>
-      <div>
-        <a class="item-control item-edit"><i class="fas fa-edit"></i></a>
-        <a class="item-control item-delete"><i class="fas fa-trash"></i></a>
-      </div>
-    </div>
-    {{/each}}
+      <tbody>
+        {{#each items.weapons as |item|}}
+        <tr class="item" data-item-id="{{item._id}}" draggable="true">
+          <td>
+            <img class="item-image" src="{{item.img}}">
+            <a class="item-control item-roll">{{item.name}}</a>
+          </td>
+          <td>{{item.data.toHit}}</td>
+          <td>{{item.data.dmg}}</td>
+          <td>{{item.data.details.type}}</td>
+          <td>{{item.data.details.range.normal}}/{{item.data.details.range.max}}</td>
+          <td>{{item.data.details.special}}</td>
+          <td>{{item.data.ammo}}</td>
+          <td>
+            <a class="item-control item-edit"><i class="fas fa-edit"></i></a>
+            <a class="item-control item-delete"><i class="fas fa-trash"></i></a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <div style="flex: 1"></div>
   </section>
 
 </main>

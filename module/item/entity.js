@@ -42,7 +42,7 @@ export default class ItemSg extends Item {
 
     async rollDamage() {
         const dmgRoll = this.data.data.dmg;
-        const r = new CONFIG.Dice.DamageRoll(dmgRoll);
+        const r = new CONFIG.Dice.DamageRoll(dmgRoll, this.actor.data.data);
 
         const configured = await r.configureDialog({
             title: `Damage from ${this.data.name}`,

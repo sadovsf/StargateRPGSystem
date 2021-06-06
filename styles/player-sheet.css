@@ -522,38 +522,25 @@
 }
 .charsheet section.attacks {
     grid-area: attacks;
-    display: grid;
+    display: unset;
     grid-template-columns: 3.5fr repeat(5, 1fr) 2fr;
     grid-template-rows: repeat(5, 1fr);
     margin: 0px 20px 10px 5px;
 }
-.charsheet section.attacks label {
-    text-transform: capitalize;
+.charsheet section.attacks img {
+    vertical-align: middle;
 }
-.charsheet section.attacks .name {
-    padding-left: 42px;
+
+.charsheet .item-image {
+    width: 26px;
+    height: 26px;
+    background-color: black;
+    padding: 2px;
+    border-radius: 4px;
+    margin-right: 5px;
 }
-.charsheet section.attacks .dmg-type {
-    padding-left: 9px;
-}
-.charsheet section.attacks span {
-    height: 25px;
-}
-.charsheet section.attacks div a[type="roll"] {
-    height: 20px;
-}
-.charsheet section.attacks div input[type="text"] {
-    height: 20px;
-}
-.charsheet section.attacks .mr15 {
-    margin-right: 10px;
-}
-.charsheet section.attacks .ml15 {
-    margin-left: 15px;
-}
-.charsheet section.attacks .pl20 {
-    padding-left: 20px;
-}
+
+
 .charsheet section.settings {
     grid-area: settings;
 }
@@ -619,15 +606,6 @@
 .charsheet main.background div.editor {
     width: 100%;
     height: 100%;
-}
-
-.charsheet .item-image {
-    width: 28px;
-    height: 28px;
-    background-color: black;
-    padding: 2px;
-    border-radius: 4px;
-    margin-right: 5px;
 }
 
 .charsheet .inventory-item {
