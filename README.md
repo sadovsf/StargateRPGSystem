@@ -2,6 +2,10 @@
 ![](https://user-images.githubusercontent.com/2211533/120898785-ca4f7e00-c62c-11eb-8663-b13aa72c119c.png)
 https://www.buymeacoffee.com/sadovsf
 
+Icons kindly provided and Created by AurelTristen, if you like his work make sure to take a look on his other works and support him on
+https://www.patreon.com/HellScapeAssets
+
+
 This is system for FoundryVTT based on original sheet implementation for Roll20:
 https://github.com/Roll20/roll20-character-sheets/tree/master/Stargate-RPG
 
