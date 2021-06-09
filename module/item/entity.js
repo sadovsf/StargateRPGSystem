@@ -100,7 +100,7 @@ export default class ItemSg extends Item {
         await this.update({
             "data.quantity": remainingCount - 1
         });
-        return ui.notifications.info(`Item '${this.data.name}' was used, ${remainingCount - 1} usages remain.`);
+        return ui.notifications.info(`Item '${this.data.name}' was consumed, ${remainingCount - 1} usages remain.`);
     }
 
     /**

@@ -1,19 +1,21 @@
-<form class="{{cssClass}} flexcol itemsheet" autocomplete="off">
+<form class="{{cssClass}} flexcol sgrpg itemsheet" autocomplete="off">
     {{!-- Sheet Header --}}
     <header class="sheet-header">
         {{!-- Header stuff goes here --}}
         <div class="flexcol image-col">
             <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="70" width="70"/>
-            <div class="tech-level flexcol">
-                <label>TechLevel</label>
-                <input name="data.techLevel" type="text" value="{{data.techLevel}}"/>
-            </div>
         </div>
         <div class="header-fields">
             <h1 class="charname flexrow">
                 <input name="name" type="text" value="{{actor.name}}" placeholder="Name"/>
             </h1>
-            <div class="resources grid grid-3col">
+            <div class="resources grid grid-4col">
+                <div class="resource flex-group-center">
+                    <label for="data.handling" class="resource-label">Tech level</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.techLevel" value="{{data.techLevel}}" data-dtype="Number"/>
+                    </div>
+                </div>
                 <div class="resource flex-group-center">
                     <label for="data.health.value" class="resource-label">HP</label>
                     <div class="resource-content flexrow flex-center flex-between">

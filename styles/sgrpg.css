@@ -110,3 +110,25 @@
 .dice-roll .dice-total.fumble {
     color: red;
 }
+
+
+.sgrpg .item-image {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    padding: 2px;
+    border-radius: 4px;
+    margin-right: 5px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle;
+}
+
+.sgrpg table.inventory .inventory-item:hover .item-image {
+    background-image: url("../../../icons/svg/d20-grey.svg") !important;
+}
+
+.sgrpg table.inventory .inventory-item .item-image:hover {
+    background-image: url("../../../icons/svg/d20-black.svg") !important;
+}

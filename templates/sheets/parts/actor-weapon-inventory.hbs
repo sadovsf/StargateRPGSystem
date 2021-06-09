@@ -15,10 +15,10 @@
 <!-- attacks -->
   <tbody>
     {{#each items.weapon as |item|}}
-    <tr class="item" data-item-id="{{item._id}}" draggable="true">
+    <tr class="item inventory-item" data-item-id="{{item._id}}" draggable="true">
       <td>
-        <img class="item-image" src="{{item.img}}">
-        <a class="item-control item-roll">{{item.name}}</a>
+        <a class="item-control item-roll"><span class="item-image" style="background-image: url({{item.img}})"></span></a>
+        {{item.name}}
       </td>
       <td>{{item.data.toHit}}</td>
       <td>{{item.data.dmg}}</td>

@@ -531,15 +531,6 @@
     vertical-align: middle;
 }
 
-.charsheet .item-image {
-    width: 26px;
-    height: 26px;
-    background-color: silver;
-    padding: 2px;
-    border-radius: 4px;
-    margin-right: 5px;
-}
-
 .charsheet .background section {
     max-height: 350px;
 }
@@ -619,11 +610,4 @@
 
 .charsheet .inventory-item div {
     flex: 0 0 auto;
-}
-
-
-table.inventory img {
-    width: 32px;
-    height: 32px;
-    vertical-align: middle;
 }
