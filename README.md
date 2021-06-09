@@ -1,4 +1,4 @@
-# StarGateRPGSystem
+# StargateRPGSystem
 ![](https://user-images.githubusercontent.com/2211533/120898785-ca4f7e00-c62c-11eb-8663-b13aa72c119c.png)
 https://www.buymeacoffee.com/sadovsf
 
@@ -19,7 +19,7 @@ I also did setup donate option if you would like to increase my motivation to ma
 # Installation Instructions
 To install and use the SGRPG system for Foundry Virtual Tabletop, simply paste the following URL into the
 Install System dialog on the Setup menu of the application.
-https://raw.githubusercontent.com/sadovsf/StarGateRPGSystem/master/system.json
+https://raw.githubusercontent.com/sadovsf/StargateRPGSystem/master/system.json
 If you wish to manually install the system, you must clone or extract it into the Data/systems/sgrpg folder. You
 may do this by cloning the repository or downloading a zip archive from the
 Releases Page.
