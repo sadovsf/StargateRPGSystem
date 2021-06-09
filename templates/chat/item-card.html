@@ -9,8 +9,12 @@
     </div>
 
     <div class="card-buttons">
-        <button data-action="attack">Attack</button>
-        <button data-action="damage">Damage</button>
+        {{#if hasAttack}}
+            <button data-action="attack">Attack</button>
+            <button data-action="damage">Damage</button>
+        {{else}}
+            <button data-action="consume">Use</button>
+        {{/if}}
         {{#if hasAreaTarget}}
             <button data-action="placeTemplate">Place template</button>
         {{/if}}

@@ -12,6 +12,14 @@ export default class ItemSg extends Item {
         return target && (target.type in CONFIG.SGRPG.areaTargetTypes);
     }
 
+    /**
+     * Does the Item implement an attack roll as part of its usage
+     * @type {boolean}
+     */
+    get hasAttack() {
+        return typeof this.data.data.attackAbility === "string";
+    }
+
     async roll() {
         this.displayCard();
     }
@@ -83,6 +91,18 @@ export default class ItemSg extends Item {
         });
     }
 
+    async consume() {
+        const remainingCount = parseInt(this.data.data.quantity);
+        if (remainingCount < 1) {
+            return ui.notifications.warn("You dont have any more of these items to consume!");
+        }
+
+        await this.update({
+            "data.quantity": remainingCount - 1
+        });
+        return ui.notifications.info(`Item '${this.data.name}' was used, ${remainingCount - 1} usages remain.`);
+    }
+
     /**
      * Display the chat card for an Item as a Chat Message
      * @param {object} options          Options which configure the display of the item chat card
@@ -98,6 +118,7 @@ export default class ItemSg extends Item {
             tokenId: token?.uuid || null,
             item: this.data,
             data: this.getChatData(),
+            hasAttack: this.hasAttack,
             hasAreaTarget: game.user.can("TEMPLATE_CREATE") && this.hasAreaTarget,
         };
         const html = await renderTemplate("systems/sgrpg/templates/chat/item-card.html", templateData);
@@ -189,6 +210,9 @@ export default class ItemSg extends Item {
               event: event,
             });
             break;
+          case "consume":
+              await item.consume(event);
+              break
           case "placeTemplate":
             const template = AbilityTemplate.fromItem(item);
             if ( template ) template.drawPreview();

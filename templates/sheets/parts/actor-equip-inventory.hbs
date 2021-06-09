@@ -11,7 +11,9 @@
         <tr class="inventory-item item" data-item-id="{{item._id}}">
             <td>
                 <img class="item-image" src="{{item.img}}">
-                {{item.name}}
+                <a class="item-control item-roll">
+                    {{item.name}} {{#if item.isStack}} ({{item.data.quantity}}) {{/if}}
+                </a>
             </td>
             <td>
                 <a class="item-control item-edit"><i class="fas fa-edit"></i></a>

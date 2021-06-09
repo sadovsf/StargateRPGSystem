@@ -118,21 +118,44 @@ export default class SGActorSheet extends ActorSheet {
         html.find(".death-save-checkbox").change(event => this._onDeathSaveCheckboxChanged(event));
     }
 
+    /** @override */
+    async _onDropItemCreate(itemData) {
+        // if ( itemData.data ) {
+        //     // Ignore certain statuses
+        //     ["equipped", "proficient", "prepared"].forEach(k => delete itemData.data[k]);
+        // }
+
+        // Stack identical equipment
+        if ( itemData.type === "equip" && itemData.flags.core?.sourceId ) {
+            const similarItem = this.actor.items.find(i => {
+                const sourceId = i.getFlag("core", "sourceId");
+                return sourceId && (sourceId === itemData.flags.core?.sourceId) && (i.type === "equip");
+            });
+            if ( similarItem ) {
+                return similarItem.update({
+                    'data.quantity': similarItem.data.data.quantity + Math.max(itemData.data.quantity, 1)
+                });
+            }
+        }
+
+        // Create the owned item as normal
+        return super._onDropItemCreate(itemData);
+    }
+
     _prepareItemData(data) {
         let inventory = {
-            weapons: [],
+            weapon: [],
             equip: []
         };
 
-        for(const it of data.items) {
-            switch(it.type) {
-                case "weapon":
-                    inventory.weapons.push(it);
-                    break;
-                case "equip":
-                    inventory.equip.push(it);
-                    break;
+        for(const item of data.items) {
+            item.isStack = Number.isNumeric(item.data.quantity) && (item.data.quantity !== 1);
+
+            if(! Object.keys(inventory).includes(item.type)) {
+                console.error("Unknown item type!");
+                continue;
             }
+            inventory[item.type].push(item);
         }
         data.items = inventory;
     }

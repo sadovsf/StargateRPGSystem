@@ -4,30 +4,15 @@
         {{!-- Header stuff goes here --}}
         <div class="flexcol image-col">
             <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="70" width="70"/>
-            <div class="tech-level flexcol">
-                <label>TechLevel</label>
-                <input name="data.techLevel" type="text" value="{{data.techLevel}}"/>
-            </div>
         </div>
         <div class="header-fields">
             <h1 class="charname flexrow">
                 <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
             </h1>
             {{#if isWeapon}}
-            <div class="resources grid grid-2col">
-                <div class="resource flex-group-center">
-                    <label for="data.dmg" class="resource-label">Damage</label>
-                    <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.dmg" value="{{data.dmg}}" data-dtype="String"/>
-                    </div>
-                </div>
-                <div class="resource flex-group-center">
-                    <label for="data.toHit" class="resource-label">To hit</label>
-                    <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.toHit" value="{{data.toHit}}" data-dtype="String"/>
-                    </div>
-                </div>
-            </div>
+                {{> "systems/sgrpg/templates/sheets/parts/weapon-header.hbs"}}
+            {{else}}
+                {{> "systems/sgrpg/templates/sheets/parts/equip-header.hbs"}}
             {{/if}}
         </div>
     </header>

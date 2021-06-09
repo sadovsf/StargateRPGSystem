@@ -140,7 +140,7 @@
 }
 
 .itemsheet .sheet-header .image-col{
-  flex: 0;
+  flex: 0 0 auto;
   margin-right: 10px;
 }
 

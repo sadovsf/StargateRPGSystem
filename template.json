@@ -232,11 +232,13 @@
     "Item": {
         "types": ["weapon", "equip"],
         "templates": {
-            "common": {
+            "itemDescription": {
                 "description": "",
-                "bulk": 1,
-                "isProficient": true,
                 "techLevel": 2
+            },
+            "physicalItem": {
+                "bulk": 1,
+                "quantity": 1
             },
             "attack": {
                 "attackAbility": "dex",
@@ -260,11 +262,12 @@
         },
 
         "weapon": {
-            "templates": ["common", "attack"]
+            "templates": ["itemDescription", "physicalItem", "attack"],
+            "isProficient": true
         },
 
         "equip": {
-            "templates": ["common"]
+            "templates": ["itemDescription", "physicalItem"]
         }
     }
 }
