@@ -1,8 +1,8 @@
 {
     "name": "sgrpg",
-    "title": "StarGate RPG",
+    "title": "Stargate RPG",
     "description": "Many details here.",
-    "version": "1.0.0-alpha",
+    "version": "1.0.1-alpha",
     "templateVersion": 2,
     "author": "Filip Sádovský",
     "minimumCoreVersion": "0.8.6",
@@ -26,8 +26,8 @@
     "gridUnits": "m",
     "primaryTokenAttribute": "attributes.health",
     "secondaryTokenAttribute": null,
-    "url": "https://github.com/sadovsf/StarGateRPGSystem",
-    "manifest": "https://raw.githubusercontent.com/sadovsf/StarGateRPGSystem/master/system.json",
-    "download": "https://github.com/sadovsf/StarGateRPGSystem/releases/download/v1.0.0-alpha/sgrpg-alpha-1.0.0.zip"
+    "url": "https://github.com/sadovsf/StargateRPGSystem",
+    "manifest": "https://raw.githubusercontent.com/sadovsf/StargateRPGSystem/master/system.json",
+    "download": "https://github.com/sadovsf/StargateRPGSystem/releases/download/v1.0.1-alpha/sgrpg.zip"
 }
 
