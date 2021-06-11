@@ -19,4 +19,10 @@
             <button data-action="placeTemplate">Place template</button>
         {{/if}}
     </div>
+
+    <footer class="card-footer">
+        {{#each data.labels}}
+            <span>{{this}}</span>
+        {{/each}}
+    </footer>
 </div>

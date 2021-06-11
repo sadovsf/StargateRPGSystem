@@ -1,10 +1,13 @@
 <form class="{{cssClass}} sgrpg charsheet" autocomplete="off">
 
-<nav class="sheet-navigation tabs" data-group="primary">
+<div class="sheet-header">
+  <nav class="sheet-navigation tabs" data-group="primary">
     <a class="item active" data-tab="character">Character</a>
     <a class="item" data-tab="background">Background</a>
     <!-- <a class="item" data-tab="settings">Settings</a> NOT IMPLEMENTED YET-->
-</nav>
+  </nav>
+  {{> "systems/sgrpg/templates/sheets/parts/actor-bulk-progress.hbs"}}
+</div>
 
 
 <div class="sg-sheet-body">
@@ -212,13 +215,9 @@
 <!-- bulk -->
 
   <section class="bulk columnflex nowrap middle center">
-      <h3>Tactical Vest Bulk</h3>
-      <input name="data.bulk" type="number"  class="stat w40" value="{{data.bulk}}">
+      <h3>Vest bulk capacity</h3>
+      <input name="data.bulk" type="number"  class="stat w40" value="{{data.bulk}}" data-dtype="Number">
   </section>
-
-<!-- ammo -->
-
-
 
 <!-- mini notes -->
 

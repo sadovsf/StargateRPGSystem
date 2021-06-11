@@ -15,6 +15,7 @@
       // Actor Sheet Partials
       "systems/sgrpg/templates/sheets/parts/vehicle-details.hbs",
       "systems/sgrpg/templates/sheets/parts/actor-weapon-inventory.hbs",
-      "systems/sgrpg/templates/sheets/parts/actor-equip-inventory.hbs"
+      "systems/sgrpg/templates/sheets/parts/actor-equip-inventory.hbs",
+      "systems/sgrpg/templates/sheets/parts/actor-bulk-progress.hbs"
     ]);
   };

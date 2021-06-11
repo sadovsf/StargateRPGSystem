@@ -266,6 +266,7 @@
 
 .itemsheet div.details .details-entry {
   flex: 0;
+  margin: 2px 0 0 0;
 }
 
 .itemsheet div.details .details-column {

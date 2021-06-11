@@ -533,6 +533,7 @@
 
 .charsheet .background section {
     max-height: 350px;
+    overflow-y: scroll;
 }
 
 .charsheet section.settings {
@@ -610,4 +611,14 @@
 
 .charsheet .inventory-item div {
     flex: 0 0 auto;
+}
+
+.charsheet .sheet-header {
+    display: flex;
+    height: 40px;
+    flex-direction: column;
+}
+
+.charsheet .sg-sheet-body {
+    display: block;
 }

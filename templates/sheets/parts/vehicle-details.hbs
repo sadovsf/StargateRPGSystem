@@ -2,6 +2,10 @@
     <div class="flexcol details-column">
         {{!-- Details left column --}}
         <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.speed">Bulk capacity</label>
+            <input name="data.bulk" value="{{data.bulk}}" data-dtype="Number" />
+        </div>
+        <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.size">Size</label>
             <select name="data.size">
                 {{selectOptions config.sizes selected=data.size localize=false}}

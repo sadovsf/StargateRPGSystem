@@ -20,19 +20,26 @@ export default class ItemSg extends Item {
         return typeof this.data.data.attackAbility === "string";
     }
 
+    get consumesAmmunition() {
+        if (! this.data.data.ammo) {
+            return false;
+        }
+        return this.data.data.ammo.target.length && Number.isNumeric(this.data.data.ammo.max);
+    }
+
     async roll() {
         this.displayCard();
     }
 
     async rollAttack() {
         const abilityName = this.data.data.attackAbility;
-        const hasAmmo = this.data.data.ammo !== null;
+        const hasAmmo = this.data.data.ammo.value !== null;
 
         if (! this.actor) {
             return ui.notifications.warn("You can only roll for owned items!");
         }
 
-        if (hasAmmo && parseInt(this.data.data.ammo) == 0) {
+        if (hasAmmo && parseInt(this.data.data.ammo.value) == 0) {
             // Item is using ammo but no ammunition is left.
             return ui.notifications.warn("No more ammo for this item!");
         }
@@ -59,12 +66,12 @@ export default class ItemSg extends Item {
 
         // If item has some ammunition defined, consume 1.
         if (hasAmmo) {
-            const remainingAmmo = parseInt(this.data.data.ammo);
+            const remainingAmmo = parseInt(this.data.data.ammo.value);
             if (remainingAmmo <= 0) {
                 // Double check that ammo count did not change while in dialog.
                 return ui.notifications.warn("No more ammo for this item!");
             }
-            await this.update({"data.ammo": remainingAmmo - 1});
+            await this.update({"data.ammo.value": remainingAmmo - 1});
         }
 
         r.toMessage({
@@ -103,6 +110,13 @@ export default class ItemSg extends Item {
         return ui.notifications.info(`Item '${this.data.name}' was consumed, ${remainingCount - 1} usages remain.`);
     }
 
+    findAmmunition() {
+        if (! this.consumesAmmunition) {
+            return null;
+        }
+        return this.actor.items.get(this.data.data.ammo.target);
+    }
+
     /**
      * Display the chat card for an Item as a Chat Message
      * @param {object} options          Options which configure the display of the item chat card
@@ -130,7 +144,7 @@ export default class ItemSg extends Item {
             content: html,
             flavor: this.data.data.chatFlavor || this.name,
             speaker: ChatMessage.getSpeaker({actor: this.actor, token}),
-            flags: {"core.canPopout": true}
+            flags: {"core.canPopout": true},
         };
 
         // Apply the roll mode to adjust message visibility
@@ -139,7 +153,6 @@ export default class ItemSg extends Item {
         // Create the Chat Message or return its data
         return createMessage ? ChatMessage.create(chatData) : chatData;
     }
-
 
     /**
      * Prepare an object of chat data used to display a card for the Item in the chat log
@@ -151,6 +164,7 @@ export default class ItemSg extends Item {
 
         // Rich text description
         data.description = TextEditor.enrichHTML(data.description, htmlOptions);
+        data.labels = this._getItemLabels(this.data);
         return data;
     }
 
@@ -187,7 +201,7 @@ export default class ItemSg extends Item {
 
         // Validate permission to proceed with the roll
         //const isTargetted = action === "save";
-        //if ( !( isTargetted || game.user.isGM || message.isAuthor ) ) return;
+        if ( !( /*isTargetted ||*/ game.user.isGM || message.isAuthor ) ) return;
 
         // Recover the actor for the chat card
         const actor = await this._getChatCardActor(card);
@@ -198,7 +212,6 @@ export default class ItemSg extends Item {
         if ( !item ) {
             return ui.notifications.error("No associated item or item no longer exists!")
         }
-        console.log(item);
 
         // Handle different actions
         switch ( action ) {
@@ -221,6 +234,25 @@ export default class ItemSg extends Item {
 
         // Re-enable the button
         button.disabled = false;
+    }
+
+    /**
+     * Get the Array of item properties which are used in the small sidebar of the description tab
+     * @return {Array}
+     * @private
+     */
+    _getItemLabels(item) {
+        const labels = [];
+
+        if ( item.type === "weapon" ) {
+        if (item.data.ammo && item.data.ammo.target) {
+            // Items consumes some ammo, push reload action informations if any.
+            if (item.data.ammo.reload) {
+                labels.push("Reload: " + item.data.ammo.reload);
+            }
+        }
+        }
+        return labels;
     }
 
     /**

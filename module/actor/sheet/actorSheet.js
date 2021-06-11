@@ -32,6 +32,7 @@ export default class SGActorSheet extends ActorSheet {
 
     getData(options) {
         let isOwner = this.actor.isOwner;
+
         const data = {
           owner: isOwner,
           limited: this.actor.limited,
@@ -41,7 +42,7 @@ export default class SGActorSheet extends ActorSheet {
           isCharacter: this.actor.type === "character",
           isNPC: this.actor.type === "npc",
           isVehicle: this.actor.type === 'vehicle',
-          rollData: this.actor.getRollData.bind(this.actor)
+          rollData: this.actor.getRollData.bind(this.actor),
         };
 
         // The Actor's data
@@ -109,9 +110,11 @@ export default class SGActorSheet extends ActorSheet {
         html.find('section.saves div input[type="checkbox"]').click(event => this._onToggleAbilityProficiency(event));
         html.find('div.prof div.section input[name="data.prof"]').change(event => this._onProfChanged(event));
 
+        html.find('.item-consume').click(event => this._onItemConsume(event));
         html.find('.item-edit').click(event => this._onItemEdit(event));
         html.find('.item-delete').click(event => this._onItemDelete(event));
         html.find('.item-roll').click(event => this._onItemRoll(event));
+        html.find('.item-reload').click(event => this._onItemReload(event));
 
         html.find('a.config-button').click(this._onConfigMenu.bind(this));
 
@@ -148,16 +151,38 @@ export default class SGActorSheet extends ActorSheet {
             equip: []
         };
 
+        let curBulk = 0;
         for(const item of data.items) {
-            item.isStack = Number.isNumeric(item.data.quantity) && (item.data.quantity !== 1);
-
             if(! Object.keys(inventory).includes(item.type)) {
                 console.error("Unknown item type!");
                 continue;
             }
+
+            item.isStack = Number.isNumeric(item.data.quantity) && (item.data.quantity !== 1);
+            item.hasAmmo = item.data.ammo?.type?.length && Number.isNumeric(item.data.ammo?.max);
+
+            // Calculate item bulk.
+            const itemBulk = item.data.bulk || 0;
+            const itemCount = (item.isStack ? item.data.quantity : 1);
+            curBulk += itemBulk * itemCount;
+            if (item.type == "weapon") {
+                const ammoBulk = item.data.ammo.bulk;
+                const ammoCount = item.data.ammo.value;
+                curBulk += ammoBulk * ammoCount;
+            }
+
+            // Add item into proper inventory.
             inventory[item.type].push(item);
         }
+        curBulk = Math.ceil(curBulk);
+
+        const maxBulk = data.data.bulk + parseInt(data.data.attributes.str.mod);
+
         data.items = inventory;
+        data.currentBulk = curBulk;
+        data.currentBulkPerc = Math.min((curBulk / maxBulk) * 100, 100);
+        data.isOverloaded = curBulk > data.data.bulk;
+        data.maxBulk = maxBulk;
     }
 
     async _onChangeAttrValue(event) {
@@ -233,6 +258,40 @@ export default class SGActorSheet extends ActorSheet {
         const div = event.currentTarget.parentElement.parentElement;
         const item = this.actor.items.get(div.dataset.itemId);
         return item.sheet.render(true);
+    }
+
+    _onItemConsume(event) {
+        event.preventDefault();
+        const div = event.currentTarget.parentElement.parentElement;
+        const item = this.actor.items.get(div.dataset.itemId);
+        return item.consume();
+    }
+
+    async _onItemReload(event) {
+        event.preventDefault();
+        const div = event.currentTarget.parentElement.parentElement;
+        const item = this.actor.items.get(div.dataset.itemId);
+
+        if (item.data.data.ammo.value == item.data.data.ammo.max) {
+            return ui.notifications.info("Weapon is already reloaded.");
+        }
+
+        const ammoItem = item.findAmmunition();
+        if (! ammoItem) {
+            // No ammunition to reload.
+            return ui.notifications.info(`Magazine for '${item.name}' was not found.`);
+        }
+
+        const magCount = ammoItem.data.data.quantity || 0;
+        if (magCount <= 0) {
+            return ui.notifications.info(`No more magazines left for '${item.name}' in inventory.`);
+        }
+
+        await ammoItem.update({
+            "data.quantity": magCount - 1
+        }, {render: false});
+
+        return item.update({"data.ammo.value": item.data.data.ammo.max});
     }
 
     /* -------------------------------------------- */

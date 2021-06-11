@@ -30,7 +30,28 @@ export default class SGItemSheet extends ItemSheet {
         data.item = itemData;
         data.data = itemData.data;
 
+        // Potential consumption targets
+        data.abilityConsumptionTargets = this._getItemConsumptionTargets(itemData);
+
         console.log(data.data);
         return data;
+    }
+
+
+    /**
+     * Get the valid item consumption targets which exist on the actor
+     * @param {Object} item         Item data for the item being displayed
+     * @return {{string: string}}   An object of potential consumption targets
+     * @private
+     */
+    _getItemConsumptionTargets(item) {
+      const actor = this.item.actor;
+      if ( !actor ) return {};
+
+      // Ammunition
+      return actor.itemTypes.equip.reduce((ammo, i) =>  {
+        ammo[i.id] = `${i.name} (${i.data.data.quantity})`;
+        return ammo;
+      }, {});
     }
 }

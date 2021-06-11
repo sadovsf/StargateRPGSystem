@@ -19,7 +19,8 @@ SGRPG.attackTypes = {
     paralyze: "Paralyze",
     psychic: "Psychic",
     blunt: "Blunt",
-    force: "Force"
+    force: "Force",
+    slashing: "Slashing"
 };
 
 SGRPG.sizes = {
