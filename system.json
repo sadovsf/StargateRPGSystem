@@ -2,7 +2,7 @@
     "name": "sgrpg",
     "title": "Stargate RPG",
     "description": "Many details here.",
-    "version": "1.0.1-alpha",
+    "version": "1.1.0-alpha",
     "templateVersion": 2,
     "author": "Filip Sádovský",
     "minimumCoreVersion": "0.8.6",

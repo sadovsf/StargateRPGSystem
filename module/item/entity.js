@@ -32,7 +32,6 @@ export default class ItemSg extends Item {
     }
 
     async rollAttack() {
-        const abilityName = this.data.data.attackAbility;
         const hasAmmo = this.data.data.ammo.value !== null;
 
         if (! this.actor) {
@@ -44,11 +43,12 @@ export default class ItemSg extends Item {
             return ui.notifications.warn("No more ammo for this item!");
         }
 
-        const abilityMod = this.actor.data.data.attributes[abilityName].mod;
+        const abilityName = this.data.data.attackAbility;
+        const abilityMod = parseInt(this.actor.data.data.attributes[abilityName].mod);
         const isProf = this.data.data.isProficient;
 
         let rollMacro = "1d20 + " + this.data.data.toHit;
-        if (abilityMod != 0) {
+        if (parseInt(abilityMod) != 0) {
             rollMacro += " + " + abilityMod;
         }
         if (isProf != 0) {
@@ -81,7 +81,14 @@ export default class ItemSg extends Item {
     }
 
     async rollDamage() {
-        const dmgRoll = this.data.data.dmg;
+        const abilityName = this.data.data.attackAbility;
+        const abilityMod = this.actor.data.data.attributes[abilityName].mod;
+        let dmgRoll = this.data.data.dmg;
+
+        if (parseInt(abilityMod) != 0) {
+            dmgRoll += " + " + abilityMod;
+        }
+
         const r = new CONFIG.Dice.DamageRoll(dmgRoll, this.actor.data.data);
 
         const configured = await r.configureDialog({
@@ -245,12 +252,15 @@ export default class ItemSg extends Item {
         const labels = [];
 
         if ( item.type === "weapon" ) {
-        if (item.data.ammo && item.data.ammo.target) {
-            // Items consumes some ammo, push reload action informations if any.
-            if (item.data.ammo.reload) {
-                labels.push("Reload: " + item.data.ammo.reload);
+            if (item.data.ammo && item.data.ammo.target) {
+                // Items consumes some ammo, push reload action informations if any.
+                if (item.data.ammo.reload) {
+                    labels.push("Reload: " + item.data.ammo.reload);
+                }
             }
-        }
+            if (item.data.details.special?.length) {
+                labels.push(item.data.details.special);
+            }
         }
         return labels;
     }

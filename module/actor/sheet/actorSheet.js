@@ -165,7 +165,7 @@ export default class SGActorSheet extends ActorSheet {
             const itemBulk = item.data.bulk || 0;
             const itemCount = (item.isStack ? item.data.quantity : 1);
             curBulk += itemBulk * itemCount;
-            if (item.type == "weapon") {
+            if (item.type == "weapon" && item.data.ammo) {
                 const ammoBulk = item.data.ammo.bulk;
                 const ammoCount = item.data.ammo.value;
                 curBulk += ammoBulk * ammoCount;
@@ -181,7 +181,7 @@ export default class SGActorSheet extends ActorSheet {
         data.items = inventory;
         data.currentBulk = curBulk;
         data.currentBulkPerc = Math.min((curBulk / maxBulk) * 100, 100);
-        data.isOverloaded = curBulk > data.data.bulk;
+        data.isOverloaded = curBulk > maxBulk;
         data.maxBulk = maxBulk;
     }
 
