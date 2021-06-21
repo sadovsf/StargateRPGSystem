@@ -70,6 +70,7 @@
             <select name="data.ammo.target">
                 {{#select data.ammo.target}}
                     <option value=""></option>
+                    <option value="{{config.actionReloadValue}}">[Action based reload]</option>
                     {{#each abilityConsumptionTargets as |name key|}}
                         <option value="{{key}}">{{name}}</option>
                     {{/each}}

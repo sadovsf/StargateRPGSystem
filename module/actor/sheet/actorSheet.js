@@ -51,9 +51,10 @@ export default class SGActorSheet extends ActorSheet {
         data.data = actorData.data;
 
         data.items = actorData.items;
-        for ( let i of data.items ) {
-          const item = this.actor.items.get(i._id);
-          i.labels = item.labels;
+        for ( let iData of data.items ) {
+          const item = this.actor.items.get(iData._id);
+          iData.hasAmmo = item.consumesAmmunition;
+          iData.labels = item.labels;
         }
         data.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
         this._prepareItemData(data);
@@ -159,7 +160,6 @@ export default class SGActorSheet extends ActorSheet {
             }
 
             item.isStack = Number.isNumeric(item.data.quantity) && (item.data.quantity !== 1);
-            item.hasAmmo = item.data.ammo?.type?.length && Number.isNumeric(item.data.ammo?.max);
 
             // Calculate item bulk.
             const itemBulk = item.data.bulk || 0;
@@ -278,8 +278,11 @@ export default class SGActorSheet extends ActorSheet {
 
         const ammoItem = item.findAmmunition();
         if (! ammoItem) {
-            // No ammunition to reload.
-            return ui.notifications.info(`Magazine for '${item.name}' was not found.`);
+            if (item.data.data.ammo.target == CONFIG.SGRPG.actionReloadValue) {
+                // Weapon has no magazine, allow free reload.
+                return item.update({"data.ammo.value": item.data.data.ammo.max});
+            }
+            return ui.notifications.info(`Unable to find magazine to reload '${item.name}'.`);
         }
 
         const magCount = ammoItem.data.data.quantity || 0;

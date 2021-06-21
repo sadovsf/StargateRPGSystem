@@ -31,6 +31,7 @@ SGRPG.sizes = {
   large: "Large"
 }
 
+SGRPG.actionReloadValue = "act_based_reload";
 
 /**
  * This Object defines the types of single or area targets which can be applied

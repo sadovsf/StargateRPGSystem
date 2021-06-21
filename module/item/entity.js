@@ -24,7 +24,7 @@ export default class ItemSg extends Item {
         if (! this.data.data.ammo) {
             return false;
         }
-        return this.data.data.ammo.target.length && Number.isNumeric(this.data.data.ammo.max);
+        return this.data.data.ammo.target?.length && Number.isNumeric(this.data.data.ammo.max);
     }
 
     async roll() {
