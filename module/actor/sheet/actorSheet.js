@@ -108,6 +108,7 @@ export default class SGActorSheet extends ActorSheet {
 
         html.find('div.attr input').change(this._onChangeAttrValue.bind(this));
         html.find('section.skills div input[type="checkbox"]').click(event => this._onToggleAbilityProficiency(event));
+        html.find('section.skills div span.mod select').change(event => this._onChangeSkillMod(event));
         html.find('section.saves div input[type="checkbox"]').click(event => this._onToggleAbilityProficiency(event));
         html.find('div.prof div.section input[name="data.prof"]').change(event => this._onProfChanged(event));
 
@@ -214,6 +215,14 @@ export default class SGActorSheet extends ActorSheet {
         const cb = event.currentTarget;
 
         await this.actor.update({[cb.name]: cb.checked == true });
+        return this.actor.update(this._compileSkillValues());
+    }
+
+    async _onChangeSkillMod(event) {
+        event.preventDefault();
+        const select = event.currentTarget;
+
+        await this.actor.update({[select.name]: select.value });
         return this.actor.update(this._compileSkillValues());
     }
 

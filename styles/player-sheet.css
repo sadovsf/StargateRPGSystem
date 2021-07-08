@@ -331,13 +331,16 @@
     margin-left: 0px;
 }
 .charsheet section.skills span.mod {
-    width: 25px;
     margin-top: 4px;
-    border-style: none none solid none;
     margin-bottom: 4px;
-    border-width: 2px;
     text-align: center;
 }
+
+.charsheet section.skills span.mod select {
+    height: 15px;
+    font-size: 10px;
+}
+
 .charsheet section.skills div {
     align-content: space-around;
 }

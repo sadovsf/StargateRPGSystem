@@ -99,7 +99,11 @@
         <input name="data.skills.{{s}}.proficient" type="checkbox" {{checked skill.proficient}}>
         <input name="data.skills.{{s}}.value" class="w30" value="{{skill.value}}">
         <a type="roll" class="txt-btn" data-bonus="data.skills.{{s}}.value">{{s}}</a>
-        <span>({{skill.mod}})</span>
+        <span class="mod">
+          <select name="data.skills.{{s}}.mod" class="skillModSelect">
+            {{selectOptions ../config.abilities selected=skill.mod localize=false}}
+          </select>
+        </span>
       </div>
     {{/each}}
 
