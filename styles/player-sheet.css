@@ -120,7 +120,7 @@
 .charsheet a[type^="roll"].txt-btn {
     height: 25px;
     line-height: unset;
-    font-size: 14px;
+    font-size: 12px;
     border: 2px solid black;
     background-color: transparent;
     margin-left: 5px;
@@ -346,6 +346,7 @@
 }
 .charsheet section.skills .mod {
     margin: 0px 4px 0px 4px;
+    white-space: nowrap;
 }
 .charsheet section.skills a[type="roll"] {
     margin-right: 0px;
@@ -379,7 +380,7 @@
 .charsheet section.condition {
     grid-area: condition;
     padding-left: 10px;
-    margin: 8px 25px 8px 4px;
+    margin: 0px 5px 0px 0px;
 }
 .charsheet section.condition span {
     text-transform: uppercase;
@@ -451,7 +452,7 @@
     margin: 5px;
 }
 .charsheet div.ac label {
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: bold;
 }
 .charsheet div.ac label.wide {
@@ -511,12 +512,12 @@
 }
 .charsheet section.bulk {
     grid-area: bulk;
-    width: 156px;
+    width: 130px;
     height: 80px;
 }
 .charsheet section.inventory {
     grid-area: inventory;
-    width: 156px;
+    width: 130px;
 }
 .charsheet section.inventory textarea {
     width: 95%;
@@ -528,7 +529,7 @@
     display: unset;
     grid-template-columns: 3.5fr repeat(5, 1fr) 2fr;
     grid-template-rows: repeat(5, 1fr);
-    margin: 0px 20px 10px 5px;
+    margin: 0px 5px 10px 5px;
 }
 .charsheet .attacks img {
     vertical-align: middle;

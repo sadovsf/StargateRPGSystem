@@ -109,6 +109,7 @@ export default class SGActorSheet extends ActorSheet {
         html.find('div.attr input').change(this._onChangeAttrValue.bind(this));
         html.find('section.skills div input[type="checkbox"]').click(event => this._onToggleAbilityProficiency(event));
         html.find('section.skills div span.mod select').change(event => this._onChangeSkillMod(event));
+        html.find('section.skills span.mod a.skill-mod-revert').click(event => this._onSkillRestoreDefaultModClicked(event));
         html.find('section.saves div input[type="checkbox"]').click(event => this._onToggleAbilityProficiency(event));
         html.find('div.prof div.section input[name="data.prof"]').change(event => this._onProfChanged(event));
 
@@ -121,6 +122,17 @@ export default class SGActorSheet extends ActorSheet {
         html.find('a.config-button').click(this._onConfigMenu.bind(this));
 
         html.find(".death-save-checkbox").change(event => this._onDeathSaveCheckboxChanged(event));
+    }
+
+    async _onSkillRestoreDefaultModClicked(event) {
+        const skillName = event.currentTarget.parentElement.parentElement.dataset.skill;
+
+        const defaultValues = game.system.model.Actor[this.actor.type];
+        const defaultSkillMod = defaultValues.skills[skillName].mod;
+
+        await this.actor.update({ [`data.skills.${skillName}.mod`]: defaultSkillMod }, {render: false});
+
+        return this.actor.update(this._compileSkillValues());
     }
 
     /** @override */
