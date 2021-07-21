@@ -1,20 +1,18 @@
 # StargateRPGSystem
-![](https://user-images.githubusercontent.com/2211533/120898785-ca4f7e00-c62c-11eb-8663-b13aa72c119c.png)
+Rules are made by **Wyvern Gaming** and can be purchased on official page:
+https://stargatetherpg.com - [Rules PDF link](https://stargatetherpg.com/store/product/13-stargate-sg-1-roleplaying-game-core-rulebook-digital-pdf-only/)
+
+System programmed by me, you can support my work here:
 https://www.buymeacoffee.com/sadovsf
 
-Icons kindly provided and Created by AurelTristen, if you like his work make sure to take a look on his other works and support him on
-https://www.patreon.com/HellScapeAssets
+Icons kindly provided and Created by AurelTristen, if you like his work make sure to take a look on his other works and support him on https://www.patreon.com/HellScapeAssets
 
 
 This is system for FoundryVTT based on original sheet implementation for Roll20:
 https://github.com/Roll20/roll20-character-sheets/tree/master/Stargate-RPG
 
-It is in super early stage and pretty much only part of visualizaiton is working as iam currently learning FoundryVTT API and stuff myself.
-System should ideally contain at least characted sheet port and possibly if i have more time some prepared weapons and items.
-
 # Latest news
-Systems are going along nicely and i believe that in a week or so basic workings for sheet and weapon management will be ready to play.
-I also did setup donate option if you would like to increase my motivation to make it into great system!
+https://www.buymeacoffee.com/sadovsf/posts
 
 # Installation Instructions
 To install and use the SGRPG system for Foundry Virtual Tabletop, simply paste the following URL into the
