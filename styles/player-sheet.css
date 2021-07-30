@@ -226,28 +226,17 @@
     grid-gap: 10px;
     padding: 5px;
 }
-.charsheet main.page3 .settings label {
+.charsheet main.page3 label {
     font-size: 1.4em;
     font-weight: bold;
     text-align: center;
     width: 250px;
 }
-.charsheet main.page3 .changelog label {
-    font-size: 1.4em;
-    font-weight: bold;
-    text-align: center;
-    width: 250px;
-}
-.charsheet main.page3 label.other {
-    font-size: 1.4em;
-    font-weight: bold;
-    text-align: center;
-    width: 250px;
-}
-.charsheet main.character, .charsheet main.background, .charsheet main.settings {
+
+.charsheet main.character, .charsheet main.background, .charsheet main.credits {
     display: none;
 }
-.charsheet input.tabstoggle[value="character"] ~ main.character, .charsheet input.tabstoggle[value="background"] ~ main.background, .charsheet input.tabstoggle[value="settings"] ~ main.settings {
+.charsheet input.tabstoggle[value="character"] ~ main.character, .charsheet input.tabstoggle[value="background"] ~ main.background, .charsheet input.tabstoggle[value="credits"] ~ main.credits {
     display: grid;
 }
 .charsheet div.tab-as {
@@ -538,19 +527,6 @@
 .charsheet .background section {
     max-height: 350px;
     overflow-y: scroll;
-}
-
-.charsheet section.settings {
-    grid-area: settings;
-}
-.charsheet section.settings select {
-    width: 60px;
-}
-.charsheet section.settings div {
-    padding: 10px;
-}
-.charsheet section.settings input[type="text"] {
-    width: 395px;
 }
 .charsheet section.other {
     grid-area: other;
