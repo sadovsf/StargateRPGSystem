@@ -1,6 +1,6 @@
 {
     "Actor": {
-        "types": [ "player", "vehicle" ],
+        "types": [ "player", "vehicle", "npc" ],
         "templates": {
             "common": {
                 "health": {
@@ -226,6 +226,14 @@
             "size": "medium",
             "description": "",
             "handling": 10
+        },
+
+        "npc": {
+            "templates": ["common"],
+            "cr": 0,
+            "size": "normal",
+            "gm_notes": "",
+            "details": ""
         }
     },
 

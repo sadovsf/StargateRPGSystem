@@ -41,6 +41,7 @@ export default class SGActorSheet extends ActorSheet {
           cssClass: isOwner ? "editable" : "locked",
           isCharacter: this.actor.type === "character",
           isNPC: this.actor.type === "npc",
+          isGM: game.user.isGM,
           isVehicle: this.actor.type === 'vehicle',
           rollData: this.actor.getRollData.bind(this.actor),
         };
@@ -58,6 +59,7 @@ export default class SGActorSheet extends ActorSheet {
         }
         data.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
         this._prepareItemData(data);
+        this._prepare_proficient_skills(data);
 
         data.death_success1 = data.data.deathSaves.sucesses > 0;
         data.death_success2 = data.data.deathSaves.sucesses > 1;
@@ -104,14 +106,14 @@ export default class SGActorSheet extends ActorSheet {
         html.find('a.txt-btn[type="roll_deathsave"]').click(event => this._onRollDeathSave(event));
         html.find('a.txt-btn[type="roll_init"]').click(event => this._roll_initiative(event));
         html.find('a.txt-btn[type="roll_moxie"]').click(event => this._roll_moxie(event));
+        html.find('a.txt-btn[type="reset_deathsave"]').click(event => this._reset_deathsave(event));
         html.find('a[type="roll_attack"]').click(event => this._roll_attack(event));
 
-        html.find('div.attr input').change(this._onChangeAttrValue.bind(this));
-        html.find('section.skills div input[type="checkbox"]').click(event => this._onToggleAbilityProficiency(event));
-        html.find('section.skills div span.mod select').change(event => this._onChangeSkillMod(event));
-        html.find('section.skills span.mod a.skill-mod-revert').click(event => this._onSkillRestoreDefaultModClicked(event));
-        html.find('section.saves div input[type="checkbox"]').click(event => this._onToggleAbilityProficiency(event));
-        html.find('div.prof div.section input[name="data.prof"]').change(event => this._onProfChanged(event));
+        html.find('input[data_type="ability_value"]').change(this._onChangeAbilityValue.bind(this));
+        html.find('input[data_type="skill_prof"]').click(event => this._onToggleSkillProficiency(event));
+        html.find('input[name="data.prof"]').change(event => this._onProfChanged(event));
+        html.find('select[data_type="skill_mod"]').change(event => this._onChangeSkillMod(event));
+        html.find('a.skill-mod-revert').click(event => this._onSkillRestoreDefaultModClicked(event));
 
         html.find('.item-consume').click(event => this._onItemConsume(event));
         html.find('.item-edit').click(event => this._onItemEdit(event));
@@ -198,7 +200,18 @@ export default class SGActorSheet extends ActorSheet {
         data.maxBulk = maxBulk;
     }
 
-    async _onChangeAttrValue(event) {
+
+    _prepare_proficient_skills(data) {
+        data.proficient_skills = {};
+        for(const skill_id in data.data.skills) {
+            const skill = data.data.skills[skill_id];
+            if (skill.proficient) {
+                data.proficient_skills[skill_id] = foundry.utils.deepClone(skill);
+            }
+        }
+    }
+
+    async _onChangeAbilityValue(event) {
         event.preventDefault();
         const newAttrVal = parseInt(event.currentTarget.value);
         const attrName = event.currentTarget.parentElement.dataset.attr;
@@ -222,7 +235,7 @@ export default class SGActorSheet extends ActorSheet {
         return this.actor.update(this._compileSkillValues());
     }
 
-    async _onToggleAbilityProficiency(event) {
+    async _onToggleSkillProficiency(event) {
         event.preventDefault();
         const cb = event.currentTarget;
 
@@ -432,6 +445,14 @@ export default class SGActorSheet extends ActorSheet {
         r.toMessage({
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             flavor: "Death save"
+        });
+    }
+
+    _reset_deathsave(event) {
+        event.preventDefault();
+        return this.actor.update({
+            "data.deathSaves.fails": 0,
+            "data.deathSaves.sucesses": 0
         });
     }
 

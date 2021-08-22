@@ -83,7 +83,7 @@
     {{#each data.attributes as |attr a|}}
       <div class="stat columnflex nowrap center middle" data-attr="{{a}}">
         <a type="roll" class="txt-btn large" data-bonus="data.attributes.{{a}}.mod">{{a}}</a>
-        <input name="data.attributes.{{a}}.value" type="number" value="{{attr.value}}">
+        <input data_type="ability_value" name="data.attributes.{{a}}.value" type="number" value="{{attr.value}}">
         <span class="mod">{{attr.mod}}</span>
       </div>
     {{/each}}
@@ -97,11 +97,11 @@
 
     {{#each data.skills as |skill s|}}
       <div class="rowflex nowrap" data-skill="{{s}}">
-        <input name="data.skills.{{s}}.proficient" type="checkbox" {{checked skill.proficient}}>
-        <input name="data.skills.{{s}}.value" class="w30" value="{{skill.value}}">
+        <input data_type="skill_prof" name="data.skills.{{s}}.proficient" type="checkbox" {{checked skill.proficient}}>
+        <input data_type="skill_value" name="data.skills.{{s}}.value" class="w30" value="{{skill.value}}">
         <a type="roll" class="txt-btn" data-bonus="data.skills.{{s}}.value">{{s}}</a>
         <span class="mod">
-          <select name="data.skills.{{s}}.mod" class="skillModSelect">
+          <select data_type="skill_mod"  name="data.skills.{{s}}.mod" class="skillModSelect">
             {{selectOptions ../config.abilities selected=skill.mod localize=false}}
           </select>
           <a class="skill-mod-revert" title="Revert to default attribute mod"><i class="fa fa-undo" style="font-size: 8px;"></i></a>
@@ -210,7 +210,7 @@
     <h3>Saves</h3>
     {{#each data.saves as |save s|}}
       <div class="rowflex nowrap" data-save="{{s}}">
-        <input name="data.saves.{{s}}.proficient" type="checkbox" {{checked save.proficient}}>
+        <input data_type="skill_prof" name="data.saves.{{s}}.proficient" type="checkbox" {{checked save.proficient}}>
         <input name="data.saves.{{s}}.value" class="w30" value="{{save.value}}">
         <a type="roll" class="txt-btn" data-bonus="data.saves.{{s}}.value">{{lookup ../config.saves s}}</a>
       </div>

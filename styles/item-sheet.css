@@ -121,8 +121,8 @@
 
 .itemsheet .sheet-header {
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 120px;
-  flex: 0 0 120px;
+  -ms-flex: 0 0 125px;
+  flex: 0 0 125px;
   overflow: hidden;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -137,6 +137,30 @@
   -ms-flex-pack: start;
   justify-content: flex-start;
   margin-bottom: 10px;
+}
+
+.itemsheet .compact-header-field {
+  flex: 0 0 auto;
+  width: 50px;
+  margin-top: 7px;
+  text-align: center;
+  margin-right: 10px;
+}
+
+.itemsheet .w30 {
+  width: 30px;
+}
+
+.itemsheet .margin-top {
+  margin-top: 10px;
+}
+
+.itemsheet .nowrap {
+  flex-wrap: nowrap;
+}
+
+.itemsheet .editor-wrapper .editor {
+  height: 100%;
 }
 
 .itemsheet .sheet-header .image-col{

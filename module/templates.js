@@ -9,6 +9,7 @@
       // Item Sheet Partials
       "systems/sgrpg/templates/sheets/parts/weapon-details.hbs",
       "systems/sgrpg/templates/sheets/parts/equip-details.hbs",
+      "systems/sgrpg/templates/sheets/parts/npc-details.hbs",
       "systems/sgrpg/templates/sheets/parts/equip-header.hbs",
       "systems/sgrpg/templates/sheets/parts/weapon-header.hbs",
 

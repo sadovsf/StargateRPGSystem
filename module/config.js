@@ -28,7 +28,9 @@ SGRPG.sizes = {
   tiny: "Tiny",
   small: "Small",
   medium: "Medium",
-  large: "Large"
+  large: "Large",
+  huge: "Huge",
+  grg: "Gargantuan"
 }
 
 SGRPG.actionReloadValue = "act_based_reload";

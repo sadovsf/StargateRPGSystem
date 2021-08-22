@@ -1,0 +1,137 @@
+<form class="{{cssClass}} flexcol sgrpg itemsheet" autocomplete="off">
+    {{!-- Sheet Header --}}
+    <header class="sheet-header">
+        {{!-- Header stuff goes here --}}
+        <div class="flexcol image-col">
+            <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="70" width="70"/>
+        </div>
+        <div class="header-fields">
+            <div class="flexrow nowrap">
+                <div class="compact-header-field">
+                    <label for="data.handling" class="resource-label">CR</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.cr" value="{{data.cr}}" data-dtype="Number"/>
+                    </div>
+                </div>
+                <h1 class="charname flexrow">
+                    <input name="name" type="text" value="{{actor.name}}" placeholder="Name"/>
+                </h1>
+            </div>
+            <div class="resources grid grid-4col">
+                <div class="resource flex-group-center">
+                    <label for="data.prof" class="resource-label">Prof</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.prof" value="{{data.prof}}" data-dtype="Number"/>
+                    </div>
+                </div>
+                <div class="resource flex-group-center">
+                    <label for="data.health.value" class="resource-label">HP</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.health.value" value="{{data.health.value}}" data-dtype="Number"/>
+                        <label>/</label>
+                        <input type="text" name="data.health.max" value="{{data.health.max}}" data-dtype="Number"/>
+                    </div>
+                </div>
+                <div class="resource flex-group-center">
+                    <label for="data.ac" class="resource-label">AC</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.ac" value="{{data.ac}}" data-dtype="Number"/>
+                    </div>
+                </div>
+                <div class="resource flex-group-center">
+                    <label for="data.speed" class="resource-label">Speed</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.speed" value="{{data.speed}}" data-dtype="Number"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item active" data-tab="description">Attributes</a>
+        <a class="item" data-tab="details">Skills &#38; Saves</a>
+        <a class="item" data-tab="notes">Notes</a>
+    </nav>
+    {{> "systems/sgrpg/templates/sheets/parts/actor-bulk-progress.hbs"}}
+
+    <section class="sg-sheet-body flexcol">
+        <div class="tab flexcol description" data-tab="description">
+            {{! ATTRIBUTES }}
+            <div class="flexrow" style="flex: 0">
+                {{#each data.attributes as |attr a|}}
+                <div class="flex-group-center" data-attr="{{a}}">
+                    <label class="resource-label" for="data.attributes.{{a}}.value">
+                        <a type="roll" class="txt-btn large" data-bonus="data.attributes.{{a}}.mod">{{a}}</a>
+                    </label>
+                    <input data_type="ability_value" name="data.attributes.{{a}}.value" type="number" value="{{attr.value}}">
+                    <span class="mod">{{attr.mod}}</span>
+                </div>
+                {{/each}}
+            </div>
+
+            {{! Proficient SKILLS }}
+            <div class="flex0 margin-top">
+                <label class="resource-label" >Skills:</label>
+                {{#each proficient_skills as |skill s|}}
+                    <a type="roll" class="txt-btn" data-bonus="data.skills.{{s}}.value">{{s}} ({{skill.value}})</a>
+                {{/each}}
+            </div>
+
+            {{! SAVES}}
+            <div class="flex0 margin-top">
+                <label class="resource-label" >Saves:</label>
+                {{#each data.saves as |save s|}}
+                    <a type="roll" class="txt-btn" data-bonus="data.saves.{{s}}.value">{{lookup ../config.saves s}} ({{save.value}})</a>
+                {{/each}}
+            </div>
+
+            {{! CONDITION}}
+            <div class="flex0 margin-top">
+                <label class="resource-label" >Condition:</label>
+                {{radioBoxes "data.condition" config.conditions checked=data.condition localize=false}}
+            </div>
+
+            {{! DEATH }}
+            <div class="flex0 margin-top">
+                <a title="Reset death saves counter" class="txt-btn" type="reset_deathsave"><i class="fa fa-undo"></i></a>
+                <a type="roll_deathsave" class="txt-btn resource-label large">Death Save:</a>
+                <i class="fa fa-check" style="color: green">{{data.deathSaves.sucesses}}</i>
+                <i class="fa fa-cross" style="color: red">{{data.deathSaves.fails}}</i>
+            </div>
+
+            {{! WEAPONS INVENTORY }}
+            <div class="attacks margin-top">
+                {{> "systems/sgrpg/templates/sheets/parts/actor-weapon-inventory.hbs"}}
+            </div>
+        </div>
+
+        {{! DETAILS }}
+        <div class="tab flexrow details" data-tab="details">
+            {{> "systems/sgrpg/templates/sheets/parts/npc-details.hbs"}}
+        </div>
+
+        {{! NOTES }}
+        <div class="tab flexcol notes" data-tab="notes">
+            <div class="grid grid-2col">
+                <div class="flex-group-center editor-wrapper">
+                    <h2>GM notes</h2>
+                    {{#if isGM}}
+                        {{editor content=data.gm_notes target="data.gm_notes" button=true owner=owner editable=editable rollData=rollData}}
+                    {{/if}}
+                </div>
+
+                <div class="flex-group-center editor-wrapper">
+                    <h2>Feats &#38; abilities</h2>
+                    {{editor content=data.details target="data.details" button=true owner=owner editable=editable rollData=rollData}}
+                </div>
+
+                <div class="flex-group-center">
+                    <h2>Item inventory</h2>
+                    {{> "systems/sgrpg/templates/sheets/parts/actor-equip-inventory.hbs"}}
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
