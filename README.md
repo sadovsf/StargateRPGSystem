@@ -3,7 +3,7 @@ Rules are made by **Wyvern Gaming** and can be purchased on official page:
 https://stargatetherpg.com - [Rules PDF link](https://stargatetherpg.com/store/product/13-stargate-sg-1-roleplaying-game-core-rulebook-digital-pdf-only/)
 
 System programmed by me, you can support my work here:
-https://www.buymeacoffee.com/sadovsf
+https://www.buymeacoffee.com/sadovsf or https://paypal.me/sadovsf
 
 Icons kindly provided and Created by AurelTristen, if you like his work make sure to take a look on his other works and support him on https://www.patreon.com/HellScapeAssets
 
