@@ -74,10 +74,21 @@ export default class ItemSg extends Item {
             await this.update({"data.ammo.value": remainingAmmo - 1});
         }
 
-        r.toMessage({
+        let messageData = {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             flavor: "Attacks using " + this.data.name
-        });
+        };
+
+        if (this.data.data.atkSnd) { // Check if the sound is set, then check if it exists
+            const resp = await fetch(this.data.data.atkSnd, { method: 'HEAD' });
+            if (resp.ok) {
+                messageData.sound = this.data.data.atkSnd;
+            } else {
+                ui.notifications.warn("Attack sound path for " + this.data.name + " could not be resolved: " + this.data.data.atkSnd);
+            }
+        }
+
+        r.toMessage(messageData);
     }
 
     async rollDamage() {
@@ -99,10 +110,21 @@ export default class ItemSg extends Item {
             return;
         }
 
-        r.toMessage({
+        let messageData = {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             flavor: "Done damage using " + this.data.name
-        });
+        };
+
+        if (this.data.data.dmgSnd) { // Check if the sound is set, then check if it exists
+            const resp = await fetch(this.data.data.dmgSnd, { method: 'HEAD' });
+            if (resp.ok) {
+                messageData.sound = this.data.data.dmgSnd;
+            } else {
+                ui.notifications.warn("Damage sound path for " + this.data.name + " could not be resolved: " + this.data.data.dmgSnd);
+            }
+        }
+
+        r.toMessage(messageData);
     }
 
     async consume() {
