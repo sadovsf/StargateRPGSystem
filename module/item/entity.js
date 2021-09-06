@@ -88,7 +88,7 @@ export default class ItemSg extends Item {
             }
         }
 
-        r.toMessage(messageData);
+        return r.toMessage(messageData);
     }
 
     async rollDamage() {
@@ -124,7 +124,7 @@ export default class ItemSg extends Item {
             }
         }
 
-        r.toMessage(messageData);
+        return r.toMessage(messageData);
     }
 
     async consume() {
