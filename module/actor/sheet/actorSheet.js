@@ -69,14 +69,9 @@ export default class SGActorSheet extends ActorSheet {
         data.death_failure2 = data.data.deathSaves.fails > 1;
         data.death_failure3 = data.data.deathSaves.fails > 2;
 
+        data.tensionDie = game.sgrpg.getTensionDie();
+
         data.config = mergeObject(CONFIG.SGRPG, {
-            tensionDice: {
-                d4: "d4",
-                d6: "d6",
-                d8: "d8",
-                d10: "d10",
-                d12: "d12"
-            },
             conditions: {
                 normal: "Normal",
                 disadvabilitychecks: "Disadv ability checks",
