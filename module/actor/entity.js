@@ -32,5 +32,19 @@ export default class ActorSg extends Actor {
       isBar: true
     }, updates);
     return allowed !== false ? this.update(updates) : this;
-  }
+    }
+
+    /** @inheritdoc */
+    getRollData() {
+        let rollData = super.getRollData();
+        const data = this.data.data; // Get the data in a nicer variable
+
+        // Set the Tension Die from the scene, and if necessary, from the campaign
+        const tensionDie = game.sgrpg.getTensionDie();
+        rollData.tensionDie = tensionDie;
+        rollData.tensionDice = tensionDie;
+        rollData.TD = tensionDie;
+
+        return rollData;
+    }
 }
