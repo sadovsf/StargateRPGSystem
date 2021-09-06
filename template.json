@@ -252,6 +252,8 @@
                 "attackAbility": "dex",
                 "toHit": "4",
                 "dmg": "1d6",
+				"atkSnd" : null,
+				"dmgSnd" : null,
                 "ammo": {
                     "bulk": null,
                     "value": null,
