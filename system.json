@@ -2,7 +2,7 @@
     "name": "sgrpg",
     "title": "Stargate RPG",
     "description": "System for Stargate RPG created by Wyvern Gaming, https://stargatetherpg.com/",
-    "version": "1.4.0-alpha",
+    "version": "1.5.0-beta",
     "templateVersion": 2,
     "author": "Filip Sádovský",
     "minimumCoreVersion": "0.8.6",
@@ -28,6 +28,6 @@
     "secondaryTokenAttribute": null,
     "url": "https://github.com/sadovsf/StargateRPGSystem",
     "manifest": "https://raw.githubusercontent.com/sadovsf/StargateRPGSystem/master/system.json",
-    "download": "https://github.com/sadovsf/StargateRPGSystem/releases/download/v1.4.0-alpha/sgrpg.zip"
+    "download": "https://github.com/sadovsf/StargateRPGSystem/releases/download/v1.5.0-beta/sgrpg.zip"
 }
 
