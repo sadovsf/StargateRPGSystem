@@ -1,5 +1,7 @@
 import { SGRPG } from "./module/config.js";
 
+import "./module/scene-config.js"; // To activate the hook
+
 import ItemSg from "./module/item/entity.js"
 import ActorSg from "./module/actor/entity.js"
 
@@ -20,7 +22,8 @@ Hooks.once("init", function(){
 
     game.sgrpg = {
         config: SGRPG,
-        rollItemMacro: macros.rollItemMacro
+        rollItemMacro: macros.rollItemMacro,
+        getTensionDie
     };
 
     CONFIG.Item.documentClass = ItemSg;
@@ -41,7 +44,24 @@ Hooks.once("init", function(){
     Items.registerSheet("sgrpg", SGItemSheet, {makeDefault: true});
 
     Actors.unregisterSheet("core", ActorSheet);
-    Actors.registerSheet("sgrpg", SGActorSheet, {makeDefault: true});
+    Actors.registerSheet("sgrpg", SGActorSheet, { makeDefault: true });
+
+
+    game.settings.register("sgrpg", "campaignTension", {
+        name: "Campaign Tension Level",
+        hint: "Set the campaign's base Tension level and the Tension Die.",
+        scope: "world",
+        type: String,
+        choices: {
+            "d4": "Comedic (d4)",
+            "d6": "Standard (d6)",
+            "d8": "Growing (d8)",
+            "d10": "Dire (d10)",
+            "d12": "All is Lost (d12)",
+        },
+        default: "d6",
+        config: true
+    });
 
 
     preloadHandlebarsTemplates()
@@ -63,3 +83,13 @@ Hooks.on("renderChatMessage", (app, html, data) => {
 Hooks.on("getChatLogEntryContext", chat.addChatMessageContextOptions);
 Hooks.on("renderChatLog", (app, html, data) => ItemSg.chatListeners(html));
 Hooks.on("renderChatPopout", (app, html, data) => ItemSg.chatListeners(html));
+
+
+/** Returns the current Tension Die, either from the base campaign level, or the currently active scene level if overridden there
+ * @returns {string} The current Tension Die
+ */
+function getTensionDie() {
+    // First, try to get the Tension Die of the currently active scene, if that turns out unset, get the Tension Die of the campaign
+    const tensionDie = game.scenes.active.getFlag("sgrpg", "sceneTensionDie") || game.settings.get("sgrpg", "campaignTension");
+    return tensionDie;
+}
