@@ -33,6 +33,15 @@ SGRPG.sizes = {
   grg: "Gargantuan"
 }
 
+SGRPG.tensionDice = {
+  "d4": "Comedic (d4)",
+  "d6": "Standard (d6)",
+  "d8": "Growing (d8)",
+  "d10": "Dire (d10)",
+  "d12": "All is Lost (d12)",
+};
+SGRPG.defaultTensionDie = "d6";
+
 SGRPG.actionReloadValue = "act_based_reload";
 
 /**

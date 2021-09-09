@@ -50,6 +50,7 @@ export default class SGActorSheet extends ActorSheet {
         const actorData = this.actor.data.toObject(false);
         data.actor = actorData;
         data.data = actorData.data;
+        data.data.tensionDie = game.sgrpg.getTensionDie();
 
         data.items = actorData.items;
         for ( let iData of data.items ) {
@@ -84,7 +85,6 @@ export default class SGActorSheet extends ActorSheet {
             saves: CONFIG.SGRPG.abilities
         });
 
-        console.log(data);
         return data;
     }
 
