@@ -52,14 +52,8 @@ Hooks.once("init", function(){
         hint: "Set the campaign's base Tension level and the Tension Die.",
         scope: "world",
         type: String,
-        choices: {
-            "d4": "Comedic (d4)",
-            "d6": "Standard (d6)",
-            "d8": "Growing (d8)",
-            "d10": "Dire (d10)",
-            "d12": "All is Lost (d12)",
-        },
-        default: "d6",
+        choices: SGRPG.tensionDice,
+        default: SGRPG.defaultTensionDie,
         config: true
     });
 

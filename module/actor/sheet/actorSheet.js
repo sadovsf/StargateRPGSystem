@@ -50,6 +50,7 @@ export default class SGActorSheet extends ActorSheet {
         const actorData = this.actor.data.toObject(false);
         data.actor = actorData;
         data.data = actorData.data;
+        data.data.tensionDie = game.sgrpg.getTensionDie();
 
         data.items = actorData.items;
         for ( let iData of data.items ) {
@@ -69,8 +70,6 @@ export default class SGActorSheet extends ActorSheet {
         data.death_failure2 = data.data.deathSaves.fails > 1;
         data.death_failure3 = data.data.deathSaves.fails > 2;
 
-        data.tensionDie = game.sgrpg.getTensionDie();
-
         data.config = mergeObject(CONFIG.SGRPG, {
             conditions: {
                 normal: "Normal",
@@ -84,7 +83,6 @@ export default class SGActorSheet extends ActorSheet {
             saves: CONFIG.SGRPG.abilities
         });
 
-        console.log(data);
         return data;
     }
 
