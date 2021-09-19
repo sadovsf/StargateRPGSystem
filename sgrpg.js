@@ -1,6 +1,8 @@
 import { SGRPG } from "./module/config.js";
 
-import "./module/scene-config.js"; // To activate the hook
+import "./module/scene-config.js";
+
+import "./module/externals.js"; // Setup external module integrations here, so sgrpg.js doesn't need to otherwise care
 
 import ItemSg from "./module/item/entity.js"
 import ActorSg from "./module/actor/entity.js"
