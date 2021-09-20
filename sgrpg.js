@@ -86,6 +86,5 @@ Hooks.on("renderChatPopout", (app, html, data) => ItemSg.chatListeners(html));
  */
 function getTensionDie() {
     // First, try to get the Tension Die of the currently active scene, if that turns out unset, get the Tension Die of the campaign
-    const tensionDie = game.scenes.active.getFlag("sgrpg", "sceneTensionDie") || game.settings.get("sgrpg", "campaignTension");
-    return tensionDie;
+    return game.scenes.active?.getFlag("sgrpg", "sceneTensionDie") || game.settings.get("sgrpg", "campaignTension");
 }
