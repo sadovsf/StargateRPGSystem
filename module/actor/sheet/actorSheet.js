@@ -335,6 +335,11 @@ export default class SGActorSheet extends ActorSheet {
         event.preventDefault();
         const div = event.currentTarget.parentElement.parentElement;
         const item = this.actor.items.get(div.dataset.itemId);
+
+        if (confirm(`Do you really want to delete '${item.name}' from inventory?`) !== true) {
+            return;
+        }
+
         if ( item ) return item.delete();
     }
 
