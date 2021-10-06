@@ -21,7 +21,10 @@ SGRPG.attackTypes = {
     blunt: "Blunt",
     force: "Force",
     slashing: "Slashing",
-    electric: "Electric"
+    electric: "Electric",
+    radiant: "Radiant",
+    sonic: "Sonic",
+    explosive: "Explosive"
 };
 
 SGRPG.sizes = {
