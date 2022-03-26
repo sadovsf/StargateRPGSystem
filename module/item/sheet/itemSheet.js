@@ -1,12 +1,12 @@
 export default class SGItemSheet extends ItemSheet {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
-          classes: ["sheet", "item", "itemsheet"],
-          width: 520,
-          height: 480,
-          tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
+            classes: ["sheet", "item", "itemsheet"],
+            width: 520,
+            height: 480,
+            tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
         });
-      }
+    }
 
     get template() {
         return `systems/sgrpg/templates/sheets/item-sheet.hbs`;
@@ -15,14 +15,14 @@ export default class SGItemSheet extends ItemSheet {
     getData(options) {
         let isOwner = this.item.isOwner;
         const data = {
-          owner: isOwner,
-          limited: this.item.limited,
-          options: this.options,
-          editable: this.isEditable,
-          cssClass: isOwner ? "editable" : "locked",
-          rollData: this.item.getRollData.bind(this.item),
-          config: CONFIG.SGRPG,
-          isWeapon: this.item.type == "weapon"
+            owner: isOwner,
+            limited: this.item.limited,
+            options: this.options,
+            editable: this.isEditable,
+            cssClass: isOwner ? "editable" : "locked",
+            rollData: this.item.getRollData.bind(this.item),
+            config: CONFIG.SGRPG,
+            isWeapon: this.item.type == "weapon"
         };
 
         // The Actor's data
@@ -45,13 +45,13 @@ export default class SGItemSheet extends ItemSheet {
      * @private
      */
     _getItemConsumptionTargets(item) {
-      const actor = this.item.actor;
-      if ( !actor ) return {};
+        const actor = this.item.actor;
+        if (!actor) return {};
 
-      // Ammunition
-      return actor.itemTypes.equip.reduce((ammo, i) =>  {
-        ammo[i.id] = `${i.name} (${i.data.data.quantity})`;
-        return ammo;
-      }, {});
+        // Ammunition
+        return actor.itemTypes.equip.reduce((ammo, i) => {
+            ammo[i.id] = `${i.name} (${i.data.data.quantity})`;
+            return ammo;
+        }, {});
     }
 }

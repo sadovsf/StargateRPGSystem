@@ -18,7 +18,7 @@ import * as macros from "./module/macros.js"
 import { _getInitiativeFormula } from "./module/combat.js";
 import { preloadHandlebarsTemplates } from "./module/templates.js";
 
-Hooks.once("init", function(){
+Hooks.once("init", function () {
     console.log("Initializing StarGate systems");
     CONFIG.SGRPG = SGRPG;
 
@@ -43,7 +43,7 @@ Hooks.once("init", function(){
     Combatant.prototype._getInitiativeFormula = _getInitiativeFormula;
 
     Items.unregisterSheet("core", ItemSheet);
-    Items.registerSheet("sgrpg", SGItemSheet, {makeDefault: true});
+    Items.registerSheet("sgrpg", SGItemSheet, { makeDefault: true });
 
     Actors.unregisterSheet("core", ActorSheet);
     Actors.registerSheet("sgrpg", SGActorSheet, { makeDefault: true });
@@ -63,7 +63,7 @@ Hooks.once("init", function(){
     preloadHandlebarsTemplates()
 });
 
-Hooks.once("ready", function() {
+Hooks.once("ready", function () {
     console.log("Registering StarGate systems");
 
     // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to

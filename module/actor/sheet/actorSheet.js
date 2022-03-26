@@ -6,7 +6,7 @@ export default class SGActorSheet extends ActorSheet {
         return mergeObject(super.defaultOptions, {
             width: 875,
             height: 900,
-            tabs: [{navSelector: ".tabs", contentSelector: ".sg-sheet-body", initial: "character"}]
+            tabs: [{ navSelector: ".tabs", contentSelector: ".sg-sheet-body", initial: "character" }]
         });
 
         // https://foundryvtt.wiki/en/development/guides/SD-tutorial/SD07-Extending-the-ActorSheet-class
@@ -34,16 +34,16 @@ export default class SGActorSheet extends ActorSheet {
         let isOwner = this.actor.isOwner;
 
         const data = {
-          owner: isOwner,
-          limited: this.actor.limited,
-          options: this.options,
-          editable: this.isEditable,
-          cssClass: isOwner ? "editable" : "locked",
-          isCharacter: this.actor.type === "character",
-          isNPC: this.actor.type === "npc",
-          isGM: game.user.isGM,
-          isVehicle: this.actor.type === 'vehicle',
-          rollData: this.actor.getRollData.bind(this.actor),
+            owner: isOwner,
+            limited: this.actor.limited,
+            options: this.options,
+            editable: this.isEditable,
+            cssClass: isOwner ? "editable" : "locked",
+            isCharacter: this.actor.type === "character",
+            isNPC: this.actor.type === "npc",
+            isGM: game.user.isGM,
+            isVehicle: this.actor.type === 'vehicle',
+            rollData: this.actor.getRollData.bind(this.actor),
         };
 
         // The Actor's data
@@ -53,10 +53,10 @@ export default class SGActorSheet extends ActorSheet {
         data.data.tensionDie = game.sgrpg.getTensionDie();
 
         data.items = actorData.items;
-        for ( let iData of data.items ) {
-          const item = this.actor.items.get(iData._id);
-          iData.hasAmmo = item.consumesAmmunition;
-          iData.labels = item.labels;
+        for (let iData of data.items) {
+            const item = this.actor.items.get(iData._id);
+            iData.hasAmmo = item.consumesAmmunition;
+            iData.labels = item.labels;
         }
         data.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
         this._prepareItemData(data);
@@ -94,7 +94,7 @@ export default class SGActorSheet extends ActorSheet {
      */
     activateListeners(html) {
         super.activateListeners(html);
-        if ( ! this.isEditable ) return;
+        if (!this.isEditable) return;
 
         // Rollable skill checks
         html.find('a.txt-btn[type="roll"]').click(event => this._onRollCheck(event));
@@ -127,7 +127,7 @@ export default class SGActorSheet extends ActorSheet {
         const defaultValues = game.system.model.Actor[this.actor.type];
         const defaultSkillMod = defaultValues.skills[skillName].mod;
 
-        await this.actor.update({ [`data.skills.${skillName}.mod`]: defaultSkillMod }, {render: false});
+        await this.actor.update({ [`data.skills.${skillName}.mod`]: defaultSkillMod }, { render: false });
 
         return this.actor.update(this._compileSkillValues());
     }
@@ -140,12 +140,12 @@ export default class SGActorSheet extends ActorSheet {
         // }
 
         // Stack identical equipment
-        if ( itemData.type === "equip" && itemData.flags.core?.sourceId ) {
+        if (itemData.type === "equip" && itemData.flags.core?.sourceId) {
             const similarItem = this.actor.items.find(i => {
                 const sourceId = i.getFlag("core", "sourceId");
                 return sourceId && (sourceId === itemData.flags.core?.sourceId) && (i.type === "equip");
             });
-            if ( similarItem ) {
+            if (similarItem) {
                 return similarItem.update({
                     'data.quantity': similarItem.data.data.quantity + Math.max(itemData.data.quantity, 1)
                 });
@@ -163,8 +163,8 @@ export default class SGActorSheet extends ActorSheet {
         };
 
         let curBulk = 0;
-        for(const item of data.items) {
-            if(! Object.keys(inventory).includes(item.type)) {
+        for (const item of data.items) {
+            if (!Object.keys(inventory).includes(item.type)) {
                 console.error("Unknown item type!");
                 continue;
             }
@@ -198,7 +198,7 @@ export default class SGActorSheet extends ActorSheet {
 
     _prepare_proficient_skills(data) {
         data.proficient_skills = {};
-        for(const skill_id in data.data.skills) {
+        for (const skill_id in data.data.skills) {
             const skill = data.data.skills[skill_id];
             if (skill.proficient) {
                 data.proficient_skills[skill_id] = foundry.utils.deepClone(skill);
@@ -214,7 +214,7 @@ export default class SGActorSheet extends ActorSheet {
         await this.actor.update({
             [`data.attributes.${attrName}.mod`]: this._calculateAttributeMod(newAttrVal),
             [`data.attributes.${attrName}.value`]: newAttrVal
-        }, {render: false});
+        }, { render: false });
 
         return this.actor.update(this._compileSkillValues());
     }
@@ -225,7 +225,7 @@ export default class SGActorSheet extends ActorSheet {
 
         await this.actor.update({
             "data.prof": newProf
-        }, {render: false});
+        }, { render: false });
 
         return this.actor.update(this._compileSkillValues());
     }
@@ -234,7 +234,7 @@ export default class SGActorSheet extends ActorSheet {
         event.preventDefault();
         const cb = event.currentTarget;
 
-        await this.actor.update({[cb.name]: cb.checked == true });
+        await this.actor.update({ [cb.name]: cb.checked == true });
         return this.actor.update(this._compileSkillValues());
     }
 
@@ -242,7 +242,7 @@ export default class SGActorSheet extends ActorSheet {
         event.preventDefault();
         const select = event.currentTarget;
 
-        await this.actor.update({[select.name]: select.value });
+        await this.actor.update({ [select.name]: select.value });
         return this.actor.update(this._compileSkillValues());
     }
 
@@ -253,24 +253,24 @@ export default class SGActorSheet extends ActorSheet {
         const currentProfValue = parseInt(getProperty(actorData, "data.prof"));
 
         let modify = {};
-        for(const skillName in skillList) {
+        for (const skillName in skillList) {
             const skill = skillList[skillName]
             const skillModName = getProperty(actorData, `data.skills.${skillName}.mod`);
             let baseVal = parseInt(getProperty(actorData, `data.attributes.${skillModName}.mod`));
             if (skill.proficient) {
                 baseVal += currentProfValue;
             }
-            modify[`data.skills.${skillName}.value`] = baseVal < 0 ? baseVal.toString() : "+"+baseVal;
+            modify[`data.skills.${skillName}.value`] = baseVal < 0 ? baseVal.toString() : "+" + baseVal;
         }
 
-        for(const saveName in savesList) {
+        for (const saveName in savesList) {
             const save = savesList[saveName]
             const saveModName = getProperty(actorData, `data.saves.${saveName}.mod`);
             let baseVal = parseInt(getProperty(actorData, `data.attributes.${saveModName}.mod`));
             if (save.proficient) {
                 baseVal += currentProfValue;
             }
-            modify[`data.saves.${saveName}.value`] = baseVal < 0 ? baseVal.toString() : "+"+baseVal;
+            modify[`data.saves.${saveName}.value`] = baseVal < 0 ? baseVal.toString() : "+" + baseVal;
         }
 
 
@@ -306,10 +306,10 @@ export default class SGActorSheet extends ActorSheet {
         }
 
         const ammoItem = item.findAmmunition();
-        if (! ammoItem) {
+        if (!ammoItem) {
             if (item.data.data.ammo.target == CONFIG.SGRPG.actionReloadValue) {
                 // Weapon has no magazine, allow free reload.
-                return item.update({"data.ammo.value": item.data.data.ammo.max});
+                return item.update({ "data.ammo.value": item.data.data.ammo.max });
             }
             return ui.notifications.info(`Unable to find magazine to reload '${item.name}'.`);
         }
@@ -321,9 +321,9 @@ export default class SGActorSheet extends ActorSheet {
 
         await ammoItem.update({
             "data.quantity": magCount - 1
-        }, {render: false});
+        }, { render: false });
 
-        return item.update({"data.ammo.value": item.data.data.ammo.max});
+        return item.update({ "data.ammo.value": item.data.data.ammo.max });
     }
 
     /* -------------------------------------------- */
@@ -342,14 +342,14 @@ export default class SGActorSheet extends ActorSheet {
             return;
         }
 
-        if ( item ) return item.delete();
+        if (item) return item.delete();
     }
 
     _onItemRoll(event) {
         event.preventDefault();
         const div = event.currentTarget.parentElement.parentElement;
         const item = this.actor.items.get(div.dataset.itemId);
-        if ( item ) return item.roll()
+        if (item) return item.roll()
     }
 
     /**
@@ -357,7 +357,7 @@ export default class SGActorSheet extends ActorSheet {
      * @param {Event} event     The originating click event
      * @private
      */
-     async _onRollCheck(event) {
+    async _onRollCheck(event) {
         event.preventDefault();
 
         let actorData = this.getData();
@@ -370,7 +370,7 @@ export default class SGActorSheet extends ActorSheet {
         }
 
 
-        let r = new CONFIG.Dice.D20Roll("1d20 @prof", {prof: rollData});
+        let r = new CONFIG.Dice.D20Roll("1d20 @prof", { prof: rollData });
         const configured = await r.configureDialog({
             title: `Roll check for ${event.currentTarget.innerText}`,
             defaultRollMode: "normal"
@@ -406,16 +406,16 @@ export default class SGActorSheet extends ActorSheet {
                     "data.condition": "death"
                 });
             } else {
-                this.actor.update({["data.deathSaves.fails"]: curFails + 2 });
+                this.actor.update({ ["data.deathSaves.fails"]: curFails + 2 });
             }
         }
-        else if(rollResult == 20) {
+        else if (rollResult == 20) {
             // sucess + heal.
             const maxHealth = parseInt(this.actor.data.data.health.max);
             this.actor.update({
                 "data.deathSaves.fails": 0,
                 "data.deathSaves.sucesses": 0,
-                "data.health.value": curHealth+1 <= maxHealth ? curHealth+1 : curHealth
+                "data.health.value": curHealth + 1 <= maxHealth ? curHealth + 1 : curHealth
             });
         }
         else if (rollResult >= 10) {
@@ -427,7 +427,7 @@ export default class SGActorSheet extends ActorSheet {
                 });
             }
             else {
-                this.actor.update({[`data.deathSaves.sucesses`]: curSucess + 1 });
+                this.actor.update({ [`data.deathSaves.sucesses`]: curSucess + 1 });
             }
         }
         else {
@@ -438,7 +438,7 @@ export default class SGActorSheet extends ActorSheet {
                     "data.condition": "death"
                 });
             } else {
-                this.actor.update({["data.deathSaves.fails"]: curFails + 1 });
+                this.actor.update({ ["data.deathSaves.fails"]: curFails + 1 });
             }
         }
 
@@ -457,7 +457,7 @@ export default class SGActorSheet extends ActorSheet {
     }
 
     _roll_initiative(event) {
-        return this.actor.rollInitiative({createCombatants: true});
+        return this.actor.rollInitiative({ createCombatants: true });
     }
 
     _roll_moxie(event) {
@@ -474,10 +474,10 @@ export default class SGActorSheet extends ActorSheet {
         const button = event.currentTarget;
         let app;
         console.log(button.dataset.action)
-        switch ( button.dataset.action ) {
-        case "flags":
-            app = new ActorSheetFlags(this.object);
-            break;
+        switch (button.dataset.action) {
+            case "flags":
+                app = new ActorSheetFlags(this.object);
+                break;
         }
         app?.render(true);
     }
@@ -494,10 +494,10 @@ export default class SGActorSheet extends ActorSheet {
         });
 
         if (isSucess) {
-            return this.actor.update({"data.deathSaves.sucesses": val});
+            return this.actor.update({ "data.deathSaves.sucesses": val });
         }
         else {
-            return this.actor.update({"data.deathSaves.fails": val});
+            return this.actor.update({ "data.deathSaves.fails": val });
         }
     }
 
@@ -506,7 +506,7 @@ export default class SGActorSheet extends ActorSheet {
      * @param event
      * @private
      */
-     _calculateAttributeMod(value) {
+    _calculateAttributeMod(value) {
         const stat_base = value
 
         let stat_mod = 0;
