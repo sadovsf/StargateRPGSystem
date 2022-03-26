@@ -262,6 +262,7 @@
                 },
                 "details": {
                     "type": "piercing",
+                    "sec_type": null,
                     "range": {
                         "normal": 50,
                         "max": 100

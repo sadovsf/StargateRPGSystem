@@ -1,6 +1,8 @@
 import { SGRPG } from "./module/config.js";
 
-import "./module/scene-config.js"; // To activate the hook
+import "./module/scene-config.js";
+
+import "./module/externals.js"; // Setup external module integrations here, so sgrpg.js doesn't need to otherwise care
 
 import ItemSg from "./module/item/entity.js"
 import ActorSg from "./module/actor/entity.js"
@@ -84,6 +86,5 @@ Hooks.on("renderChatPopout", (app, html, data) => ItemSg.chatListeners(html));
  */
 function getTensionDie() {
     // First, try to get the Tension Die of the currently active scene, if that turns out unset, get the Tension Die of the campaign
-    const tensionDie = game.scenes.active.getFlag("sgrpg", "sceneTensionDie") || game.settings.get("sgrpg", "campaignTension");
-    return tensionDie;
+    return game.scenes.active?.getFlag("sgrpg", "sceneTensionDie") || game.settings.get("sgrpg", "campaignTension");
 }

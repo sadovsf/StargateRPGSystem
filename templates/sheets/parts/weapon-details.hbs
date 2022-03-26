@@ -11,6 +11,13 @@
                 {{selectOptions config.attackTypes selected=data.details.type localize=false}}
             </select>
         </div>
+        <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.details.sec_type">Sec.attack type</label>
+            <select name="data.details.sec_type">
+                <option value=""></option>
+                {{selectOptions config.attackTypes selected=data.details.sec_type localize=false}}
+            </select>
+        </div>
 
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.attackAbility">Attack mod</label>

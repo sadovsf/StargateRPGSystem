@@ -44,6 +44,7 @@ export default class ActorSg extends Actor {
         rollData.tensionDie = tensionDie;
         rollData.tensionDice = tensionDie;
         rollData.TD = tensionDie;
+        rollData.td = tensionDie;
 
         return rollData;
     }

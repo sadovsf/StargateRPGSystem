@@ -283,7 +283,15 @@ export default class ItemSg extends Item {
             if (item.data.details.special?.length) {
                 labels.push(item.data.details.special);
             }
+
+            if (item.data.details.type) {
+                labels.push("Damage: " + item.data.details.type);
+            }
+            if (item.data.details.sec_type) {
+                labels.push("Sec.damage: " + item.data.details.sec_type);
+            }
         }
+
         return labels;
     }
 
