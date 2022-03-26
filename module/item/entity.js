@@ -218,7 +218,6 @@ export default class ItemSg extends Item {
 
     static async _onChatCardAction(event) {
         event.preventDefault();
-        console.log("JA");
 
         // Extract card data
         const button = event.currentTarget;
@@ -232,19 +231,16 @@ export default class ItemSg extends Item {
         // Validate permission to proceed with the roll
         //const isTargetted = action === "save";
         if (!( /*isTargetted ||*/ game.user.isGM || message.isAuthor)) return;
-        console.log("HAHAA");
 
         // Recover the actor for the chat card
         const actor = await this._getChatCardActor(card);
         if (!actor) return;
-        console.log("PANKISTA");
 
         // Get the Item from stored flag data or by the item ID on the Actor
         const item = actor.items.get(card.dataset.itemId);
         if (!item) {
             return ui.notifications.error("No associated item or item no longer exists!")
         }
-        console.log("SAA");
 
         // Handle different actions
         switch (action) {
@@ -264,7 +260,6 @@ export default class ItemSg extends Item {
                 if (template) template.drawPreview();
                 break;
         }
-        console.log("RAHAA");
 
         // Re-enable the button
         button.disabled = false;
