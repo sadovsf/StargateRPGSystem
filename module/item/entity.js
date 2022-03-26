@@ -21,7 +21,7 @@ export default class ItemSg extends Item {
     }
 
     get consumesAmmunition() {
-        if (! this.data.data.ammo) {
+        if (!this.data.data.ammo) {
             return false;
         }
         return this.data.data.ammo.target?.length && Number.isNumeric(this.data.data.ammo.max);
@@ -34,7 +34,7 @@ export default class ItemSg extends Item {
     async rollAttack() {
         const hasAmmo = this.data.data.ammo.value !== null;
 
-        if (! this.actor) {
+        if (!this.actor) {
             return ui.notifications.warn("You can only roll for owned items!");
         }
 
@@ -71,7 +71,7 @@ export default class ItemSg extends Item {
                 // Double check that ammo count did not change while in dialog.
                 return ui.notifications.warn("No more ammo for this item!");
             }
-            await this.update({"data.ammo.value": remainingAmmo - 1});
+            await this.update({ "data.ammo.value": remainingAmmo - 1 });
         }
 
         let messageData = {
@@ -140,7 +140,7 @@ export default class ItemSg extends Item {
     }
 
     findAmmunition() {
-        if (! this.consumesAmmunition) {
+        if (!this.consumesAmmunition) {
             return null;
         }
         return this.actor.items.get(this.data.data.ammo.target);
@@ -153,7 +153,7 @@ export default class ItemSg extends Item {
      * @param {boolean} createMessage   Whether to automatically create a ChatMessage entity (if true), or only return
      *                                  the prepared message data (if false)
      */
-    async displayCard({rollMode, createMessage=true}={}) {
+    async displayCard({ rollMode, createMessage = true } = {}) {
         // Render the chat card template
         const token = this.actor.token;
         const templateData = {
@@ -172,8 +172,8 @@ export default class ItemSg extends Item {
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             content: html,
             flavor: this.data.data.chatFlavor || this.name,
-            speaker: ChatMessage.getSpeaker({actor: this.actor, token}),
-            flags: {"core.canPopout": true},
+            speaker: ChatMessage.getSpeaker({ actor: this.actor, token }),
+            flags: { "core.canPopout": true },
         };
 
         // Apply the roll mode to adjust message visibility
@@ -188,7 +188,7 @@ export default class ItemSg extends Item {
      * @param {Object} htmlOptions    Options used by the TextEditor.enrichHTML function
      * @return {Object}               An object of chat data to render
      */
-    getChatData(htmlOptions={}) {
+    getChatData(htmlOptions = {}) {
         const data = foundry.utils.deepClone(this.data.data);
 
         // Rich text description
@@ -225,40 +225,40 @@ export default class ItemSg extends Item {
 
         const card = button.closest(".chat-card");
         const messageId = card.closest(".message").dataset.messageId;
-        const message =  game.messages.get(messageId);
+        const message = game.messages.get(messageId);
         const action = button.dataset.action;
 
         // Validate permission to proceed with the roll
         //const isTargetted = action === "save";
-        if ( !( /*isTargetted ||*/ game.user.isGM || message.isAuthor ) ) return;
+        if (!( /*isTargetted ||*/ game.user.isGM || message.isAuthor)) return;
 
         // Recover the actor for the chat card
         const actor = await this._getChatCardActor(card);
-        if ( !actor ) return;
+        if (!actor) return;
 
         // Get the Item from stored flag data or by the item ID on the Actor
         const item = actor.items.get(card.dataset.itemId);
-        if ( !item ) {
+        if (!item) {
             return ui.notifications.error("No associated item or item no longer exists!")
         }
 
         // Handle different actions
-        switch ( action ) {
-          case "attack":
-            await item.rollAttack(event); break;
-          case "damage":
-            await item.rollDamage({
-              critical: event.altKey,
-              event: event,
-            });
-            break;
-          case "consume":
-              await item.consume(event);
-              break
-          case "placeTemplate":
-            const template = AbilityTemplate.fromItem(item);
-            if ( template ) template.drawPreview();
-            break;
+        switch (action) {
+            case "attack":
+                await item.rollAttack(event); break;
+            case "damage":
+                await item.rollDamage({
+                    critical: event.altKey,
+                    event: event,
+                });
+                break;
+            case "consume":
+                await item.consume(event);
+                break
+            case "placeTemplate":
+                const template = AbilityTemplate.fromItem(item);
+                if (template) template.drawPreview();
+                break;
         }
 
         // Re-enable the button
@@ -273,7 +273,7 @@ export default class ItemSg extends Item {
     _getItemLabels(item) {
         const labels = [];
 
-        if ( item.type === "weapon" ) {
+        if (item.type === "weapon") {
             if (item.data.ammo && item.data.ammo.target) {
                 // Items consumes some ammo, push reload action informations if any.
                 if (item.data.ammo.reload) {
@@ -304,9 +304,9 @@ export default class ItemSg extends Item {
     static async _getChatCardActor(card) {
 
         // Case 1 - a synthetic actor from a Token
-        if ( card.dataset.tokenId ) {
+        if (card.dataset.tokenId) {
             const token = await fromUuid(card.dataset.tokenId);
-            if ( !token ) return null;
+            if (!token) return null;
             return token.actor;
         }
 
