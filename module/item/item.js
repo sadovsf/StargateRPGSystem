@@ -85,7 +85,7 @@ export default class ItemSg extends Item {
             rollMacro += " + " + abilityMod;
         }
         if (isProf != 0) {
-            rollMacro += " + " + this.actor.data.data.prof;
+            rollMacro += " + " + this.actor.data.data.proficiencyLevel;
         }
 
         const r = new CONFIG.Dice.D20Roll(rollMacro, this.actor.data.data);
