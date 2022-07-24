@@ -108,6 +108,7 @@ export default class ActorSg extends Actor {
     _prepareNpcData(actorData) {
         this._processCommon(actorData);
         this._processArmor(actorData);
+        this._processNpc(actorData);
     }
 
     /**
@@ -187,6 +188,7 @@ export default class ActorSg extends Actor {
      * Process data for actors with only minimal data
      */
     _processMinimal(actorData) {
+        const data = actorData.data;
 
         // Get max HP
         data.health.max = data.health.maxBonus;
@@ -196,6 +198,34 @@ export default class ActorSg extends Actor {
 
         // Get speed
         data.speed = data.speedBase;
+
+        // Get bulk
+        data.bulkMax = data.bulkBonus;
+
+        // Used bulk
+        // Only consider carried items that are not part of the base kit
+        const bulkItems = this.items.filter(element => element.data.data.carried && !element.data.data.partOfBaseKit);
+        let usedBulk = 0;
+        for (let item of bulkItems) {
+            usedBulk += item.data.data.bulk * item.data.data.quantity;
+        }
+        data.bulkUsed = usedBulk;
+        data.bulkOverload = usedBulk > data.bulkMax;
+    }
+
+    /**
+     * Process data that's only used for NPC's
+     */
+    _processNpc(actorData) {
+        const data = actorData.data;
+
+        // Get proficient skills
+        data.proficientSkills = {};
+        for (let [key, skill] of Object.entries(data.skills)) {
+            if (skill.proficient > 0) {
+                data.proficientSkills[key] = skill;
+            }
+        }
     }
 
     /**

@@ -574,6 +574,9 @@
 .charsheet .sets.double {
     grid-template-rows: repeat(4, 1fr);
 }
+.charsheet .sets .setvisual {
+    max-width:110px;
+}
 .charsheet .sets .setinput {
     max-width: 80px;
 }

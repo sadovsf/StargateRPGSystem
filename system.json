@@ -2,11 +2,11 @@
     "name": "sgrpg",
     "title": "Stargate RPG",
     "description": "System for Stargate RPG created by Wyvern Gaming, https://stargatetherpg.com/",
-    "version": "1.6.2-beta",
-    "templateVersion": 2,
+    "version": "1.7.0",
+    "templateVersion": 3,
     "author": "Filip Sádovský",
     "minimumCoreVersion": "9",
-    "compatibleCoreVersion": "9.255",
+    "compatibleCoreVersion": "9.269",
     "scripts": [
     ],
     "esmodules": [
