@@ -1,4 +1,4 @@
-import ActorSheetFlags from "../../apps/actor-flags.js";
+import ActorSheetFlags from "../apps/actor-flags.js";
 
 export default class SGActorSheet extends ActorSheet {
     /** @override */
@@ -16,63 +16,57 @@ export default class SGActorSheet extends ActorSheet {
         return `systems/sgrpg/templates/sheets/${this.actor.data.type}-sheet.hbs`;
     }
 
-
-    /**
-     * Prepare Character type specific data
-     */
-    _prepareCharacterData(actorData) {
-        const data = actorData.data;
-
-        // Loop through ability scores, and add their modifiers to our sheet output.
-        for (let [key, ability] of Object.entries(data.attributes)) {
-            // Calculate the modifier using d20 rules.
-            ability.mod = Math.floor((ability.value - 10) / 2);
-        }
-    }
-
     getData(options) {
-        let isOwner = this.actor.isOwner;
+        const baseData = super.getData();
+        baseData.dtypes = ["String", "Number", "Boolean"];
 
-        const data = {
-            owner: isOwner,
-            limited: this.actor.limited,
-            options: this.options,
-            editable: this.isEditable,
-            cssClass: isOwner ? "editable" : "locked",
-            isCharacter: this.actor.type === "character",
-            isNPC: this.actor.type === "npc",
-            isGM: game.user.isGM,
-            isVehicle: this.actor.type === 'vehicle',
-            rollData: this.actor.getRollData.bind(this.actor),
+        let sheetData = {};
+
+        // Insert the basics
+        sheetData.actor = baseData.data;
+        sheetData.items = baseData.items;
+
+        // Insert necessary misc data
+        sheetData.options = baseData.options;
+        sheetData.cssClass = baseData.cssClass;
+        sheetData.editable = baseData.editable;
+        sheetData.limited = baseData.limited;
+        sheetData.title = baseData.title;
+        sheetData.dtypes = baseData.dtypes;
+
+        // Prepare items
+        if (this.actor.data.type == 'player') {
+            this._prepareCharacterItems(sheetData);
+        }
+        if (this.actor.data.type == 'npc') {
+            this._prepareCharacterItems(sheetData);
+        }
+        if (this.actor.data.type == 'vehicle') {
+            this._prepareVehicleItems(sheetData);
+        }
+
+        // Grab the actual template data and effects
+        sheetData.data = baseData.data.data;
+        sheetData.effects = baseData.effects;
+
+        // Structural sheet stuff
+        sheetData.tensionDie = game.sgrpg.getTensionDie();
+        sheetData.selectables = {
+            proficiencySelects: {
+                0: "Untrained",
+                1: "Proficient",
+                2: "Exceptional"
+            }
+        };
+        sheetData.bulkMeter = {
+            currentBulkPerc: Math.min((sheetData.data.bulkUsed / sheetData.data.bulkMax) * 100, 100),
+            currentBulk: sheetData.data.bulkUsed,
+            maxBulk: sheetData.data.bulkMax,
+            isOverloaded: sheetData.data.bulkOverload
         };
 
-        // The Actor's data
-        const actorData = this.actor.data.toObject(false);
-        data.actor = actorData;
-        data.data = actorData.data;
-        data.data.tensionDie = game.sgrpg.getTensionDie();
-
-        data.items = actorData.items;
-        for (let iData of data.items) {
-            const item = this.actor.items.get(iData._id);
-            iData.hasAmmo = item.consumesAmmunition;
-            iData.labels = item.labels;
-        }
-        data.items.sort((a, b) => (a.sort || 0) - (b.sort || 0));
-        this._prepareItemData(data);
-        this._prepare_proficient_skills(data);
-
-        data.death_success1 = data.data.deathSaves.sucesses > 0;
-        data.death_success2 = data.data.deathSaves.sucesses > 1;
-        data.death_success3 = data.data.deathSaves.sucesses > 2;
-
-        data.death_failure1 = data.data.deathSaves.fails > 0;
-        data.death_failure2 = data.data.deathSaves.fails > 1;
-        data.death_failure3 = data.data.deathSaves.fails > 2;
-
-        data.tensionDie = game.sgrpg.getTensionDie();
-
-        data.config = mergeObject(CONFIG.SGRPG, {
+        // Configuration data
+        sheetData.config = mergeObject(CONFIG.SGRPG, {
             conditions: {
                 normal: "Normal",
                 disadvabilitychecks: "Disadv ability checks",
@@ -85,7 +79,82 @@ export default class SGActorSheet extends ActorSheet {
             saves: CONFIG.SGRPG.abilities
         });
 
-        return data;
+
+        return sheetData;
+    }
+
+    /**
+     * Properly sort items into their respective lists
+     */
+    _prepareCharacterItems(sheetData) {
+        const actorData = sheetData.actor;
+
+        // Initialize containers.
+        const gear = [];
+        const weapons = [];
+        const armors = [];
+
+        // Iterate through items, allocating to containers
+        for (let i of sheetData.items) {
+            let item = i.data;
+            i.img = i.img || DEFAULT_TOKEN;
+
+            // Switch-case to append the item to the proper list
+            switch (i.type) {
+                case 'item':
+                    gear.push(i);
+                    break;
+                case 'weapon':
+                    weapons.push(i);
+                    break;
+                case 'armor':
+                    armors.push(i);
+                    break;
+                default:
+                    gear.push(i);
+                    console.warn("Unknown item type in character data, pushed into gear: " + i.name);
+                    break;
+            }
+        }
+
+        // Assign and return
+        actorData.gear = gear;
+        actorData.weapons = weapons;
+        actorData.armors = armors;
+    }
+
+    /**
+     * Properly sort items into their respective lists, but for vehicles
+     */
+    _prepareVehicleItems(sheetData) {
+        const actorData = sheetData.actor;
+
+        // Initialize containers.
+        const gear = [];
+        const weapons = [];
+
+        // Iterate through items, allocating to containers
+        for (let i of sheetData.items) {
+            let item = i.data;
+            i.img = i.img || DEFAULT_TOKEN;
+
+            // Switch-case to append the item to the proper list
+            switch (i.type) {
+                case 'item':
+                    gear.push(i);
+                    break;
+                case 'weapon':
+                    weapons.push(i);
+                    break;
+                default:
+                    gear.push(i);
+                    break;
+            }
+        }
+
+        // Assign and return
+        actorData.gear = gear;
+        actorData.weapons = weapons;
     }
 
     /**
@@ -102,12 +171,7 @@ export default class SGActorSheet extends ActorSheet {
         html.find('a.txt-btn[type="roll_init"]').click(event => this._roll_initiative(event));
         html.find('a.txt-btn[type="roll_moxie"]').click(event => this._roll_moxie(event));
         html.find('a.txt-btn[type="reset_deathsave"]').click(event => this._reset_deathsave(event));
-        html.find('a[type="roll_attack"]').click(event => this._roll_attack(event));
-
-        html.find('input[data_type="ability_value"]').change(this._onChangeAbilityValue.bind(this));
-        html.find('input[data_type="skill_prof"]').click(event => this._onToggleSkillProficiency(event));
-        html.find('input[name="data.prof"]').change(event => this._onProfChanged(event));
-        html.find('select[data_type="skill_mod"]').change(event => this._onChangeSkillMod(event));
+        //html.find('a[type="roll_attack"]').click(event => this._roll_attack(event));
         html.find('a.skill-mod-revert').click(event => this._onSkillRestoreDefaultModClicked(event));
 
         html.find('.item-consume').click(event => this._onItemConsume(event));
@@ -121,15 +185,16 @@ export default class SGActorSheet extends ActorSheet {
         html.find(".death-save-checkbox").change(event => this._onDeathSaveCheckboxChanged(event));
     }
 
+    /**
+     * Handle resetting the skill attribute to default
+     */
     async _onSkillRestoreDefaultModClicked(event) {
         const skillName = event.currentTarget.parentElement.parentElement.dataset.skill;
 
         const defaultValues = game.system.model.Actor[this.actor.type];
-        const defaultSkillMod = defaultValues.skills[skillName].mod;
+        const defaultSkillAttribute = defaultValues.skills[skillName].attribute;
 
-        await this.actor.update({ [`data.skills.${skillName}.mod`]: defaultSkillMod }, { render: false });
-
-        return this.actor.update(this._compileSkillValues());
+        return this.actor.update({ [`data.skills.${skillName}.attribute`]: defaultSkillAttribute });
     }
 
     /** @override */
@@ -154,127 +219,6 @@ export default class SGActorSheet extends ActorSheet {
 
         // Create the owned item as normal
         return super._onDropItemCreate(itemData);
-    }
-
-    _prepareItemData(data) {
-        let inventory = {
-            weapon: [],
-            equip: []
-        };
-
-        let curBulk = 0;
-        for (const item of data.items) {
-            if (!Object.keys(inventory).includes(item.type)) {
-                console.error("Unknown item type!");
-                continue;
-            }
-
-            item.isStack = Number.isNumeric(item.data.quantity) && (item.data.quantity !== 1);
-
-            // Calculate item bulk.
-            const itemBulk = item.data.bulk || 0;
-            const itemCount = (item.isStack ? item.data.quantity : 1);
-            curBulk += itemBulk * itemCount;
-            if (item.type == "weapon" && item.data.ammo) {
-                const ammoBulk = item.data.ammo.bulk;
-                const ammoCount = item.data.ammo.value;
-                curBulk += ammoBulk * ammoCount;
-            }
-
-            // Add item into proper inventory.
-            inventory[item.type].push(item);
-        }
-        curBulk = Math.ceil(curBulk);
-
-        const maxBulk = data.data.bulk + parseInt(data.data.attributes.str.mod);
-
-        data.items = inventory;
-        data.currentBulk = curBulk;
-        data.currentBulkPerc = Math.min((curBulk / maxBulk) * 100, 100);
-        data.isOverloaded = curBulk > maxBulk;
-        data.maxBulk = maxBulk;
-    }
-
-
-    _prepare_proficient_skills(data) {
-        data.proficient_skills = {};
-        for (const skill_id in data.data.skills) {
-            const skill = data.data.skills[skill_id];
-            if (skill.proficient) {
-                data.proficient_skills[skill_id] = foundry.utils.deepClone(skill);
-            }
-        }
-    }
-
-    async _onChangeAbilityValue(event) {
-        event.preventDefault();
-        const newAttrVal = parseInt(event.currentTarget.value);
-        const attrName = event.currentTarget.parentElement.dataset.attr;
-
-        await this.actor.update({
-            [`data.attributes.${attrName}.mod`]: this._calculateAttributeMod(newAttrVal),
-            [`data.attributes.${attrName}.value`]: newAttrVal
-        }, { render: false });
-
-        return this.actor.update(this._compileSkillValues());
-    }
-
-    async _onProfChanged(event) {
-        event.preventDefault();
-        const newProf = parseInt(event.currentTarget.value);
-
-        await this.actor.update({
-            "data.prof": newProf
-        }, { render: false });
-
-        return this.actor.update(this._compileSkillValues());
-    }
-
-    async _onToggleSkillProficiency(event) {
-        event.preventDefault();
-        const cb = event.currentTarget;
-
-        await this.actor.update({ [cb.name]: cb.checked == true });
-        return this.actor.update(this._compileSkillValues());
-    }
-
-    async _onChangeSkillMod(event) {
-        event.preventDefault();
-        const select = event.currentTarget;
-
-        await this.actor.update({ [select.name]: select.value });
-        return this.actor.update(this._compileSkillValues());
-    }
-
-    _compileSkillValues() {
-        const actorData = this.getData();
-        const skillList = getProperty(actorData, "data.skills");
-        const savesList = getProperty(actorData, "data.saves");
-        const currentProfValue = parseInt(getProperty(actorData, "data.prof"));
-
-        let modify = {};
-        for (const skillName in skillList) {
-            const skill = skillList[skillName]
-            const skillModName = getProperty(actorData, `data.skills.${skillName}.mod`);
-            let baseVal = parseInt(getProperty(actorData, `data.attributes.${skillModName}.mod`));
-            if (skill.proficient) {
-                baseVal += currentProfValue;
-            }
-            modify[`data.skills.${skillName}.value`] = baseVal < 0 ? baseVal.toString() : "+" + baseVal;
-        }
-
-        for (const saveName in savesList) {
-            const save = savesList[saveName]
-            const saveModName = getProperty(actorData, `data.saves.${saveName}.mod`);
-            let baseVal = parseInt(getProperty(actorData, `data.attributes.${saveModName}.mod`));
-            if (save.proficient) {
-                baseVal += currentProfValue;
-            }
-            modify[`data.saves.${saveName}.value`] = baseVal < 0 ? baseVal.toString() : "+" + baseVal;
-        }
-
-
-        return modify;
     }
 
     /**
@@ -319,6 +263,10 @@ export default class SGActorSheet extends ActorSheet {
             return ui.notifications.info(`No more magazines left for '${item.name}' in inventory.`);
         }
 
+        // TODO: Call this stuff from item directly, do not handle the process itself in sheet
+
+        return;
+
         await ammoItem.update({
             "data.quantity": magCount - 1
         }, { render: false });
@@ -337,10 +285,6 @@ export default class SGActorSheet extends ActorSheet {
         event.preventDefault();
         const div = event.currentTarget.parentElement.parentElement;
         const item = this.actor.items.get(div.dataset.itemId);
-
-        if (confirm(`Do you really want to delete '${item.name}' from inventory?`) !== true) {
-            return;
-        }
 
         if (item) return item.delete();
     }
@@ -394,9 +338,13 @@ export default class SGActorSheet extends ActorSheet {
         const rollResult = r.total;
 
         const data = this.actor.data.data.deathSaves;
-        const curSucess = parseInt(data.sucesses);
+        const curSuccess = parseInt(data.successes);
         const curFails = parseInt(data.fails);
         const curHealth = parseInt(this.actor.data.data.health.value);
+
+        // TODO: Handle stuff in actor, do not process the actual event in sheet
+
+        return;
 
         if (rollResult == 1) {
             // 2 fails.
@@ -410,24 +358,24 @@ export default class SGActorSheet extends ActorSheet {
             }
         }
         else if (rollResult == 20) {
-            // sucess + heal.
+            // success + heal.
             const maxHealth = parseInt(this.actor.data.data.health.max);
             this.actor.update({
                 "data.deathSaves.fails": 0,
-                "data.deathSaves.sucesses": 0,
+                "data.deathSaves.successes": 0,
                 "data.health.value": curHealth + 1 <= maxHealth ? curHealth + 1 : curHealth
             });
         }
         else if (rollResult >= 10) {
-            // sucess.
-            if (curSucess >= 2) {
+            // success.
+            if (curSuccess >= 2) {
                 this.actor.update({
                     "data.deathSaves.fails": 0,
-                    "data.deathSaves.sucesses": 0
+                    "data.deathSaves.successes": 0
                 });
             }
             else {
-                this.actor.update({ [`data.deathSaves.sucesses`]: curSucess + 1 });
+                this.actor.update({ [`data.deathSaves.successes`]: curSuccess + 1 });
             }
         }
         else {
@@ -452,7 +400,7 @@ export default class SGActorSheet extends ActorSheet {
         event.preventDefault();
         return this.actor.update({
             "data.deathSaves.fails": 0,
-            "data.deathSaves.sucesses": 0
+            "data.deathSaves.successes": 0
         });
     }
 
@@ -461,6 +409,7 @@ export default class SGActorSheet extends ActorSheet {
     }
 
     _roll_moxie(event) {
+        // TODO: Setting in combat to flip between encounter types
         return ui.notifications.warn("Moxie combat is not implemented, please use different way");
     }
 
@@ -485,49 +434,15 @@ export default class SGActorSheet extends ActorSheet {
     _onDeathSaveCheckboxChanged(event) {
         event.preventDefault();
 
-        const isSucess = event.currentTarget.classList.contains("sucess");
-        const chbs = $(event.currentTarget.parentElement).find('input[type="checkbox"]');
+        const isSuccess = event.currentTarget.classList.contains("success");
+        const checked = event.currentTarget.checked;
+        const value = checked ? event.currentTarget.value : event.currentTarget.value - 1;
 
-        let val = 0;
-        chbs.each((i, cb) => {
-            if (cb.checked) val++;
-        });
-
-        if (isSucess) {
-            return this.actor.update({ "data.deathSaves.sucesses": val });
+        if (isSuccess) {
+            return this.actor.update({ "data.deathSaves.successes": value });
         }
         else {
-            return this.actor.update({ "data.deathSaves.fails": val });
+            return this.actor.update({ "data.deathSaves.fails": value });
         }
-    }
-
-    /**
-     * Handle input changes to numeric form fields, allowing them to accept delta-typed inputs
-     * @param event
-     * @private
-     */
-    _calculateAttributeMod(value) {
-        const stat_base = value
-
-        let stat_mod = 0;
-        if (stat_base >= 30) stat_mod = "+10";
-        else if (stat_base >= 28) stat_mod = "+9";
-        else if (stat_base >= 26) stat_mod = "+8";
-        else if (stat_base >= 24) stat_mod = "+7";
-        else if (stat_base >= 22) stat_mod = "+6";
-        else if (stat_base >= 20) stat_mod = "+5";
-        else if (stat_base >= 18) stat_mod = "+4";
-        else if (stat_base >= 16) stat_mod = "+3";
-        else if (stat_base >= 14) stat_mod = "+2";
-        else if (stat_base >= 12) stat_mod = "+1";
-        else if (stat_base >= 10) stat_mod = "+0";
-        else if (stat_base >= 8) stat_mod = "-1";
-        else if (stat_base >= 6) stat_mod = "-2";
-        else if (stat_base >= 4) stat_mod = "-3";
-        else if (stat_base >= 2) stat_mod = "-4";
-        else if (stat_base <= 1) stat_mod = "-5";
-        else stat_mod = "+0";
-
-        return stat_mod;
     }
 }

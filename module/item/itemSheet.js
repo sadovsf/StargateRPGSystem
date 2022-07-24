@@ -2,8 +2,8 @@ export default class SGItemSheet extends ItemSheet {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             classes: ["sheet", "item", "itemsheet"],
-            width: 520,
-            height: 480,
+            width: 560,
+            height: 560,
             tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
         });
     }
@@ -13,34 +13,31 @@ export default class SGItemSheet extends ItemSheet {
     }
 
     getData(options) {
-        let isOwner = this.item.isOwner;
-        const data = {
-            owner: isOwner,
-            limited: this.item.limited,
-            options: this.options,
-            editable: this.isEditable,
-            cssClass: isOwner ? "editable" : "locked",
-            rollData: this.item.getRollData.bind(this.item),
-            config: CONFIG.SGRPG,
-            isWeapon: this.item.type == "weapon"
-        };
+        const baseData = super.getData();
+        let sheetData = {};
 
-        // The Actor's data
-        const itemData = this.item.data.toObject(false);
-        data.item = itemData;
-        data.data = itemData.data;
+        // Insert the basics
+        sheetData.item = baseData.data;
+        sheetData.data = baseData.data.data;
+
+        // Insert necessary misc data
+        sheetData.options = baseData.options;
+        sheetData.cssClass = baseData.cssClass;
+        sheetData.editable = baseData.editable;
+        sheetData.limited = baseData.limited;
+        sheetData.title = baseData.title;
+        sheetData.dtypes = baseData.dtypes;
+        sheetData.config = CONFIG.SGRPG;
 
         // Potential consumption targets
-        data.abilityConsumptionTargets = this._getItemConsumptionTargets(itemData);
+        sheetData.abilityConsumptionTargets = this._getItemConsumptionTargets();
 
-        console.log(data.data);
-        return data;
+        return sheetData;
     }
 
 
     /**
      * Get the valid item consumption targets which exist on the actor
-     * @param {Object} item         Item data for the item being displayed
      * @return {{string: string}}   An object of potential consumption targets
      * @private
      */

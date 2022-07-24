@@ -1,0 +1,31 @@
+<div class="grid grid-2col">
+    <div class="flexcol details-column">
+        {{!-- Armor details left column --}}
+        <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.bulk">Bulk</label>
+            <input type="text" name="data.bulk" value="{{data.bulk}}" data-dtype="Number" />
+        </div>
+        <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.strRequired">Strength Required</label>
+            <input type="text" name="data.strRequired" value="{{data.strRequired}}" data-dtype="Number" />
+        </div>
+        <div class="flex1"></div>
+    </div>
+
+    <div class="flexcol details-column">
+        {{!-- Armor details right column --}}
+        <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.heavyArmor">Heavy Armor</label>
+            <input type="checkbox" name="data.heavyArmor" {{checked data.heavyArmor}} />
+        </div>
+        <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.additive">Additive</label>
+            <input type="checkbox" name="data.additive" {{checked data.additive}} />
+        </div>
+
+        <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.details.special">Special</label>
+            <input type="text" name="data.details.special" value="{{data.details.special}}" data-dtype="String" />
+        </div>
+    </div>
+</div>

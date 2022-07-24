@@ -4,11 +4,11 @@ import "./module/scene-config.js";
 
 import "./module/externals.js"; // Setup external module integrations here, so sgrpg.js doesn't need to otherwise care
 
-import ItemSg from "./module/item/entity.js"
-import ActorSg from "./module/actor/entity.js"
+import ItemSg from "./module/item/item.js"
+import ActorSg from "./module/actor/actor.js"
 
-import SGItemSheet from "./module/item/sheet/itemSheet.js";
-import SGActorSheet from "./module/actor/sheet/actorSheet.js";
+import SGItemSheet from "./module/item/itemSheet.js";
+import SGActorSheet from "./module/actor/actorSheet.js";
 
 import D20Roll from "./module/dice/d20-roll.js";
 import DamageRoll from "./module/dice/damage-roll.js"
@@ -16,7 +16,7 @@ import DamageRoll from "./module/dice/damage-roll.js"
 import * as chat from "./module/chat.js"
 import * as macros from "./module/macros.js"
 import { _getInitiativeFormula } from "./module/combat.js";
-import { preloadHandlebarsTemplates } from "./module/templates.js";
+import { preloadHandlebarsTemplates, registerHandlebarsHelpersSG } from "./module/templates.js";
 
 Hooks.once("init", function () {
     console.log("Initializing StarGate systems");
@@ -60,7 +60,8 @@ Hooks.once("init", function () {
     });
 
 
-    preloadHandlebarsTemplates()
+    preloadHandlebarsTemplates();
+    registerHandlebarsHelpersSG();
 });
 
 Hooks.once("ready", function () {

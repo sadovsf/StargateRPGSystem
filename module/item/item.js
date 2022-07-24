@@ -3,6 +3,35 @@ import AbilityTemplate from "../pixi/ability-template.js";
 
 export default class ItemSg extends Item {
 
+    /* -------------------------------------------- */
+    /* Overrides                                    */
+    /* -------------------------------------------- */
+
+    /** @override
+     * Augment the basic Item data model with additional dynamic data.
+     */
+    prepareDerivedData() {
+        // Get the Item's data
+        const itemData = this.data;
+        const actorData = this.actor ? this.actor.data : {};
+
+        if (itemData.type === 'armor') this._processArmor(itemData);
+    }
+
+    /**
+     * Process armor data
+     */
+    _processArmor(itemData) {
+        const data = itemData.data;
+
+        // Visual AC modifier
+        data.visualAC = data.additive ? (data.acBonus >= 0 ? "+" + data.acBonus.toString() : data.acBonus.toString()) : data.acBonus.toString();
+    }
+
+    /* -------------------------------------------- */
+    /* Getters                                      */
+    /* -------------------------------------------- */
+
     /**
      * Does the Item have an area of effect target
      * @type {boolean}
@@ -26,6 +55,10 @@ export default class ItemSg extends Item {
         }
         return this.data.data.ammo.target?.length && Number.isNumeric(this.data.data.ammo.max);
     }
+
+    /* -------------------------------------------- */
+    /* Item Use Functions                           */
+    /* -------------------------------------------- */
 
     async roll() {
         this.displayCard();

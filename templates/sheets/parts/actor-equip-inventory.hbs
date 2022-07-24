@@ -7,7 +7,7 @@
         </tr>
     </thead>
     <tbody>
-        {{#each items.equip as |item|}}
+        {{#each actor.gear as |item|}}
             <tr class="inventory-item item" data-item-id="{{item._id}}">
                 <td>
                     <a class="item-control item-roll"><span class="item-image" style="background-image: url({{item.img}})"></span></a>
