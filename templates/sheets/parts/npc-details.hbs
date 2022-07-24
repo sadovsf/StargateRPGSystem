@@ -30,7 +30,7 @@
                     {{selectOptions ../selectables.proficiencySelects selected=save.proficient localize=false}}
                 </select>
             </span>
-            <input name="data.saves.{{s}}.value" value="{{save.value}}" class="flex0 w30">
+            <input value="{{save.totalVisual}}" class="flex0 w30" readonly>
             <a type="roll" class="txt-btn resource-label" data-bonus="data.saves.{{s}}.total">{{lookup ../config.saves s}}</a>
         </div>
         {{/each}}
