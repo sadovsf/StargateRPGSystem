@@ -10,13 +10,27 @@
 
     <div class="card-buttons">
         {{#if hasAttack}}
+        <div class="flexrow">
             <button data-action="attack">Attack</button>
             <button data-action="damage">Damage</button>
+        </div>
+        {{#if data.burstAttack.able}}
+        <div class="flexrow">
+            <button data-action="burstAttack">Attack</button>
+            <button data-action="burstDamage">Damage</button>
+        </div>
+        {{/if}}
+        {{#if data.autoAttack.able}}
+        <div class="flexrow">
+            <button data-action="autoAttack">Attack</button>
+            <button data-action="autoDamage">Damage</button>
+        </div>
+        {{/if}}
         {{else}}
-            <button data-action="consume">Consume</button>
+        <button data-action="consume">Consume</button>
         {{/if}}
         {{#if hasAreaTarget}}
-            <button data-action="placeTemplate">Place template</button>
+        <button data-action="placeTemplate">Place template</button>
         {{/if}}
     </div>
 

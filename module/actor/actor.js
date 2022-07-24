@@ -255,6 +255,7 @@ export default class ActorSg extends Actor {
         data.bulkMax = baseBulk + additiveBulk + data.bulkBonus + data.attributes.str.mod;
         data.speed = overStrength ? 1 : data.speedBase - (heavyArmor ? 2 : 0);
         data.ac = baseAC + additiveAC + data.acBonus + (heavyArmor ? 0 : data.attributes.dex.mod);
+        data.bulkOverload = data.usedBulk > data.bulkMax;
 
         // Store visual sheet data
         data.visualData.armorAC = baseAC;
