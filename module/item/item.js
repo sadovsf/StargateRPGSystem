@@ -16,6 +16,7 @@ export default class ItemSg extends Item {
         const actorData = this.actor ? this.actor.data : {};
 
         if (itemData.type === 'armor') this._processArmor(itemData);
+        if (itemData.type === 'weapon') this._processWeapon(itemData);
     }
 
     /**
@@ -26,6 +27,15 @@ export default class ItemSg extends Item {
 
         // Visual AC modifier
         data.visualAC = data.additive ? (data.acBonus >= 0 ? "+" + data.acBonus.toString() : data.acBonus.toString()) : data.acBonus.toString();
+    }
+
+    /**
+     * Process weapon data
+     */
+    _processWeapon(itemData) {
+        const data = itemData.data;
+
+        data.hasAmmo = data.ammo.value !== null;
     }
 
     /* -------------------------------------------- */
@@ -64,14 +74,14 @@ export default class ItemSg extends Item {
         this.displayCard();
     }
 
-    async rollAttack() {
-        const hasAmmo = this.data.data.ammo.value !== null;
+    async rollAttack({ mode = "single", fullAutoCount = 0 } = {}) {
+        const data = this.data.data;
 
         if (!this.actor) {
             return ui.notifications.warn("You can only roll for owned items!");
         }
 
-        if (hasAmmo && parseInt(this.data.data.ammo.value) == 0) {
+        if (data.hasAmmo && parseInt(this.data.data.ammo.value) == 0) {
             // Item is using ammo but no ammunition is left.
             return ui.notifications.warn("No more ammo for this item!");
         }
@@ -79,52 +89,75 @@ export default class ItemSg extends Item {
         const abilityName = this.data.data.attackAbility;
         const abilityMod = parseInt(this.actor.data.data.attributes[abilityName].mod);
         const isProf = this.data.data.isProficient;
+        // If fired on full auto, check whether the weapon is either not fired more than is 'free' or is set to never be disadvantaged at full auto, otherwise, set disadvantage as default
+        const disadvDefault = mode === "fullAuto" ? (fullAutoCount <= this.data.data.autoAttack.freeCount || this.data.data.autoAttack.freeCount === -1 ? false : true) : false;
+        let ammoCost = 0, atkSnd = "", flavorAdd = "";
+        switch (mode) {
+            case "single":
+                ammoCost = 1;
+                atkSnd = this.data.data.atkSnd;
+                break;
+            case "burst":
+                ammoCost = this.data.data.burstAttack.ammoCost;
+                atkSnd = this.data.data.burstAttack.atkSnd;
+                flavorAdd = " with burst";
+                break;
+            case "fullAuto":
+                ammoCost = this.data.data.autoAttack.ammoCost * fullAutoCount;
+                atkSnd = this.data.data.autoAttack.atkSnd;
+                flavorAdd = " in full auto";
+                break;
+        }
 
         let rollMacro = "1d20 + " + this.data.data.toHit;
         if (parseInt(abilityMod) != 0) {
             rollMacro += " + " + abilityMod;
         }
-        if (isProf != 0) {
+        if (isProf) {
             rollMacro += " + " + this.actor.data.data.proficiencyLevel;
         }
 
         const r = new CONFIG.Dice.D20Roll(rollMacro, this.actor.data.data);
         const configured = await r.configureDialog({
             title: `Attack by ${this.data.name}`,
-            defaultRollMode: "normal"
+            defaultRollMode: game.settings.get("core", "rollMode"),
+            defaultAction: disadvDefault ? CONFIG.Dice.D20Roll.ADV_MODE.DISADVANTAGE : CONFIG.Dice.D20Roll.ADV_MODE.NORMAL
         });
         if (configured === null) {
             return;
         }
 
         // If item has some ammunition defined, consume 1.
-        if (hasAmmo) {
+        if (data.hasAmmo) {
             const remainingAmmo = parseInt(this.data.data.ammo.value);
             if (remainingAmmo <= 0) {
                 // Double check that ammo count did not change while in dialog.
                 return ui.notifications.warn("No more ammo for this item!");
             }
-            await this.update({ "data.ammo.value": remainingAmmo - 1 });
+            if (remainingAmmo - ammoCost < 0) {
+                return ui.notifications.warn("Not enough ammo for the attack mode!");
+            }
+            await this.update({ "data.ammo.value": remainingAmmo - ammoCost });
         }
 
         let messageData = {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: "Attacks using " + this.data.name
+            flavor: "Attacks using " + this.data.name + flavorAdd
         };
 
-        if (this.data.data.atkSnd) { // Check if the sound is set, then check if it exists
-            const resp = await fetch(this.data.data.atkSnd, { method: 'HEAD' });
+        if (atkSnd) { // Check if the sound is set, then check if it exists
+            const resp = await fetch(atkSnd, { method: 'HEAD' });
             if (resp.ok) {
-                messageData.sound = this.data.data.atkSnd;
+                messageData.sound = atkSnd;
             } else {
-                ui.notifications.warn("Attack sound path for " + this.data.name + " could not be resolved: " + this.data.data.atkSnd);
+                ui.notifications.warn("Attack sound path for " + this.data.name + " could not be resolved: " + atkSnd);
             }
         }
 
         return r.toMessage(messageData);
     }
 
-    async rollDamage() {
+    async rollDamage({ mode = "single", fullAutoCount = 0 } = {}) {
         const abilityName = this.data.data.attackAbility;
         const abilityMod = this.actor.data.data.attributes[abilityName].mod;
         let dmgRoll = this.data.data.dmg;
@@ -133,11 +166,28 @@ export default class ItemSg extends Item {
             dmgRoll += " + " + abilityMod;
         }
 
+        let dmgSnd = "", flavorAdd = "";
+        switch (mode) {
+            case "single":
+                dmgSnd = this.data.data.dmgSnd;
+                break;
+            case "burst":
+                dmgSnd = this.data.data.burstAttack.dmgSnd;
+                dmgRoll += " + 1@td";
+                flavorAdd = " with burst";
+                break;
+            case "fullAuto":
+                dmgSnd = this.data.data.autoAttack.dmgSnd;
+                dmgRoll += " + " + fullAutoCount.toFixed(0) + "@td";
+                flavorAdd = " in full auto";
+                break;
+        }
+
         const r = new CONFIG.Dice.DamageRoll(dmgRoll, this.actor.data.data);
 
         const configured = await r.configureDialog({
             title: `Damage from ${this.data.name}`,
-            defaultRollMode: "normal"
+            defaultRollMode: game.settings.get("core", "rollMode")
         });
         if (configured === null) {
             return;
@@ -145,15 +195,15 @@ export default class ItemSg extends Item {
 
         let messageData = {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: "Done damage using " + this.data.name
+            flavor: "Done damage using " + this.data.name + flavorAdd
         };
 
-        if (this.data.data.dmgSnd) { // Check if the sound is set, then check if it exists
-            const resp = await fetch(this.data.data.dmgSnd, { method: 'HEAD' });
+        if (dmgSnd) { // Check if the sound is set, then check if it exists
+            const resp = await fetch(dmgSnd, { method: 'HEAD' });
             if (resp.ok) {
-                messageData.sound = this.data.data.dmgSnd;
+                messageData.sound = dmgSnd;
             } else {
-                ui.notifications.warn("Damage sound path for " + this.data.name + " could not be resolved: " + this.data.data.dmgSnd);
+                ui.notifications.warn("Damage sound path for " + this.data.name + " could not be resolved: " + dmgSnd);
             }
         }
 
@@ -260,6 +310,8 @@ export default class ItemSg extends Item {
         const messageId = card.closest(".message").dataset.messageId;
         const message = game.messages.get(messageId);
         const action = button.dataset.action;
+        const mode = button.dataset.mode ?? "single";
+        const count = parseInt($(card).find(".autoAttackCount")[0]?.value) || 0;
 
         // Validate permission to proceed with the roll
         //const isTargetted = action === "save";
@@ -278,12 +330,10 @@ export default class ItemSg extends Item {
         // Handle different actions
         switch (action) {
             case "attack":
-                await item.rollAttack(event); break;
+                await item.rollAttack({ mode, fullAutoCount: count });
+                break;
             case "damage":
-                await item.rollDamage({
-                    critical: event.altKey,
-                    event: event,
-                });
+                await item.rollDamage({ mode, fullAutoCount: count });
                 break;
             case "consume":
                 await item.consume(event);

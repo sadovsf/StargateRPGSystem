@@ -1,6 +1,6 @@
-<div class="sgrpg chat-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item._id}}" {{#if tokenId}}data-token-id="{{tokenId}}"{{/if}}>
+<div class="sgrpg chat-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item._id}}" {{#if tokenId}} data-token-id="{{tokenId}}" {{/if}}>
     <header class="card-header flexrow">
-        <img src="{{item.img}}" title="{{item.name}}" width="36" height="36"/>
+        <img src="{{item.img}}" title="{{item.name}}" width="36" height="36" />
         <h3 class="item-name">{{item.name}}</h3>
     </header>
 
@@ -11,19 +11,23 @@
     <div class="card-buttons">
         {{#if hasAttack}}
         <div class="flexrow">
-            <button data-action="attack">Attack</button>
-            <button data-action="damage">Damage</button>
+            <button data-action="attack" data-mode="single">Attack</button>
+            <button data-action="damage" data-mode="single">Damage</button>
         </div>
         {{#if data.burstAttack.able}}
         <div class="flexrow">
-            <button data-action="burstAttack">Attack</button>
-            <button data-action="burstDamage">Damage</button>
+            <button data-action="attack" data-mode="burst">Burst Attack</button>
+            <button data-action="damage" data-mode="burst">Burst Damage</button>
         </div>
         {{/if}}
         {{#if data.autoAttack.able}}
         <div class="flexrow">
-            <button data-action="autoAttack">Attack</button>
-            <button data-action="autoDamage">Damage</button>
+            <button data-action="attack" data-mode="fullAuto">Full Auto Attack</button>
+            <button data-action="damage" data-mode="fullAuto">Full Auto Damage</button>
+        </div>
+        <div class="flexrow">
+            <span class="item-name">Full Auto Count</span>
+            <input class="autoAttackCount" type="number" value="{{data.autoAttack.freeCount}}" data-dtype="Number" onfocus="this.select();" />
         </div>
         {{/if}}
         {{else}}
@@ -36,7 +40,7 @@
 
     <footer class="card-footer">
         {{#each data.labels}}
-            <span>{{this}}</span>
+        <span>{{this}}</span>
         {{/each}}
     </footer>
 </div>
