@@ -158,6 +158,10 @@
           "cha": {
             "proficient": 0
           }
+        },
+
+        "miscSettings": {
+          "extraAutoFire": 0
         }
       },
       "background": {
@@ -238,7 +242,7 @@
         "autoAttack": {
           "able": false,
           "ammoCost": 10,
-          "freeCount": 0,
+          "stabilized": false,
           "atkSnd": null,
           "dmgSnd": null
         },

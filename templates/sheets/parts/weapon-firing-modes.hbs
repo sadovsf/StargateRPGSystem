@@ -41,9 +41,9 @@
             <label class="attribute-label" for="data.autoAttack.ammoCost">Ammo Cost</label>
             <input type="number" name="data.autoAttack.ammoCost" value="{{data.autoAttack.ammoCost}}" data-dtype="Number" />
         </div>
-        <div class="details-entry grid grid-2col" title="How many sets of auto-fire, ie. how many tension dice, can the weapon shoot before disadvantage happens, -1 is unlimited.">
-            <label class="attribute-label" for="data.autoAttack.freeCount">Penalty-free Shots</label>
-            <input type="number" name="data.autoAttack.freeCount" value="{{data.autoAttack.freeCount}}" data-dtype="Number" />
+        <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.autoAttack.stabilized">Compensated</label>
+            <input type="checkbox" name="data.autoAttack.stabilized" {{checked data.autoAttack.stabilized}} data-dtype="Boolean" />
         </div>
 
         <div class="details-entry grid grid-2col">

@@ -16,7 +16,7 @@ export default class ItemSg extends Item {
         const actorData = this.actor ? this.actor.data : {};
 
         if (itemData.type === 'armor') this._processArmor(itemData);
-        if (itemData.type === 'weapon') this._processWeapon(itemData);
+        if (itemData.type === 'weapon') this._processWeapon(itemData, actorData);
     }
 
     /**
@@ -32,10 +32,15 @@ export default class ItemSg extends Item {
     /**
      * Process weapon data
      */
-    _processWeapon(itemData) {
+    _processWeapon(itemData, actorData) {
         const data = itemData.data;
 
         data.hasAmmo = data.ammo.value !== null;
+        if (actorData.data) {
+            data.standardAutoShots = actorData.data.maxAutomaticShots;
+        } else {
+            data.standardAutoShots = 0;
+        }
     }
 
     /* -------------------------------------------- */
@@ -81,35 +86,35 @@ export default class ItemSg extends Item {
             return ui.notifications.warn("You can only roll for owned items!");
         }
 
-        if (data.hasAmmo && parseInt(this.data.data.ammo.value) == 0) {
+        if (data.hasAmmo && parseInt(data.ammo.value) == 0) {
             // Item is using ammo but no ammunition is left.
             return ui.notifications.warn("No more ammo for this item!");
         }
 
-        const abilityName = this.data.data.attackAbility;
+        const abilityName = data.attackAbility;
         const abilityMod = parseInt(this.actor.data.data.attributes[abilityName].mod);
-        const isProf = this.data.data.isProficient;
-        // If fired on full auto, check whether the weapon is either not fired more than is 'free' or is set to never be disadvantaged at full auto, otherwise, set disadvantage as default
-        const disadvDefault = mode === "fullAuto" ? (fullAutoCount <= this.data.data.autoAttack.freeCount || this.data.data.autoAttack.freeCount === -1 ? false : true) : false;
+        const isProf = data.isProficient;
+        // If fired on full auto, check whether the weapon is stabilized, if not, set disadvantage as default
+        const disadvDefault = mode === "fullAuto" ? (data.autoAttack.stabilized ? false : true) : false;
         let ammoCost = 0, atkSnd = "", flavorAdd = "";
         switch (mode) {
             case "single":
                 ammoCost = 1;
-                atkSnd = this.data.data.atkSnd;
+                atkSnd = data.atkSnd;
                 break;
             case "burst":
-                ammoCost = this.data.data.burstAttack.ammoCost;
-                atkSnd = this.data.data.burstAttack.atkSnd;
+                ammoCost = data.burstAttack.ammoCost;
+                atkSnd = data.burstAttack.atkSnd;
                 flavorAdd = " with burst";
                 break;
             case "fullAuto":
-                ammoCost = this.data.data.autoAttack.ammoCost * fullAutoCount;
-                atkSnd = this.data.data.autoAttack.atkSnd;
+                ammoCost = data.autoAttack.ammoCost * fullAutoCount;
+                atkSnd = data.autoAttack.atkSnd;
                 flavorAdd = " in full auto";
                 break;
         }
 
-        let rollMacro = "1d20 + " + this.data.data.toHit;
+        let rollMacro = "1d20 + " + data.toHit;
         if (parseInt(abilityMod) != 0) {
             rollMacro += " + " + abilityMod;
         }
@@ -127,9 +132,9 @@ export default class ItemSg extends Item {
             return;
         }
 
-        // If item has some ammunition defined, consume 1.
+        // If item has some ammunition defined, consume as needed
         if (data.hasAmmo) {
-            const remainingAmmo = parseInt(this.data.data.ammo.value);
+            const remainingAmmo = parseInt(data.ammo.value);
             if (remainingAmmo <= 0) {
                 // Double check that ammo count did not change while in dialog.
                 return ui.notifications.warn("No more ammo for this item!");

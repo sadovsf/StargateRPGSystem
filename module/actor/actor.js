@@ -173,6 +173,9 @@ export default class ActorSg extends Actor {
         data.speed = data.speedBase;
         data.ac = 10 + data.acBonus + data.attributes.dex.mod;
 
+        // Max automatic shots
+        data.maxAutomaticShots = data.attributes.str.mod + data.miscSettings.extraAutoFire;
+
         // Used bulk
         // Only consider carried items that are not part of the base kit or a worn armor
         const bulkItems = this.items.filter(element => element.data.data.carried && !element.data.data.partOfBaseKit && !element.data.data.worn);

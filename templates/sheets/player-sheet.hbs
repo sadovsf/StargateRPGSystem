@@ -409,6 +409,15 @@
                     <span>Actual: {{data.speed}}</span>
                 </div>
             </section>
+
+            <section class="sets initsets columnflex nowrap spaced">
+                <div class="flexrow span-margins flex-group-center">
+                    <span class="bold-text">Max Automatic Shots</span>
+                    <span>Total: {{data.maxAutomaticShots}}</span>
+                    <span>Strength: {{data.attributes.str.mod}}</span>
+                    <span>Extra: <input onfocus="this.select();" class="setinput" type="number" name="data.miscSettings.extraAutoFire" value="{{data.miscSettings.extraAutoFire}}" data-dtype="Number" /></span>
+                </div>
+            </section>
         </main>
 
         <!--  --------------------------------------------------------------------------------- -->
