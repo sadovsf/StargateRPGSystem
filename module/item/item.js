@@ -16,7 +16,7 @@ export default class ItemSg extends Item {
         const actorData = this.actor ? this.actor.data : {};
 
         if (itemData.type === 'armor') this._processArmor(itemData);
-        if (itemData.type === 'weapon') this._processWeapon(itemData, actorData);
+        if (itemData.type === 'weapon') this._processWeapon(itemData);
     }
 
     /**
@@ -32,15 +32,10 @@ export default class ItemSg extends Item {
     /**
      * Process weapon data
      */
-    _processWeapon(itemData, actorData) {
+    _processWeapon(itemData) {
         const data = itemData.data;
 
         data.hasAmmo = data.ammo.value !== null;
-        if (actorData.data) {
-            data.standardAutoShots = actorData.data.maxAutomaticShots;
-        } else {
-            data.standardAutoShots = 0;
-        }
     }
 
     /* -------------------------------------------- */

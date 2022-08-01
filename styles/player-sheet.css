@@ -236,7 +236,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(6, 2fr);
-    grid-template-areas: "skills hpsets hpsets hpsets" "skills acsets acsets acsets" "skills initsets initsets initsets" "skills speedsets speedsets speedsets" "skills . . . " ". . . .";
+    grid-template-areas: "skills hpsets hpsets hpsets" "skills acsets acsets acsets" "skills initsets initsets initsets" "skills miscsets miscsets miscsets" "skills . . . " ". . . .";
     width: 865px;
     height: 990px;
     /* background-image: url(https://raw.githubusercontent.com/Roll20/roll20-character-sheets/master/Stargate-RPG/images/bg.png); */
@@ -591,6 +591,9 @@
 }
 .charsheet .initsets {
     grid-area: initsets;
+}
+.charsheet .miscsets {
+    grid-area: miscsets;
 }
 
 .charsheet .background section {
