@@ -3,7 +3,11 @@
         {{!-- Attack details left column --}}
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.details.type">Bulk</label>
-            <input type="text" name="data.bulk" value="{{data.bulk}}" data-dtype="Number"/>
+            <input type="text" name="data.bulk" value="{{data.bulk}}" data-dtype="Number" />
+        </div>
+        <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.quantity">Quantity</label>
+            <input name="data.quantity" type="text" value="{{data.quantity}}" data-dtype="Number" />
         </div>
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.details.type">Attack type</label>
@@ -29,9 +33,9 @@
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.details.range.normal">Range</label>
             <div class="flexrow flex-center flex-between">
-                <input type="text" name="data.details.range.normal" value="{{data.details.range.normal}}" data-dtype="Number"/>
+                <input type="text" name="data.details.range.normal" value="{{data.details.range.normal}}" data-dtype="Number" />
                 <span> / </span>
-                <input type="text" name="data.details.range.max" value="{{data.details.range.max}}" data-dtype="Number"/>
+                <input type="text" name="data.details.range.max" value="{{data.details.range.max}}" data-dtype="Number" />
             </div>
         </div>
 
@@ -39,13 +43,13 @@
         <div class="details-entry grid grid-2col">
             <label>Target</label>
             <div class="form-fields">
-                <input type="text" name="data.target.value" style="width: 25%" value="{{data.target.value}}" data-dtype="Number" placeholder="-"/>
+                <input type="text" name="data.target.value" style="width: 25%" value="{{data.target.value}}" data-dtype="Number" placeholder="-" />
                 <select name="data.target.type" style="width: 75%">
                     {{#select data.target.type}}
-                        <option value=""></option>
-                        {{#each config.targetTypes as |name key|}}
-                            <option value="{{key}}">{{name}}</option>
-                        {{/each}}
+                    <option value=""></option>
+                    {{#each config.targetTypes as |name key|}}
+                    <option value="{{key}}">{{name}}</option>
+                    {{/each}}
                     {{/select}}
                 </select>
             </div>
@@ -74,36 +78,36 @@
         {{!-- Attack details right column --}}
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.details.special">Special</label>
-            <input type="text" name="data.details.special" value="{{data.details.special}}" data-dtype="String"/>
+            <input type="text" name="data.details.special" value="{{data.details.special}}" data-dtype="String" />
         </div>
 
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.ammo.value">Ammo</label>
             <div class="flexrow flex-center flex-between">
-                <input type="text" name="data.ammo.value" value="{{data.ammo.value}}" data-dtype="Number"/>
+                <input type="text" name="data.ammo.value" value="{{data.ammo.value}}" data-dtype="Number" />
                 <span>/</span>
-                <input type="text" name="data.ammo.max" value="{{data.ammo.max}}" data-dtype="Number"/>
+                <input type="text" name="data.ammo.max" value="{{data.ammo.max}}" data-dtype="Number" />
             </div>
         </div>
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.ammo.bulk">Ammo unit bulk</label>
-            <input type="text" name="data.ammo.bulk" value="{{data.ammo.bulk}}" data-dtype="Number"/>
+            <input type="text" name="data.ammo.bulk" value="{{data.ammo.bulk}}" data-dtype="Number" />
         </div>
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.ammo.target">Reload Consumable</label>
             <select name="data.ammo.target">
                 {{#select data.ammo.target}}
-                    <option value=""></option>
-                    <option value="{{config.actionReloadValue}}">[Action based reload]</option>
-                    {{#each abilityConsumptionTargets as |name key|}}
-                        <option value="{{key}}">{{name}}</option>
-                    {{/each}}
+                <option value=""></option>
+                <option value="{{config.actionReloadValue}}">[Action based reload]</option>
+                {{#each abilityConsumptionTargets as |name key|}}
+                <option value="{{key}}">{{name}}</option>
+                {{/each}}
                 {{/select}}
             </select>
         </div>
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.ammo.reload">Reload</label>
-            <input type="text" name="data.ammo.reload" value="{{data.ammo.reload}}" data-dtype="String"/>
+            <input type="text" name="data.ammo.reload" value="{{data.ammo.reload}}" data-dtype="String" />
         </div>
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.isProficient">Has proficiency</label>

@@ -249,6 +249,8 @@ export default class SGActorSheet extends ActorSheet {
             return ui.notifications.info("Weapon is already reloaded.");
         }
 
+        // TODO: Call this stuff from item directly, do not handle the process itself in sheet
+
         const ammoItem = item.findAmmunition();
         if (!ammoItem) {
             if (item.data.data.ammo.target == CONFIG.SGRPG.actionReloadValue) {
@@ -262,10 +264,6 @@ export default class SGActorSheet extends ActorSheet {
         if (magCount <= 0) {
             return ui.notifications.info(`No more magazines left for '${item.name}' in inventory.`);
         }
-
-        // TODO: Call this stuff from item directly, do not handle the process itself in sheet
-
-        return;
 
         await ammoItem.update({
             "data.quantity": magCount - 1

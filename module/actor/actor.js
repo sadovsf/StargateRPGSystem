@@ -181,7 +181,7 @@ export default class ActorSg extends Actor {
         const bulkItems = this.items.filter(element => element.data.data.carried && !element.data.data.partOfBaseKit && !element.data.data.worn);
         let usedBulk = 0;
         for (let item of bulkItems) {
-            usedBulk += item.data.data.bulk * item.data.data.quantity;
+            usedBulk += item.data.data.bulkTotal;
         }
         data.bulkUsed = usedBulk;
         data.bulkOverload = usedBulk > data.bulkMax;
