@@ -222,7 +222,7 @@
       },
       "attack": {
         "attackAbility": "dex",
-        "toHit": "0",
+        "toHitBonus": 0,
         "dmg": "1d6",
         "atkSnd": null,
         "dmgSnd": null,

@@ -51,6 +51,10 @@ export default class ItemSg extends Item {
             if (ammoBulk < 0) ammoBulk = 0; // Clamp the ammo bulk to non-negatives
             data.bulkTotal = (data.bulk + ammoBulk) * data.quantity; // Use the weapon and ammo bulk together as the bulk of a single weapon, then multiply by quantity
         }
+
+        // To-hit bonus
+        data.toHit = data.toHitBonus + (this.actor?.data ? this.actor.data.data.attributes[data.attackAbility].mod + (data.isProficient ? this.actor.data.data.proficiencyLevel : 0) : 0);
+        data.visualToHit = data.toHit >= 0 ? "+" + data.toHit.toString() : data.toHit.toString()
     }
 
     /* -------------------------------------------- */
@@ -101,8 +105,7 @@ export default class ItemSg extends Item {
             return ui.notifications.warn("No more ammo for this item!");
         }
 
-        const abilityName = data.attackAbility;
-        const abilityMod = parseInt(this.actor.data.data.attributes[abilityName].mod);
+        const abilityMod = this.actor.data.data.attributes[data.attackAbility].mod;
         const isProf = data.isProficient;
         // If fired on full auto, check whether the weapon is stabilized, if not, set disadvantage as default
         const disadvDefault = mode === "fullAuto" ? (data.autoAttack.stabilized ? false : true) : false;
@@ -124,7 +127,7 @@ export default class ItemSg extends Item {
                 break;
         }
 
-        let rollMacro = "1d20 + " + data.toHit;
+        let rollMacro = "1d20 + " + data.toHitBonus;
         if (parseInt(abilityMod) != 0) {
             rollMacro += " + " + abilityMod;
         }
@@ -173,9 +176,9 @@ export default class ItemSg extends Item {
     }
 
     async rollDamage({ mode = "single", fullAutoCount = 0 } = {}) {
-        const abilityName = this.data.data.attackAbility;
-        const abilityMod = this.actor.data.data.attributes[abilityName].mod;
-        let dmgRoll = this.data.data.dmg;
+        const data = this.data.data;
+        const abilityMod = this.actor.data.data.attributes[data.attackAbility].mod;
+        let dmgRoll = data.dmg;
 
         if (parseInt(abilityMod) != 0) {
             dmgRoll += " + " + abilityMod;
@@ -184,15 +187,15 @@ export default class ItemSg extends Item {
         let dmgSnd = "", flavorAdd = "";
         switch (mode) {
             case "single":
-                dmgSnd = this.data.data.dmgSnd;
+                dmgSnd = data.dmgSnd;
                 break;
             case "burst":
-                dmgSnd = this.data.data.burstAttack.dmgSnd;
+                dmgSnd = data.burstAttack.dmgSnd;
                 dmgRoll += " + 1@td";
                 flavorAdd = " with burst";
                 break;
             case "fullAuto":
-                dmgSnd = this.data.data.autoAttack.dmgSnd;
+                dmgSnd = data.autoAttack.dmgSnd;
                 dmgRoll += " + " + fullAutoCount.toFixed(0) + "@td";
                 flavorAdd = " in full auto";
                 break;
