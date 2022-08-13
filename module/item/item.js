@@ -47,7 +47,7 @@ export default class ItemSg extends Item {
         // Only consider the ammo bulk calculation if ammo and bulk are set, and either nothing is set as the ammo item, or the item is explicitly set as ammo-item-free with only an action
         if (data.hasAmmo && data.ammo.bulk && (!data.ammo.target || data.ammo.target === CONFIG.SGRPG.actionReloadValue)) {
             // Use the ammo numbers to figure out the total bulk of the carried ammo
-            let ammoBulk = Math.ceil(data.ammo.bulk * (data.ammo.value / data.ammo.max)) + ((data.ammo.extraMags ?? -1) > 0 ? (data.ammo.bulk * data.ammo.extraMags) : 0);
+            let ammoBulk = Math.ceil((data.ammo.bulk * (data.ammo.value / data.ammo.max)) + ((data.ammo.extraMags ?? -1) > 0 ? (data.ammo.bulk * data.ammo.extraMags) : 0));
             if (ammoBulk < 0) ammoBulk = 0; // Clamp the ammo bulk to non-negatives
             data.bulkTotal = (data.bulk + ammoBulk) * data.quantity; // Use the weapon and ammo bulk together as the bulk of a single weapon, then multiply by quantity
         }

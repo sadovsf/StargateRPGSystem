@@ -205,10 +205,10 @@ export default class SGActorSheet extends ActorSheet {
         // }
 
         // Stack identical equipment
-        if (itemData.type === "equip" && itemData.flags.core?.sourceId) {
+        if (itemData.flags.core?.sourceId) {
             const similarItem = this.actor.items.find(i => {
                 const sourceId = i.getFlag("core", "sourceId");
-                return sourceId && (sourceId === itemData.flags.core?.sourceId) && (i.type === "equip");
+                return sourceId && (sourceId === itemData.flags.core?.sourceId);
             });
             if (similarItem) {
                 return similarItem.update({
