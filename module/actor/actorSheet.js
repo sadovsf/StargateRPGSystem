@@ -101,7 +101,7 @@ export default class SGActorSheet extends ActorSheet {
 
             // Switch-case to append the item to the proper list
             switch (i.type) {
-                case 'item':
+                case 'equip':
                     gear.push(i);
                     break;
                 case 'weapon':

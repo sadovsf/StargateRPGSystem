@@ -54,9 +54,9 @@ export default class ItemSg extends Item {
         }
         // Formulate the visual shown for the weapon's magazines on the character sheet, either showing the ammo and the extra mags, ammo and the extra weapons, or just simple ammo
         if (data.hasAmmo) {
-            if ((data.ammo.extraMags ?? -1) > 0 || ((data.ammo.extraMags ?? -1) >= 0 && data.quantity <= 1))
+            if ((data.ammo.extraMags ?? -2) >= 0)
                 data.visualAmmo = data.ammo.value.toFixed(0) + " /" + data.ammo.extraMags.toFixed(0) + "mag";
-            else if (data.quantity > 1)
+            else if ((data.ammo.extraMags ?? -2) === -1 && data.quantity > 1)
                 data.visualAmmo = data.ammo.value.toFixed(0) + " + " + (data.quantity - 1).toFixed(0) + "pcs";
             else
                 data.visualAmmo = data.ammo.value.toFixed(0);
@@ -274,19 +274,24 @@ export default class ItemSg extends Item {
 
         const ammoItem = item.findAmmunition();
         if (!ammoItem) {
+            // If no ammo item is found, check if the target matches the standard action reload value or is empty for a reload that doesn't consume separate items
             if (data.ammo.target === CONFIG.SGRPG.actionReloadValue || data.ammo.target == null) {
-                if (data.ammo.extraMags === null || data.ammo.extraMags === undefined || data.ammo.extraMags < 0) {
-                    // Weapon has no magazines set, allow free reload.
+                if (data.ammo.extraMags === null || data.ammo.extraMags === undefined || data.ammo.extraMags <= -2) {
+                    // Weapon has no magazines set, allow free reloading without consuming anything
                     return item.update({ "data.ammo.value": data.ammo.max });
                 } else {
-                    // Weapon has a set number of additional magazines in store
-                    if (data.ammo.extraMags === 0) {
-                        // If no mags remain, check if there is an extra weapon, then consume that instead of an extra magazine
+                    if (data.ammo.extraMags === -1) {
+                        // If mags are set to negative 1, check if there is an extra weapon, then consume that
                         // In place for single shot weapons, like the common disposable anti-tank launchers
                         if (data.quantity > 1) {
-                            ui.notifications.info(`No extra magazines remaining, consuming an extra weapon instead.`);
+                            ui.notifications.info(`Single shot weapon, reloading by consuming one quantity.`);
                             return item.update({ "data.ammo.value": data.ammo.max, "data.quantity": data.quantity - 1 });
+                        } else {
+                            return ui.notifications.info(`Single shot weapon, no more remain.`);
                         }
+                    }
+                    else if (data.ammo.extraMags === 0) {
+                        // Weapon has a set number of additional magazines in store
                         return ui.notifications.info(`No extra magazines remaining for '${item.name}'.`);
                     } else {
                         // Decrease the number of mags by one and fill the ammo
