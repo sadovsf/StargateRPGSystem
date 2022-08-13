@@ -21,6 +21,7 @@ export default class ItemSg extends Item {
         if (data.bulk) {
             data.bulkTotal = data.bulk * data.quantity;
         }
+        if (data.quantity !== 1) data.isStack = true;
 
         if (itemData.type === 'armor') this._processArmor(itemData);
         if (itemData.type === 'weapon') this._processWeapon(itemData);
@@ -54,9 +55,9 @@ export default class ItemSg extends Item {
         // Formulate the visual shown for the weapon's magazines on the character sheet, either showing the ammo and the extra mags, ammo and the extra weapons, or just simple ammo
         if (data.hasAmmo) {
             if ((data.ammo.extraMags ?? -1) > 0 || ((data.ammo.extraMags ?? -1) >= 0 && data.quantity <= 1))
-                data.visualAmmo = data.ammo.value.toFixed(0) + " /" + data.ammo.extraMags.toFixed(0) + "m";
+                data.visualAmmo = data.ammo.value.toFixed(0) + " /" + data.ammo.extraMags.toFixed(0) + "mag";
             else if (data.quantity > 1)
-                data.visualAmmo = data.ammo.value.toFixed(0) + " + " + (data.quantity - 1).toFixed(0) + "ext";
+                data.visualAmmo = data.ammo.value.toFixed(0) + " + " + (data.quantity - 1).toFixed(0) + "pcs";
             else
                 data.visualAmmo = data.ammo.value.toFixed(0);
         } else { data.visualAmmo = ""; }
