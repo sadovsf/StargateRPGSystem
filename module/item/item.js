@@ -47,13 +47,19 @@ export default class ItemSg extends Item {
         // Only consider the ammo bulk calculation if ammo and bulk are set, and either nothing is set as the ammo item, or the item is explicitly set as ammo-item-free with only an action
         if (data.hasAmmo && data.ammo.bulk && (!data.ammo.target || data.ammo.target === CONFIG.SGRPG.actionReloadValue)) {
             // Use the ammo numbers to figure out the total bulk of the carried ammo
-            let ammoBulk = Math.ceil(data.ammo.bulk * (data.ammo.value / data.ammo.max)) + (data.ammo.bulk * data.ammo.extraMags);
+            let ammoBulk = Math.ceil(data.ammo.bulk * (data.ammo.value / data.ammo.max)) + ((data.ammo.extraMags ?? -1) > 0 ? (data.ammo.bulk * data.ammo.extraMags) : 0);
             if (ammoBulk < 0) ammoBulk = 0; // Clamp the ammo bulk to non-negatives
             data.bulkTotal = (data.bulk + ammoBulk) * data.quantity; // Use the weapon and ammo bulk together as the bulk of a single weapon, then multiply by quantity
         }
         // Formulate the visual shown for the weapon's magazines on the character sheet, either showing the ammo and the extra mags, ammo and the extra weapons, or just simple ammo
-        data.visualMags = data.ammo.extraMags >= 0 ? data.ammo.value.toFixed(0) + " /" + data.ammo.extraMags.toFixed(0) + "m" :
-            (data.quantity > 1 ? data.ammo.value.toFixed(0) + " /" + data.quantity.toFixed(0) + "ext" : data.ammo.value.toFixed(0));
+        if (data.hasAmmo) {
+            if ((data.ammo.extraMags ?? -1) > 0 || ((data.ammo.extraMags ?? -1) >= 0 && data.quantity <= 1))
+                data.visualAmmo = data.ammo.value.toFixed(0) + " /" + data.ammo.extraMags.toFixed(0) + "m";
+            else if (data.quantity > 1)
+                data.visualAmmo = data.ammo.value.toFixed(0) + " + " + (data.quantity - 1).toFixed(0) + "ext";
+            else
+                data.visualAmmo = data.ammo.value.toFixed(0);
+        } else { data.visualAmmo = ""; }
 
         // To-hit bonus
         data.toHit = data.toHitBonus + (this.actor?.data ? this.actor.data.data.attributes[data.attackAbility].mod + (data.isProficient ? this.actor.data.data.proficiencyLevel : 0) : 0);
@@ -274,7 +280,7 @@ export default class ItemSg extends Item {
                 } else {
                     // Weapon has a set number of additional magazines in store
                     if (data.ammo.extraMags === 0) {
-                        // Check if there is an extra weapon, then consume that instead of an extra magazine
+                        // If no mags remain, check if there is an extra weapon, then consume that instead of an extra magazine
                         // In place for single shot weapons, like the common disposable anti-tank launchers
                         if (data.quantity > 1) {
                             ui.notifications.info(`No extra magazines remaining, consuming an extra weapon instead.`);
