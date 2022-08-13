@@ -84,15 +84,21 @@
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.ammo.value">Ammo</label>
             <div class="flexrow flex-center flex-between">
-                <input type="text" name="data.ammo.value" value="{{data.ammo.value}}" data-dtype="Number" />
+                <input type="number" name="data.ammo.value" value="{{data.ammo.value}}" data-dtype="Number" />
                 <span>/</span>
-                <input type="text" name="data.ammo.max" value="{{data.ammo.max}}" data-dtype="Number" />
+                <input type="number" name="data.ammo.max" value="{{data.ammo.max}}" data-dtype="Number" />
             </div>
         </div>
+        {{#unless (consumesAmmo item)}}
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.ammo.bulk">Ammo unit bulk</label>
-            <input type="text" name="data.ammo.bulk" value="{{data.ammo.bulk}}" data-dtype="Number" />
+            <input type="number" name="data.ammo.bulk" value="{{data.ammo.bulk}}" data-dtype="Number" />
         </div>
+        <div class="details-entry grid grid-2col" title="Negative or empty means untracked / infinite magazines">
+            <label class="attribute-label" for="data.ammo.extraMags">Extra magazines</label>
+            <input type="number" name="data.ammo.extraMags" value="{{data.ammo.extraMags}}" data-dtype="Number" />
+        </div>
+        {{/unless}}
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.ammo.target">Reload Consumable</label>
             <select name="data.ammo.target">

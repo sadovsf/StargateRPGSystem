@@ -33,4 +33,8 @@ export function registerHandlebarsHelpersSG() {
     Handlebars.registerHelper('equalTo', function (val, compare) {
         return val == compare;
     });
+
+    Handlebars.registerHelper('consumesAmmo', function (item) {
+        return item?.consumesAmmunition?.() ?? false;
+    });
 };

@@ -59,6 +59,15 @@ Hooks.once("init", function () {
         config: true
     });
 
+    game.settings.register("sgrpg", "showDescriptionDefault", {
+        name: "Show Item Description",
+        hint: "Whether to show the item description by default.",
+        scope: "world",
+        type: Boolean,
+        default: false,
+        config: true
+    });
+
 
     preloadHandlebarsTemplates();
     registerHandlebarsHelpersSG();

@@ -230,6 +230,7 @@
           "bulk": null,
           "value": null,
           "max": null,
+          "extraMags": null,
           "target": null,
           "reload": null
         },

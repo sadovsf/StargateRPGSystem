@@ -245,31 +245,11 @@ export default class SGActorSheet extends ActorSheet {
         const div = event.currentTarget.parentElement.parentElement;
         const item = this.actor.items.get(div.dataset.itemId);
 
-        if (item.data.data.ammo.value == item.data.data.ammo.max) {
-            return ui.notifications.info("Weapon is already reloaded.");
+        if (!item) {
+            return ui.notifications.warn("Item to reload not found!");
         }
 
-        // TODO: Call this stuff from item directly, do not handle the process itself in sheet
-
-        const ammoItem = item.findAmmunition();
-        if (!ammoItem) {
-            if (item.data.data.ammo.target == CONFIG.SGRPG.actionReloadValue) {
-                // Weapon has no magazine, allow free reload.
-                return item.update({ "data.ammo.value": item.data.data.ammo.max });
-            }
-            return ui.notifications.info(`Unable to find magazine to reload '${item.name}'.`);
-        }
-
-        const magCount = ammoItem.data.data.quantity || 0;
-        if (magCount <= 0) {
-            return ui.notifications.info(`No more magazines left for '${item.name}' in inventory.`);
-        }
-
-        await ammoItem.update({
-            "data.quantity": magCount - 1
-        }, { render: false });
-
-        return item.update({ "data.ammo.value": item.data.data.ammo.max });
+        item.reloadWeapon();
     }
 
     /* -------------------------------------------- */
