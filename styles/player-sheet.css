@@ -104,6 +104,10 @@
     font-size: 2em;
     font-weight: bold;
 }
+.charsheet input[type="text"].smallstat, .charsheet input[type="number"].smallstat {
+    font-size: 1.5em;
+    font-weight: bold;
+}
 .charsheet textarea:placeholder-shown, .charsheet input[type="text"]:placeholder-shown, .charsheet input[type="number"]:placeholder-shown {
     background-color: #eac9d1;
 }

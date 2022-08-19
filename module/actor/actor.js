@@ -310,9 +310,12 @@ export default class ActorSg extends Actor {
         return allowed !== false ? this.update(updates) : this;
     }
 
+    /**
+     * Automatically roll and record the result of a death save
+     */
     async rollDeathSave() {
         let r = new Roll("1d20");
-        r.evaluate();
+        await r.evaluate();
         const rollResult = r.total;
 
         const data = this.data.data.deathSaves;
@@ -364,7 +367,7 @@ export default class ActorSg extends Actor {
             }
         }
 
-        r.toMessage({
+        return r.toMessage({
             speaker: ChatMessage.getSpeaker({ actor: this }),
             flavor: "Death Save"
         });
