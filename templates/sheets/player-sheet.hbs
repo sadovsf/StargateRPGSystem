@@ -318,16 +318,16 @@
                     <span class="bold-text">Total HP</span>
                     <i class="equal fas fa-equals xs"></i>
                     <span>HP Bonus</span>
-                    <span>Hit Die Level 1</span>
-                    <span>Hit Die Level 2+</span>
+                    <span>Per Level Bonus</span>
+                    <span>Hit Die HP</span>
                     <span>Con Bonus</span>
                 </div>
                 <div class="flexrow flex-group-center">
                     <input class="setvisual" type="number" value="{{data.health.max}}" readonly />
                     <i class="equal fas fa-equals xs"></i>
-                    <input onfocus="this.select();" class="setinput" type="number" name="data.health.maxBonus" value="{{data.health.maxBonus}}" data-dtype="Number" />
-                    <span>{{data.hitDieValue}}</span>
-                    <span>{{data.visualData.hitDieLevels}}</span>
+                    <input onfocus="this.select();" class="setvisual" type="number" name="data.health.maxBonus" value="{{data.health.maxBonus}}" data-dtype="Number" />
+                    <span><input onfocus="this.select();" class="setinput" type="number" name="data.health.maxLevelBonus" value="{{data.health.maxLevelBonus}}" data-dtype="Number" style="margin-left:4px;" /> * {{data.level}}</span>
+                    <span>{{data.visualData.hitDieTotal}}</span>
                     <span>{{data.visualData.conBonus}}</span>
                 </div>
                 <div class="flexrow flex-group-center">

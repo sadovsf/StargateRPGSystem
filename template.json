@@ -5,7 +5,8 @@
       "minimal": {
         "health": {
           "value": 20,
-          "maxBonus": 10
+          "maxBonus": 10,
+          "maxLevelBonus": 0
         },
         "temp_health": {
           "value": 0,

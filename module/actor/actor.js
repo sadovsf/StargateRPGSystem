@@ -148,8 +148,9 @@ export default class ActorSg extends Actor {
                     hitDieValue = parseInt(data.hd.trim().slice(index + 1));
                 }
                 data.hitDieValue = hitDieValue;
-                hp = data.health.maxBonus + hitDieValue + (hitDieValue / 2 + 1) * (data.level - 1) + data.attributes.con.mod * data.level;
+                hp = data.health.maxBonus + (data.health.maxLevelBonus * data.level) + hitDieValue + (hitDieValue / 2 + 1) * (data.level - 1) + data.attributes.con.mod * data.level;
                 data.visualData.hitDieLevels = (hitDieValue / 2 + 1) * (data.level - 1);
+                data.visualData.hitDieTotal = `${hitDieValue} + ${(hitDieValue / 2 + 1) * (data.level - 1)}`;
                 data.visualData.conBonus = data.attributes.con.mod * data.level;
                 break;
             default:
