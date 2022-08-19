@@ -309,4 +309,64 @@ export default class ActorSg extends Actor {
         }, updates);
         return allowed !== false ? this.update(updates) : this;
     }
+
+    async rollDeathSave() {
+        let r = new Roll("1d20");
+        r.evaluate();
+        const rollResult = r.total;
+
+        const data = this.data.data.deathSaves;
+        const curSuccess = parseInt(data.successes);
+        const curFails = parseInt(data.fails);
+        const curHealth = parseInt(this.data.data.health.value);
+
+        if (rollResult == 1) {
+            // 2 fails.
+            if (curHealth == 0 && curFails >= 1) {
+                this.update({
+                    "data.deathSaves.fails": curFails + 2,
+                    "data.condition": "death"
+                });
+            } else {
+                this.update({ ["data.deathSaves.fails"]: curFails + 2 });
+            }
+        }
+        else if (rollResult == 20) {
+            // success + heal.
+            const maxHealth = parseInt(this.data.data.health.max);
+            this.update({
+                "data.deathSaves.fails": 0,
+                "data.deathSaves.successes": 0,
+                "data.health.value": curHealth + 1 <= maxHealth ? curHealth + 1 : curHealth
+            });
+        }
+        else if (rollResult >= 10) {
+            // success.
+            if (curSuccess >= 2) {
+                this.update({
+                    "data.deathSaves.fails": 0,
+                    "data.deathSaves.successes": 0
+                });
+            }
+            else {
+                this.update({ [`data.deathSaves.successes`]: curSuccess + 1 });
+            }
+        }
+        else {
+            // fail.
+            if (curHealth == 0 && curFails >= 2) {
+                this.update({
+                    "data.deathSaves.fails": curFails + 1,
+                    "data.condition": "death"
+                });
+            } else {
+                this.update({ ["data.deathSaves.fails"]: curFails + 1 });
+            }
+        }
+
+        r.toMessage({
+            speaker: ChatMessage.getSpeaker({ actor: this }),
+            flavor: "Death Save"
+        });
+    }
 }

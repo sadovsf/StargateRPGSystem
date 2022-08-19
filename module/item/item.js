@@ -54,7 +54,16 @@ export default class ItemSg extends Item {
         }
         // Formulate the visual shown for the weapon's magazines on the character sheet, either showing the ammo and the extra mags, ammo and the extra weapons, or just simple ammo
         if (data.hasAmmo) {
-            if ((data.ammo.extraMags ?? -2) >= 0)
+            if (this.actor && this.consumesAmmunition) {
+                const ammoItem = this.findAmmunition();
+                if (ammoItem?.data)
+                    data.visualAmmo = data.ammo.value.toFixed(0) + " /" + ammoItem.data.data.quantity.toFixed(0) + "mag";
+                else {
+                    data.visualAmmo = data.ammo.value.toFixed(0);
+                    console.error("Somehow, the ammo item was received but turned up null: " + ammoItem);
+                }
+            }
+            else if ((data.ammo.extraMags ?? -2) >= 0)
                 data.visualAmmo = data.ammo.value.toFixed(0) + " /" + data.ammo.extraMags.toFixed(0) + "mag";
             else if ((data.ammo.extraMags ?? -2) === -1 && data.quantity > 1)
                 data.visualAmmo = data.ammo.value.toFixed(0) + " + " + (data.quantity - 1).toFixed(0) + "pcs";
@@ -257,6 +266,10 @@ export default class ItemSg extends Item {
         return ui.notifications.info(`Item '${this.data.name}' was consumed, ${remainingCount - 1} usages remain.`);
     }
 
+    /**
+     * Find the ammo item for this weapon, if any exists
+     * @returns {ItemSg}
+     */
     findAmmunition() {
         if (!this.consumesAmmunition) {
             return null;

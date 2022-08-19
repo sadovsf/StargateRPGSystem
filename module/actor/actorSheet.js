@@ -311,67 +311,7 @@ export default class SGActorSheet extends ActorSheet {
     _onRollDeathSave(event) {
         event.preventDefault();
 
-        let r = new Roll("1d20");
-        r.evaluate();
-        const rollResult = r.total;
-
-        const data = this.actor.data.data.deathSaves;
-        const curSuccess = parseInt(data.successes);
-        const curFails = parseInt(data.fails);
-        const curHealth = parseInt(this.actor.data.data.health.value);
-
-        // TODO: Handle stuff in actor, do not process the actual event in sheet
-
-        return;
-
-        if (rollResult == 1) {
-            // 2 fails.
-            if (curHealth == 0 && curFails >= 1) {
-                this.actor.update({
-                    "data.deathSaves.fails": curFails + 2,
-                    "data.condition": "death"
-                });
-            } else {
-                this.actor.update({ ["data.deathSaves.fails"]: curFails + 2 });
-            }
-        }
-        else if (rollResult == 20) {
-            // success + heal.
-            const maxHealth = parseInt(this.actor.data.data.health.max);
-            this.actor.update({
-                "data.deathSaves.fails": 0,
-                "data.deathSaves.successes": 0,
-                "data.health.value": curHealth + 1 <= maxHealth ? curHealth + 1 : curHealth
-            });
-        }
-        else if (rollResult >= 10) {
-            // success.
-            if (curSuccess >= 2) {
-                this.actor.update({
-                    "data.deathSaves.fails": 0,
-                    "data.deathSaves.successes": 0
-                });
-            }
-            else {
-                this.actor.update({ [`data.deathSaves.successes`]: curSuccess + 1 });
-            }
-        }
-        else {
-            // fail.
-            if (curHealth == 0 && curFails >= 2) {
-                this.actor.update({
-                    "data.deathSaves.fails": curFails + 1,
-                    "data.condition": "death"
-                });
-            } else {
-                this.actor.update({ ["data.deathSaves.fails"]: curFails + 1 });
-            }
-        }
-
-        r.toMessage({
-            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: "Death save"
-        });
+        this.actor.rollDeathSave();
     }
 
     _reset_deathsave(event) {
