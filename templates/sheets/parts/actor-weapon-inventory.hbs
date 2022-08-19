@@ -28,7 +28,7 @@
             <td class="flex-center">{{item.data.visualAmmo}}</td>
             <td>
                 {{#if item.data.hasAmmo}}{{#if item.data.ammo.reload}}
-                <a class="item-control item-reload" title="Reload magazine"><i class="fas fa-retweet"></i></a>
+                <a class="item-control item-reload" title="Reload magazine: {{item.data.ammo.reload}}"><i class="fas fa-retweet"></i></a>
                 {{/if}}{{/if}}
                 <a class="item-control item-edit"><i class="fas fa-edit"></i></a>
                 <a class="item-control item-delete"><i class="fas fa-trash"></i></a>
