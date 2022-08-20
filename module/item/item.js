@@ -23,18 +23,7 @@ export default class ItemSg extends Item {
         }
         if (data.quantity !== 1) data.isStack = true;
 
-        if (itemData.type === 'armor') this._processArmor(itemData);
         if (itemData.type === 'weapon') this._processWeapon(itemData);
-    }
-
-    /**
-     * Process armor data
-     */
-    _processArmor(itemData) {
-        const data = itemData.data;
-
-        // Visual AC modifier
-        data.visualAC = data.additive ? (data.acBonus >= 0 ? "+" + data.acBonus.toString() : data.acBonus.toString()) : data.acBonus.toString();
     }
 
     /**
@@ -52,9 +41,41 @@ export default class ItemSg extends Item {
             if (ammoBulk < 0) ammoBulk = 0; // Clamp the ammo bulk to non-negatives
             data.bulkTotal = (data.bulk + ammoBulk) * data.quantity; // Use the weapon and ammo bulk together as the bulk of a single weapon, then multiply by quantity
         }
+
+        // To-hit bonus
+        data.toHit = data.toHitBonus + (this.actor?.data ? this.actor.data.data.attributes[data.attackAbility].mod + (data.isProficient ? this.actor.data.data.proficiencyLevel : 0) : 0);
+
+    }
+
+    /** @override
+     * Add visual data for sheet use to items after everything else has been processed
+     */
+    prepareVisualData() {
+        const itemData = this.data;
+
+        if (itemData.type === 'armor') this._processArmorVisuals(itemData);
+        if (itemData.type === 'weapon') this._processWeaponVisuals(itemData);
+    }
+
+    /**
+     * Process armor data for visuals
+     */
+    _processArmorVisuals(itemData) {
+        const data = itemData.data;
+
+        // Visual AC modifier
+        data.visualAC = data.additive ? (data.acBonus >= 0 ? "+" + data.acBonus.toString() : data.acBonus.toString()) : data.acBonus.toString();
+    }
+
+    /**
+     * Process weapon data for visuals
+     */
+    _processWeaponVisuals(itemData) {
+        const data = itemData.data;
+
         // Formulate the visual shown for the weapon's magazines on the character sheet, either showing the ammo and the extra mags, ammo and the extra weapons, or just simple ammo
         if (data.hasAmmo) {
-            if (this.actor && this.consumesAmmunition) {
+            if (this.actor?.data && this.consumesAmmunition) {
                 const ammoItem = this.findAmmunition();
                 if (ammoItem?.data)
                     data.visualAmmo = data.ammo.value.toFixed(0) + " /" + ammoItem.data.data.quantity.toFixed(0) + "mag";
@@ -71,10 +92,8 @@ export default class ItemSg extends Item {
                 data.visualAmmo = data.ammo.value.toFixed(0);
         } else { data.visualAmmo = ""; }
 
-        // To-hit bonus
-        data.toHit = data.toHitBonus + (this.actor?.data ? this.actor.data.data.attributes[data.attackAbility].mod + (data.isProficient ? this.actor.data.data.proficiencyLevel : 0) : 0);
+        // Visual to-hit bonus
         data.visualToHit = data.toHit >= 0 ? "+" + data.toHit.toString() : data.toHit.toString();
-
     }
 
     /* -------------------------------------------- */

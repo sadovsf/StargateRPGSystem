@@ -25,7 +25,8 @@ Hooks.once("init", function () {
     game.sgrpg = {
         config: SGRPG,
         rollItemMacro: macros.rollItemMacro,
-        getTensionDie
+        getTensionDie,
+        usingMoxieCombat
     };
 
     CONFIG.Item.documentClass = ItemSg;
@@ -68,6 +69,15 @@ Hooks.once("init", function () {
         config: true
     });
 
+    game.settings.register("sgrpg", "useMoxieCombat", {
+        name: "Use Moxie in Combat",
+        hint: "Whether to use Moxie instead of Initiative in combat.",
+        scope: "world",
+        type: Boolean,
+        default: false,
+        config: true
+    });
+
 
     preloadHandlebarsTemplates();
     registerHandlebarsHelpersSG();
@@ -97,4 +107,11 @@ Hooks.on("renderChatPopout", (app, html, data) => ItemSg.chatListeners(html));
 function getTensionDie() {
     // First, try to get the Tension Die of the currently active scene, if that turns out unset, get the Tension Die of the campaign
     return game.scenes.active?.getFlag("sgrpg", "sceneTensionDie") || game.settings.get("sgrpg", "campaignTension");
+}
+
+/** Returns whether the combat is configured to use Moxie instead of Initiative
+ * @returns {boolean} True for Moxie, False for Initiative
+ */
+function usingMoxieCombat() {
+    return game.settings.get("sgrpg", "useMoxieCombat");
 }

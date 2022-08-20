@@ -32,6 +32,13 @@ export default class ActorSg extends Actor {
     /* Normal Functions                             */
     /* -------------------------------------------- */
 
+    /** @override
+     */
+    prepareData() {
+        super.prepareData();
+        this.prepareEmbeddedVisuals();
+    }
+
     /* -------------------------------------------- */
     /* Process Base                                 */
     /* -------------------------------------------- */
@@ -271,6 +278,16 @@ export default class ActorSg extends Actor {
 
         data.visualData.armorBulk = baseBulk;
         data.visualData.armorBulkPlus = additiveBulk;
+    }
+
+    /* -------------------------------------------- */
+    /* Process Derived                              */
+    /* -------------------------------------------- */
+
+    prepareEmbeddedVisuals() {
+        for (let item of this.items) {
+            item.prepareVisualData();
+        }
     }
 
     /* -------------------------------------------- */

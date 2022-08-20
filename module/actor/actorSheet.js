@@ -323,12 +323,19 @@ export default class SGActorSheet extends ActorSheet {
     }
 
     _roll_initiative(event) {
-        return this.actor.rollInitiative({ createCombatants: true });
+        if (game.sgrpg.usingMoxieCombat()) {
+            return ui.notifications.info("Using Moxie Combat, please roll that one");
+        } else {
+            return this.actor.rollInitiative({ createCombatants: true });
+        }
     }
 
     _roll_moxie(event) {
-        // TODO: Setting in combat to flip between encounter types
-        return ui.notifications.warn("Moxie combat is not implemented, please use different way");
+        if (game.sgrpg.usingMoxieCombat()) {
+            return this.actor.rollInitiative({ createCombatants: true });
+        } else {
+            return ui.notifications.info("Using normal Initiative, please roll that one");
+        }
     }
 
     /**

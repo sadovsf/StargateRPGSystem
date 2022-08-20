@@ -9,7 +9,8 @@
 export const _getInitiativeFormula = function () {
     const actor = this.actor;
     if (!actor) return "1d20";
-    const init = actor.data.data.initiative;
+    const moxie = game.settings.get("sgrpg", "useMoxieCombat"); // Use the raw setting here, since it's where the magic happens
+    const init = moxie ? actor.data.data.moxie : actor.data.data.initiative;
 
     // Construct initiative formula parts
     let nd = 1;
@@ -19,6 +20,5 @@ export const _getInitiativeFormula = function () {
         mods += "kh";
     }
 
-    // Optionally apply Dexterity tiebreaker
     return `${nd}d20${mods} + ${init}`;
 };
