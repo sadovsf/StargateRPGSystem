@@ -441,6 +441,7 @@ export default class ItemSg extends Item {
         if (!actor) return;
 
         // Get the Item from stored flag data or by the item ID on the Actor
+        /** @type {ItemSg} */
         const item = actor.items.get(card.dataset.itemId);
         if (!item) {
             return ui.notifications.error("No associated item or item no longer exists!")

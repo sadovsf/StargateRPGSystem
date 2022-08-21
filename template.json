@@ -180,7 +180,6 @@
           "racial": "",
           "feats": "",
           "class": "",
-          "equipment": "",
           "proficiencies": "",
           "notes": ""
         }
@@ -188,7 +187,8 @@
     },
 
     "player": {
-      "templates": [ "minimal", "common", "background" ]
+      "templates": [ "minimal", "common", "background" ],
+      "baseKitDisabled": false
     },
 
     "vehicle": {
@@ -262,6 +262,17 @@
           "width": null,
           "type": ""
         }
+      },
+      "lightItem": {
+        "lighted": false,
+        "dimLight": 0,
+        "brightLight": 0,
+        "lightAngle": 360,
+        "lightColor": "#ffffff",
+        "lightAlpha": 0.2,
+        "lightAnimationType": "",
+        "lightAnimationSpeed": 5,
+        "lightAnimationIntensity": 5
       }
     },
 
@@ -282,7 +293,8 @@
     },
 
     "equip": {
-      "templates": [ "itemDescription", "physicalItem" ]
+      "templates": [ "itemDescription", "physicalItem", "lightItem" ],
+      "isLightItem": false
     }
   }
 }

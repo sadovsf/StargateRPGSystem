@@ -115,7 +115,10 @@
 
             <section class="hp rowflex nowrap">
                 <div class="section columnflex nowrap middle center">
-                    <label class="txtcenter" title="Hit Points">HP</label>
+                    <div class="rowflex nowrap">
+                        <label class="txtcenter" title="Hit Points">HP</label>
+                        <a type="roll_restheal" class="txt-btn" style="margin-top:4px;">Rest</a>
+                    </div>
                     <div class="rowflex nowrap">
                         <input onfocus="this.select();" name="data.health.value" type="number" value="{{data.health.value}}" placeholder="XXX" class="smallstat w50" data-dtype="Number" />
                         <span class="slash">/</span>
@@ -273,9 +276,10 @@
                 {{editor content=data.abilities.class target="data.abilities.class" button=true owner=owner editable=editable rollData=rollData}}
             </section>
 
-            <section class="equipment columnflex nowrap center">
-                <label>Equipment notes</label>
-                {{editor content=data.abilities.equipment target="data.abilities.equipment" button=true owner=owner editable=editable rollData=rollData}}
+            <section class="equipment columnflex nowrap center item-list">
+                <label>Inventory</label>
+                {{> "systems/sgrpg/templates/sheets/parts/actor-basekit-inventory.hbs"}}
+                <div class="flex1"></div>
             </section>
 
             <section class="prof columnflex nowrap center">

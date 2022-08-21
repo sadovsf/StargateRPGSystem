@@ -281,7 +281,7 @@ export default class ActorSg extends Actor {
     }
 
     /* -------------------------------------------- */
-    /* Process Derived                              */
+    /* Process Visuals                              */
     /* -------------------------------------------- */
 
     prepareEmbeddedVisuals() {
@@ -308,8 +308,8 @@ export default class ActorSg extends Actor {
         const dt = amount > 0 ? Math.min(tmp, amount) : 0;
 
         // Remaining goes to health
-        const tmpMax = parseInt(this.data.data.temp_health.max) || 0;
-        const dh = Math.clamped(this.data.data.health.value - (amount - dt), 0, this.data.data.health.max + tmpMax);
+        // const tmpMax = parseInt(this.data.data.temp_health.max) || 0;
+        const dh = Math.clamped(this.data.data.health.value - (amount - dt), 0, this.data.data.health.max);
 
         // Update the Actor
         const updates = {
@@ -326,6 +326,67 @@ export default class ActorSg extends Actor {
             isBar: true
         }, updates);
         return allowed !== false ? this.update(updates) : this;
+    }
+
+    /**
+     * Pop up a dialog to specify which heal, then roll and apply it
+     */
+    async rollHealing() {
+        if (this.type !== "player") {
+            return console.error("Tried to rest heal a non-character: " + this.name);
+        }
+
+        const data = this.data.data;
+        if (data.health.value >= data.health.max) {
+            return ui.notifications.info("Already at maximum health!");
+        }
+
+        const betterMod = data.attributes.con.mod > data.proficiencyLevel ? data.attributes.con.mod : data.proficiencyLevel;
+        const templateData = {
+            "actor": this,
+            "shortRestHeal": `${data.hd} + ${betterMod}`,
+            "longRestHeal": `${data.level}${data.hd} + ${betterMod}`
+        };
+
+        const contents = await renderTemplate("systems/sgrpg/templates/popups/healing-popup.html", templateData);
+        let resolvedroll = new Promise((resolve) => {
+            let confirmed = false;
+            let restType = "";
+            let dlog = new Dialog({
+                title: "Resting Heal",
+                content: contents,
+                buttons: {
+                    one: {
+                        icon: '<i class="fas fa-clock"></i>',
+                        label: "Short Rest",
+                        callback: () => { restType = "Short"; confirmed = true; }
+                    },
+                    two: {
+                        icon: '<i class="fas fa-bed"></i>',
+                        label: "Long Rest",
+                        callback: () => { restType = "Long"; confirmed = true; }
+                    }
+                },
+                default: "one",
+                render: html => { },
+                close: html => {
+                    resolve({ "confirmed": confirmed, "restType": restType });
+                }
+            });
+            dlog.render(true);
+        });
+        const results = await resolvedroll;
+
+        if (results.confirmed && results.restType) {
+            let r = new Roll(results.restType === "Long" ? templateData.longRestHeal : templateData.shortRestHeal);
+            await r.evaluate();
+            const rollResult = r.total;
+            r.toMessage({
+                speaker: ChatMessage.getSpeaker({ actor: this }),
+                flavor: results.restType + " Rest Healing"
+            });
+            this.applyDamage(rollResult, -1); // Negative multiplier, as the function does damage so negative heals the character
+        }
     }
 
     /**

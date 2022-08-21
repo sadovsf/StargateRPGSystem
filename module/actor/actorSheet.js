@@ -50,6 +50,7 @@ export default class SGActorSheet extends ActorSheet {
         sheetData.effects = baseData.effects;
 
         // Structural sheet stuff
+        sheetData.baseKitDisabled = sheetData.data.baseKitDisabled ?? false;
         sheetData.tensionDie = game.sgrpg.getTensionDie();
         sheetData.selectables = {
             proficiencySelects: {
@@ -91,6 +92,7 @@ export default class SGActorSheet extends ActorSheet {
 
         // Initialize containers.
         const gear = [];
+        const basekit = [];
         const weapons = [];
         const armors = [];
 
@@ -102,7 +104,10 @@ export default class SGActorSheet extends ActorSheet {
             // Switch-case to append the item to the proper list
             switch (i.type) {
                 case 'equip':
-                    gear.push(i);
+                    if (item.partOfBaseKit && actorData.type === "player")
+                        basekit.push(i);
+                    else
+                        gear.push(i);
                     break;
                 case 'weapon':
                     weapons.push(i);
@@ -119,6 +124,7 @@ export default class SGActorSheet extends ActorSheet {
 
         // Assign and return
         actorData.gear = gear;
+        actorData.basekit = basekit;
         actorData.weapons = weapons;
         actorData.armors = armors;
     }
@@ -167,6 +173,7 @@ export default class SGActorSheet extends ActorSheet {
 
         // Rollable skill checks
         html.find('a.txt-btn[type="roll"]').click(event => this._onRollCheck(event));
+        html.find('a.txt-btn[type="roll_restheal"]').click(event => this._onRollRestHealing(event));
         html.find('a.txt-btn[type="roll_deathsave"]').click(event => this._onRollDeathSave(event));
         html.find('a.txt-btn[type="roll_init"]').click(event => this._roll_initiative(event));
         html.find('a.txt-btn[type="roll_moxie"]').click(event => this._roll_moxie(event));
@@ -174,6 +181,7 @@ export default class SGActorSheet extends ActorSheet {
         //html.find('a[type="roll_attack"]').click(event => this._roll_attack(event));
         html.find('a.skill-mod-revert').click(event => this._onSkillRestoreDefaultModClicked(event));
 
+        html.find('.item-create').click(event => this._onItemCreate(event));
         html.find('.item-consume').click(event => this._onItemConsume(event));
         html.find('.item-edit').click(event => this._onItemEdit(event));
         html.find('.item-delete').click(event => this._onItemDelete(event));
@@ -219,6 +227,34 @@ export default class SGActorSheet extends ActorSheet {
 
         // Create the owned item as normal
         return super._onDropItemCreate(itemData);
+    }
+
+    /**
+     * Handle deleting an existing Owned Item for the Actor
+     * @param {Event} event   The originating click event
+     * @private
+     */
+    async _onItemCreate(event) {
+        event.preventDefault();
+
+        const header = event.currentTarget;
+        // Get the type of item to create.
+        const type = header.dataset.type;
+        // Grab any data associated with this control.
+        const data = duplicate(header.dataset);
+        // Initialize a default name.
+        const name = `New ${type.capitalize()}`;
+        // Prepare the item object.
+        const itemData = {
+            name: name,
+            type: type,
+            system: data
+        };
+        // Remove the type from the dataset since it's in the itemData.type prop.
+        delete itemData.system["type"];
+
+        // Finally, create the item!
+        return await Item.create(itemData, { parent: this.actor });
     }
 
     /**
@@ -306,6 +342,12 @@ export default class SGActorSheet extends ActorSheet {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
             flavor: event.currentTarget.innerText
         });
+    }
+
+    _onRollRestHealing(event) {
+        event.preventDefault();
+
+        this.actor.rollHealing();
     }
 
     _onRollDeathSave(event) {

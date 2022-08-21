@@ -31,6 +31,7 @@ export default class SGItemSheet extends ItemSheet {
 
         // Potential consumption targets
         sheetData.abilityConsumptionTargets = this._getItemConsumptionTargets();
+        sheetData.lightAnimations = CONFIG.Canvas.lightAnimations;
 
         return sheetData;
     }
