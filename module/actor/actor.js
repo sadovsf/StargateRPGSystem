@@ -1,3 +1,4 @@
+import ItemSg from "../item/item.js";
 
 export default class ActorSg extends Actor {
 
@@ -291,6 +292,39 @@ export default class ActorSg extends Actor {
     }
 
     /* -------------------------------------------- */
+    /* Private Functions                            */
+    /* -------------------------------------------- */
+
+    /**
+     * Update tokens associated with this actor with lighting data
+     * @param {any} lightdata Data to use for update
+     * @private
+     */
+    async _updateTokenLighting(lightdata) {
+        const actor = this;
+        let foundtoken = null;
+        if (actor.token) {
+            foundtoken = actor.token;
+        }
+        else {
+            let tokenarray = actor.getActiveTokens(true);
+            if (tokenarray.length > 0 && tokenarray[0]?.data?.actorLink === true)
+                foundtoken = tokenarray[0].document;
+        }
+
+        if (foundtoken) {
+            await foundtoken.update({ "light": lightdata });
+        }
+
+        // Update prototype token, if applicable
+        if (!this.isToken) {
+            await this.update({
+                "token.light": lightdata
+            });
+        }
+    }
+
+    /* -------------------------------------------- */
     /* Data Modification                            */
     /* -------------------------------------------- */
 
@@ -326,6 +360,68 @@ export default class ActorSg extends Actor {
             isBar: true
         }, updates);
         return allowed !== false ? this.update(updates) : this;
+    }
+
+    /**
+     * Change which illumination item the actor is using, or turn them all off
+     * @param {ItemSg} lightsource
+     */
+    async changeLightSource(lightsource) {
+        if (!lightsource) {
+            console.error("Attempted to change a light source without providing light source for actor: " + this);
+            return;
+        }
+        let updatedlightdata = {
+            "dim": 0, "bright": 0, "angle": 360, "color": "#ffffff", "alpha": 0.25, "animation": {
+                "type": "", "speed": 5, "intensity": 5
+            }
+        };
+
+        let lightsources = this.items.filter(element => element.type === "equip" && element.data.data.isLightItem);
+
+        if (!lightsource.data.data.lighted) { // Light the light source
+            updatedlightdata = {
+                "dim": lightsource.data.data.dimLight, "bright": lightsource.data.data.brightLight, "angle": lightsource.data.data.lightAngle,
+                "color": lightsource.data.data.lightColor, "alpha": lightsource.data.data.lightAlpha, "animation": {
+                    "type": lightsource.data.data.lightAnimationType, "speed": lightsource.data.data.lightAnimationSpeed, "intensity": lightsource.data.data.lightAnimationIntensity
+                }
+            };
+            const index = lightsources.findIndex(element => element.id == lightsource.id);
+            if (index > -1)
+                lightsources.splice(index, 1); // Exclude from dousing
+            await lightsource.update({ "_id": lightsource.id, "data.lighted": true });
+        }
+
+        let doused = [];
+        for (let l of lightsources) { // Douse all other light sources, including the caller if it was previously lighted
+            doused.push({ "_id": l.id, "data.lighted": false });
+        }
+        await this.updateEmbeddedDocuments("Item", doused);
+        await this._updateTokenLighting(updatedlightdata);
+    }
+
+    /**
+     * Refresh the token light source based on which illumination item is active, if any
+     */
+    refreshLightSource() {
+        let updatedlightdata = {
+            "dim": 0, "bright": 0, "angle": 360, "color": "#ffffff", "alpha": 0.25, "animation": {
+                "type": "", "speed": 5, "intensity": 5
+            }
+        };
+
+        let lightsources = this.items.filter(element => element.type === "equip" && element.data.data.isLightItem);
+        let activesource = lightsources.find(element => element.data.data.lighted == true);
+        if (activesource) {
+            updatedlightdata = {
+                "dim": lightsource.data.data.dimLight, "bright": lightsource.data.data.brightLight, "angle": lightsource.data.data.lightAngle,
+                "color": lightsource.data.data.lightColor, "alpha": lightsource.data.data.lightAlpha, "animation": {
+                    "type": lightsource.data.data.lightAnimationType, "speed": lightsource.data.data.lightAnimationSpeed, "intensity": lightsource.data.data.lightAnimationIntensity
+                }
+            };
+        }
+
+        return this._updateTokenLighting(updatedlightdata);
     }
 
     /**

@@ -135,7 +135,11 @@ export default class ItemSg extends Item {
     /* -------------------------------------------- */
 
     async roll() {
-        this.displayCard();
+        if (this.type === "equip" && this.actor && this.data.data.isLightItem) {
+            this.actor.changeLightSource(this);
+        } else {
+            this.displayCard();
+        }
     }
 
     async rollAttack({ mode = "single", fullAutoCount = 0 } = {}) {

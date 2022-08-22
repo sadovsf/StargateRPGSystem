@@ -181,6 +181,7 @@ export default class SGActorSheet extends ActorSheet {
         //html.find('a[type="roll_attack"]').click(event => this._roll_attack(event));
         html.find('a.skill-mod-revert').click(event => this._onSkillRestoreDefaultModClicked(event));
 
+        html.find('.item-empty-inventory').click(event => this._onItemEmpty(event));
         html.find('.item-create').click(event => this._onItemCreate(event));
         html.find('.item-consume').click(event => this._onItemConsume(event));
         html.find('.item-edit').click(event => this._onItemEdit(event));
@@ -230,6 +231,16 @@ export default class SGActorSheet extends ActorSheet {
     }
 
     /**
+     * Handle deleting all non-basekit items on an Actor
+     * @param {Event} event   The originating click event
+     * @private
+     */
+    async _onItemEmpty(event) {
+        return ui.notifications.info("This button does nothing yet.");
+
+    }
+
+    /**
      * Handle deleting an existing Owned Item for the Actor
      * @param {Event} event   The originating click event
      * @private
@@ -248,10 +259,10 @@ export default class SGActorSheet extends ActorSheet {
         const itemData = {
             name: name,
             type: type,
-            system: data
+            data: data
         };
         // Remove the type from the dataset since it's in the itemData.type prop.
-        delete itemData.system["type"];
+        delete itemData.data["type"];
 
         // Finally, create the item!
         return await Item.create(itemData, { parent: this.actor });
