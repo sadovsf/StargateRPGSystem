@@ -441,7 +441,8 @@ export default class ActorSg extends Actor {
         const templateData = {
             "actor": this,
             "shortRestHeal": `${data.hd} + ${betterMod}`,
-            "longRestHeal": `${data.level}${data.hd} + ${betterMod}`
+            "longRestHeal": `${data.level}${data.hd} + ${betterMod}`,
+            "fullHeal": `${data.health.max}`
         };
 
         const contents = await renderTemplate("systems/sgrpg/templates/popups/healing-popup.html", templateData);
@@ -461,6 +462,11 @@ export default class ActorSg extends Actor {
                         icon: '<i class="fas fa-bed"></i>',
                         label: "Long Rest",
                         callback: () => { restType = "Long"; confirmed = true; }
+                    },
+                    three: {
+                        icon: '<i class="fas fa-bed"></i>',
+                        label: "Full HP",
+                        callback: () => { restType = "Full"; confirmed = true; }
                     }
                 },
                 default: "one",
@@ -474,7 +480,7 @@ export default class ActorSg extends Actor {
         const results = await resolvedroll;
 
         if (results.confirmed && results.restType) {
-            let r = new Roll(results.restType === "Long" ? templateData.longRestHeal : templateData.shortRestHeal);
+            let r = new Roll(results.restType === "Full" ? templateData.fullHeal : results.restType === "Long" ? templateData.longRestHeal : templateData.shortRestHeal);
             await r.evaluate();
             const rollResult = r.total;
             r.toMessage({
