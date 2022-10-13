@@ -168,11 +168,11 @@
       "background": {
         "playername": "",
         "biography": "",
-        "campaign": "",
+        "spentMP": "",
         "race": "",
         "origin": "",
         "class": "",
-        "level": 1,
+        "levelInput": 1,
         "hd": "d8",
         "mp": 0,
 
@@ -248,13 +248,16 @@
           "atkSnd": null,
           "dmgSnd": null
         },
+        "range": {
+          "short": 50,
+          "long": 100,
+          "shortBonus": "+0",
+          "longBonus": "+0",
+          "hasPointBlankDisadvantage": true
+        },
         "details": {
           "type": "piercing",
           "sec_type": null,
-          "range": {
-            "normal": 50,
-            "max": 100
-          },
           "special": ""
         },
         "target": {

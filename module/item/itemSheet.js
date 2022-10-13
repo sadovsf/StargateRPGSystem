@@ -3,7 +3,7 @@ export default class SGItemSheet extends ItemSheet {
         return mergeObject(super.defaultOptions, {
             classes: ["sheet", "item", "itemsheet"],
             width: 560,
-            height: 600,
+            height: 620,
             tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
         });
     }

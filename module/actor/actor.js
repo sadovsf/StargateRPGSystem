@@ -3,22 +3,49 @@ import ItemSg from "../item/item.js";
 export default class ActorSg extends Actor {
 
     /* -------------------------------------------- */
-    /* Overrides                                    */
+    /* Static Functions                             */
     /* -------------------------------------------- */
 
-    /** @override
-     * Perform any last data modifications after super.prepareData has finished executing
+    /**
+     * Static function to get the level of a player from spent MP
+     * @param {string} spent
+     * @returns {number}
      */
-    prepareData() {
-        // Performs the following, in order: data reset, prepareBaseData(), prepareEmbeddedDocuments(), prepareDerivedData()
-        super.prepareData();
+    static _parseSpentMP(spent) {
+        if (!spent) {
+            return 0;
+        }
+        const foos = spent.split("+");
+        let total = 0;
+        for (let foo of foos) {
+            total += parseInt(foo);
+        }
+        return total;
     }
+
+    /**
+     * Static function to get the level of a player from spent MP
+     * @param {number} mp
+     * @returns {number}
+     */
+    static _getLevelFromMP(mp) {
+        if (mp <= 20) { // The base training phase
+            return 1 + Math.floor(mp / 5);
+        } else { // Advanced training phase, clamped to max level 20
+            return Math.min(20, Math.floor(((mp - 20) / 10) + 5));
+        }
+    }
+
+    /* -------------------------------------------- */
+    /* Overrides                                    */
+    /* -------------------------------------------- */
 
     /** @inheritdoc */
     getRollData() {
         let rollData = super.getRollData();
 
         // Set the Tension Die from the scene, and if necessary, from the campaign
+        // Multiple different ways of writing to cover spelling errors
         const tensionDie = game.sgrpg.getTensionDie();
         rollData.tensionDie = tensionDie;
         rollData.tensionDice = tensionDie;
@@ -36,6 +63,7 @@ export default class ActorSg extends Actor {
     /** @override
      */
     prepareData() {
+        // Performs the following, in order: data reset, prepareBaseData(), prepareEmbeddedDocuments(), prepareDerivedData()
         super.prepareData();
         this.prepareEmbeddedVisuals();
     }
@@ -61,6 +89,20 @@ export default class ActorSg extends Actor {
 
     _processBaseCommon(actorData) {
         const data = actorData.data;
+        const autoLevel = game.settings.get("sgrpg", "autoLevelSystem");
+
+        // Used level for players
+        if (actorData.type === "player") {
+            data.level = -1;
+            if (autoLevel) {
+                const spentMP = ActorSg._parseSpentMP(data.spentMP);
+                if (!isNaN(spentMP)) {
+                    data.level = ActorSg._getLevelFromMP(spentMP);
+                }
+            } else {
+                data.level = data.levelInput;
+            }
+        }
 
         // Proficiency Level
         let prof = 0;
@@ -386,7 +428,7 @@ export default class ActorSg extends Actor {
                     "type": lightsource.data.data.lightAnimationType, "speed": lightsource.data.data.lightAnimationSpeed, "intensity": lightsource.data.data.lightAnimationIntensity
                 }
             };
-            const index = lightsources.findIndex(element => element.id == lightsource.id);
+            const index = lightsources.findIndex(element => element.id === lightsource.id);
             if (index > -1)
                 lightsources.splice(index, 1); // Exclude from dousing
             await lightsource.update({ "_id": lightsource.id, "data.lighted": true });
@@ -411,7 +453,7 @@ export default class ActorSg extends Actor {
         };
 
         let lightsources = this.items.filter(element => element.type === "equip" && element.data.data.isLightItem);
-        let activesource = lightsources.find(element => element.data.data.lighted == true);
+        let activesource = lightsources.find(element => element.data.data.lighted === true);
         if (activesource) {
             updatedlightdata = {
                 "dim": lightsource.data.data.dimLight, "bright": lightsource.data.data.brightLight, "angle": lightsource.data.data.lightAngle,
@@ -504,9 +546,9 @@ export default class ActorSg extends Actor {
         const curFails = parseInt(data.fails);
         const curHealth = parseInt(this.data.data.health.value);
 
-        if (rollResult == 1) {
+        if (rollResult === 1) {
             // 2 fails.
-            if (curHealth == 0 && curFails >= 1) {
+            if (curHealth === 0 && curFails >= 1) {
                 this.update({
                     "data.deathSaves.fails": curFails + 2,
                     "data.condition": "death"
@@ -515,7 +557,7 @@ export default class ActorSg extends Actor {
                 this.update({ ["data.deathSaves.fails"]: curFails + 2 });
             }
         }
-        else if (rollResult == 20) {
+        else if (rollResult === 20) {
             // success + heal.
             const maxHealth = parseInt(this.data.data.health.max);
             this.update({
@@ -538,7 +580,7 @@ export default class ActorSg extends Actor {
         }
         else {
             // fail.
-            if (curHealth == 0 && curFails >= 2) {
+            if (curHealth === 0 && curFails >= 2) {
                 this.update({
                     "data.deathSaves.fails": curFails + 1,
                     "data.condition": "death"

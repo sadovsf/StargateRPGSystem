@@ -31,9 +31,9 @@
                         <label style="width:80px;">Player name</label>
                         <input name="data.playername" type="text" value="{{data.playername}}">
                     </div>
-                    <div class="columnflex nowrap" title="Total Mission Points&#010;Use the format of '5+5+9+3+4+...'">
-                        <label>Total MP</label>
-                        <input name="data.campaign" type="text" value="{{data.campaign}}">
+                    <div class="columnflex nowrap" title="Total Spent Mission Points&#010;Either input the total number, or use the format of '5+5+9+3+4+...'">
+                        <label>Spent MP</label>
+                        <input name="data.spentMP" type="text" value="{{data.spentMP}}">
                     </div>
                     <a class="config-button" title="Configure feat details" data-action="flags"><i class="fa fa-cog"></i></a>
                 </div>
@@ -54,7 +54,7 @@
                     </div>
                     <div class="columnflex nowrap">
                         <label class="w40">Level</label>
-                        <input onfocus="this.select();" name="data.level" type="number" placeholder="" class="w40" value="{{data.level}}" data-dtype="Number">
+                        <input onfocus="this.select();" {{#unless autoLevel}}name="data.levelInput"{{/unless}} type="number" placeholder="" class="w40" value="{{data.level}}" data-dtype="Number" {{#if autoLevel}}readonly{{/if}} />
                     </div>
                     <div class="columnflex nowrap">
                         <label class="w40" title="Hit Dice">HD</label>

@@ -149,7 +149,7 @@ export default class ItemSg extends Item {
             return ui.notifications.warn("You can only roll for owned items!");
         }
 
-        if (data.hasAmmo && parseInt(data.ammo.value) == 0) {
+        if (data.hasAmmo && parseInt(data.ammo.value) === 0) {
             // Item is using ammo but no ammunition is left.
             return ui.notifications.warn("No more ammo for this item!");
         }
@@ -177,18 +177,28 @@ export default class ItemSg extends Item {
         }
 
         let rollMacro = "1d20 + " + data.toHitBonus;
-        if (parseInt(abilityMod) != 0) {
+        if (parseInt(abilityMod) !== 0) {
             rollMacro += " + " + abilityMod;
         }
         if (isProf) {
             rollMacro += " + " + this.actor.data.data.proficiencyLevel;
         }
+        const weaponData = {
+            weaponRoll: true,
+            rangeBonuses: {
+                "None": "+0",
+                "Short Range": data.range.shortBonus,
+                "Long Range": data.range.longBonus
+            },
+            rangeDefault: "None"
+        };
 
         const r = new CONFIG.Dice.D20Roll(rollMacro, this.actor.data.data);
         const configured = await r.configureDialog({
             title: `Attack by ${this.data.name}`,
             defaultRollMode: game.settings.get("core", "rollMode"),
-            defaultAction: disadvDefault ? CONFIG.Dice.D20Roll.ADV_MODE.DISADVANTAGE : CONFIG.Dice.D20Roll.ADV_MODE.NORMAL
+            defaultAction: disadvDefault ? CONFIG.Dice.D20Roll.ADV_MODE.DISADVANTAGE : CONFIG.Dice.D20Roll.ADV_MODE.NORMAL,
+            weaponData
         });
         if (configured === null) {
             return;
@@ -229,7 +239,7 @@ export default class ItemSg extends Item {
         const abilityMod = this.actor.data.data.attributes[data.attackAbility].mod;
         let dmgRoll = data.dmg;
 
-        if (parseInt(abilityMod) != 0) {
+        if (parseInt(abilityMod) !== 0) {
             dmgRoll += " + " + abilityMod;
         }
 
@@ -304,14 +314,14 @@ export default class ItemSg extends Item {
         const item = this;
         const data = item.data.data;
 
-        if (data.ammo.value == data.ammo.max) {
+        if (data.ammo.value === data.ammo.max) {
             return ui.notifications.info("Weapon is already reloaded.");
         }
 
         const ammoItem = item.findAmmunition();
         if (!ammoItem) {
             // If no ammo item is found, check if the target matches the standard action reload value or is empty for a reload that doesn't consume separate items
-            if (data.ammo.target === CONFIG.SGRPG.actionReloadValue || data.ammo.target == null) {
+            if (data.ammo.target === CONFIG.SGRPG.actionReloadValue || data.ammo.target === null) {
                 if (data.ammo.extraMags === null || data.ammo.extraMags === undefined || data.ammo.extraMags <= -2) {
                     // Weapon has no magazines set, allow free reloading without consuming anything
                     return item.update({ "data.ammo.value": data.ammo.max });

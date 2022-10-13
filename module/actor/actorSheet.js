@@ -65,6 +65,7 @@ export default class SGActorSheet extends ActorSheet {
             maxBulk: sheetData.data.bulkMax,
             isOverloaded: sheetData.data.bulkOverload
         };
+        sheetData.autoLevel = game.settings.get("sgrpg", "autoLevelSystem");
 
         // Configuration data
         sheetData.config = mergeObject(CONFIG.SGRPG, {

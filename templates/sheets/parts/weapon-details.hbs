@@ -31,11 +31,20 @@
         </div>
 
         <div class="details-entry grid grid-2col">
-            <label class="attribute-label" for="data.details.range.normal">Range</label>
+            <label class="attribute-label" for="data.range.short">Range</label>
             <div class="flexrow flex-center flex-between">
-                <input type="text" name="data.details.range.normal" value="{{data.details.range.normal}}" data-dtype="Number" />
+                <input type="text" name="data.range.short" value="{{data.range.short}}" data-dtype="Number" />
                 <span> / </span>
-                <input type="text" name="data.details.range.max" value="{{data.details.range.max}}" data-dtype="Number" />
+                <input type="text" name="data.range.long" value="{{data.range.long}}" data-dtype="Number" />
+            </div>
+        </div>
+
+        <div class="details-entry grid grid-2col">
+            <label class="attribute-label" for="data.range.shortBonus">Range Bonus</label>
+            <div class="flexrow flex-center flex-between">
+                <input type="text" name="data.range.shortBonus" value="{{data.range.shortBonus}}" data-dtype="String" />
+                <span> / </span>
+                <input type="text" name="data.range.longBonus" value="{{data.range.longBonus}}" data-dtype="String" />
             </div>
         </div>
 

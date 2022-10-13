@@ -78,6 +78,15 @@ Hooks.once("init", function () {
         config: true
     });
 
+    game.settings.register("sgrpg", "autoLevelSystem", {
+        name: "Calculate level from MP",
+        hint: "Whether the system will automatically calculate a character's level from their spent MP, given in the 'Spent MP' field.",
+        scope: "world",
+        type: Boolean,
+        default: false,
+        config: true
+    });
+
 
     preloadHandlebarsTemplates();
     registerHandlebarsHelpersSG();
