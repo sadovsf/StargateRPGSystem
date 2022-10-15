@@ -181,7 +181,7 @@ export default class ItemSg extends Item {
             rollMacro += " + " + abilityMod;
         }
         if (isProf) {
-            rollMacro += " + " + this.actor.data.data.proficiencyLevel;
+            rollMacro += " + " + (this.actor?.data.data.proficiencyLevel ?? 0);
         }
         const weaponData = {
             weaponRoll: true,
@@ -251,12 +251,12 @@ export default class ItemSg extends Item {
             case "burst":
                 dmgSnd = data.burstAttack.dmgSnd;
                 dmgRoll += " + 1@td";
-                flavorAdd = " with burst";
+                flavorAdd = " on burst fire";
                 break;
             case "fullAuto":
                 dmgSnd = data.autoAttack.dmgSnd;
                 dmgRoll += " + " + fullAutoCount.toFixed(0) + "@td";
-                flavorAdd = " in full auto";
+                flavorAdd = " on full auto";
                 break;
         }
 
