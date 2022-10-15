@@ -50,6 +50,7 @@ export default class SGActorSheet extends ActorSheet {
         sheetData.effects = baseData.effects;
 
         // Structural sheet stuff
+        sheetData.isGM = game.user.isGM;
         sheetData.baseKitDisabled = sheetData.data.baseKitDisabled ?? false;
         sheetData.tensionDie = game.sgrpg.getTensionDie();
         sheetData.selectables = {

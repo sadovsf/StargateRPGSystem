@@ -29,6 +29,9 @@ export default class SGItemSheet extends ItemSheet {
         sheetData.dtypes = baseData.dtypes;
         sheetData.config = CONFIG.SGRPG;
 
+        // Structural stuff
+        sheetData.isGM = game.user.isGM;
+
         // Potential consumption targets
         sheetData.abilityConsumptionTargets = this._getItemConsumptionTargets();
         sheetData.lightAnimations = CONFIG.Canvas.lightAnimations;
