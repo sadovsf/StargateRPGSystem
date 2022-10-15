@@ -43,7 +43,7 @@ export default class ItemSg extends Item {
         }
 
         // To-hit bonus
-        data.toHit = data.toHitBonus + (this.actor?.data ? this.actor.data.data.attributes[data.attackAbility].mod + (data.isProficient ? this.actor.data.data.proficiencyLevel : 0) : 0);
+        data.toHit = data.toHitBonus + (this.actor?.data?.data?.attributes ? this.actor.data.data.attributes[data.attackAbility].mod + (data.isProficient ? this.actor.data.data.proficiencyLevel : 0) : 0);
 
     }
 
@@ -154,7 +154,7 @@ export default class ItemSg extends Item {
             return ui.notifications.warn("No more ammo for this item!");
         }
 
-        const abilityMod = this.actor.data.data.attributes[data.attackAbility].mod;
+        const abilityMod = this.actor?.data.data.attributes?.[data.attackAbility].mod ?? 0;
         const isProf = data.isProficient;
         // If fired on full auto, check whether the weapon is stabilized, if not, set disadvantage as default
         const disadvDefault = mode === "fullAuto" ? (data.autoAttack.stabilized ? false : true) : false;
@@ -236,7 +236,7 @@ export default class ItemSg extends Item {
 
     async rollDamage({ mode = "single", fullAutoCount = 0 } = {}) {
         const data = this.data.data;
-        const abilityMod = this.actor.data.data.attributes[data.attackAbility].mod;
+        const abilityMod = this.actor?.data.data.attributes?.[data.attackAbility].mod ?? 0;
         let dmgRoll = data.dmg;
 
         if (parseInt(abilityMod) !== 0) {
