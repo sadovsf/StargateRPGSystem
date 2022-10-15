@@ -204,7 +204,7 @@ export default class ActorSg extends Actor {
                 data.visualData.conBonus = data.attributes.con.mod * data.level;
                 break;
             default:
-                hp = data.health.maxBonus;
+                hp = parseInt(data.health.maxBonus);
                 break;
         }
         data.health.max = hp;
@@ -245,16 +245,16 @@ export default class ActorSg extends Actor {
         const data = actorData.data;
 
         // Get max HP
-        data.health.max = data.health.maxBonus;
+        data.health.max = parseInt(data.health.maxBonus);
 
         // Get AC
-        data.ac = data.acBonus;
+        data.ac = parseInt(data.acBonus);
 
         // Get speed
-        data.speed = data.speedBase;
+        data.speed = parseInt(data.speedBase);
 
         // Get bulk
-        data.bulkMax = data.bulkBonus;
+        data.bulkMax = parseInt((data.bulkBonus));
 
         // Used bulk
         // Only consider carried items that are not part of the base kit

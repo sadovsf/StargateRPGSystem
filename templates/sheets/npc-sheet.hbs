@@ -10,7 +10,7 @@
                 <div class="compact-header-field">
                     <label for="data.handling" class="resource-label">CR</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input onfocus="this.select();" type="text" name="data.cr" value="{{data.cr}}" data-dtype="Number" />
+                        <input onfocus="this.select();" type="number" name="data.cr" value="{{data.cr}}" data-dtype="Number" />
                     </div>
                 </div>
                 <h1 class="charname flexrow">
@@ -27,9 +27,9 @@
                 <div class="resource flex-group-center">
                     <label for="data.health.value" class="resource-label">HP</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input onfocus="this.select();" type="text" name="data.health.value" value="{{data.health.value}}" data-dtype="Number" />
+                        <input onfocus="this.select();" type="number" name="data.health.value" value="{{data.health.value}}" data-dtype="Number" />
                         <label>/</label>
-                        <input onfocus="this.select();" type="text" name="data.health.maxBonus" value="{{data.health.max}}" data-dtype="Number" />
+                        <input onfocus="this.select();" type="number" name="data.health.maxBonus" value="{{data.health.maxBonus}}" data-dtype="Number" />
                     </div>
                 </div>
                 <div class="resource flex-group-center">
@@ -140,7 +140,6 @@
                 <div class="flex-group-center">
                     <h2>Base Bonuses</h2>
                     <div class="grid grid-2col">
-                        <span>Max HP: <input onfocus="this.select();" type="number" name="data.health.maxBonus" value="{{data.health.maxBonus}}" data-dtype="Number" /></span>
                         <span>Determination: <input onfocus="this.select();" type="number" name="data.determination.maxBonus" value="{{data.determination.maxBonus}}" data-dtype="Number" /></span>
                         <span>Armor Class: <input onfocus="this.select();" type="number" name="data.acBonus" value="{{data.acBonus}}" data-dtype="Number" /></span>
                         <span>Bulk Capacity: <input onfocus="this.select();" type="number" name="data.bulkBonus" value="{{data.bulkBonus}}" data-dtype="Number" /></span>
