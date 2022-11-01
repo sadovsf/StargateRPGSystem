@@ -45,6 +45,12 @@
             <label class="attribute-label" for="data.autoAttack.stabilized">Compensated</label>
             <input type="checkbox" name="data.autoAttack.stabilized" {{checked data.autoAttack.stabilized}} data-dtype="Boolean" />
         </div>
+        {{#if homebrewSettings.allowWeaponTensionOnAttack}}
+        <div class="details-entry grid grid-2col" title="If enabled, the chat card will keep the balance between attack and damage tension dice equal to max fire">
+            <label class="attribute-label" for="data.autoAttack.autoBalanceFullAuto">Automatically balance in chat</label>
+            <input type="checkbox" name="data.autoAttack.autoBalanceFullAuto" {{checked data.autoAttack.autoBalanceFullAuto}} data-dtype="Boolean" />
+        </div>
+        {{/if}}
 
         <div class="details-entry grid grid-2col">
             <label class="attribute-label" for="data.autoAttack.atkSnd" title="Leave empty for the default">Attack sound</label>

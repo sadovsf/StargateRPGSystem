@@ -31,6 +31,9 @@ export default class SGItemSheet extends ItemSheet {
 
         // Structural stuff
         sheetData.isGM = game.user.isGM;
+        sheetData.homebrewSettings = {
+            allowWeaponTensionOnAttack: game.settings.get("sgrpg", "allowWeaponTensionOnAttack")
+        };
 
         // Potential consumption targets
         sheetData.abilityConsumptionTargets = this._getItemConsumptionTargets();

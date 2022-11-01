@@ -50,17 +50,21 @@ export default class ItemSg extends Item {
 
         // Check to see if there's a proper number in the ammo field
         data.hasAmmo = Number.isInteger(data.ammo.value) && Number.isInteger(data.ammo.max);
-        // Only consider the ammo bulk calculation if ammo and bulk are set, and either nothing is set as the ammo item, or the item is explicitly set as ammo-item-free with only an action
-        if (data.hasAmmo && data.ammo.bulk && (!data.ammo.target || data.ammo.target === CONFIG.SGRPG.actionReloadValue)) {
-            // Use the ammo numbers to figure out the total bulk of the carried ammo
-            let ammoBulk = Math.ceil((data.ammo.bulk * (data.ammo.value / data.ammo.max)) + ((data.ammo.extraMags ?? -1) > 0 ? (data.ammo.bulk * data.ammo.extraMags) : 0));
-            if (ammoBulk < 0) ammoBulk = 0; // Clamp the ammo bulk to non-negatives
-            data.bulkTotal = (data.bulk + ammoBulk) * data.quantity; // Use the weapon and ammo bulk together as the bulk of a single weapon, then multiply by quantity
+        if (data.hasAmmo) {
+            // Maximum automatic fire the weapon can take
+            data.autoAttack.maxAutoCount = data.autoAttack.able ? Math.floor(data.ammo.max / data.autoAttack.ammoCost) : 0;
+
+            // Only consider the ammo bulk calculation if ammo and bulk are set, and either nothing is set as the ammo item, or the item is explicitly set as ammo-item-free with only an action
+            if (data.ammo.bulk && (!data.ammo.target || data.ammo.target === CONFIG.SGRPG.actionReloadValue)) {
+                // Use the ammo numbers to figure out the total bulk of the carried ammo
+                let ammoBulk = Math.ceil((data.ammo.bulk * (data.ammo.value / data.ammo.max)) + ((data.ammo.extraMags ?? -1) > 0 ? (data.ammo.bulk * data.ammo.extraMags) : 0));
+                if (ammoBulk < 0) ammoBulk = 0; // Clamp the ammo bulk to non-negatives
+                data.bulkTotal = (data.bulk + ammoBulk) * data.quantity; // Use the weapon and ammo bulk together as the bulk of a single weapon, then multiply by quantity
+            }
         }
 
         // To-hit bonus
         data.toHit = data.toHitBonus + (this.actor?.data?.data?.attributes ? this.actor.data.data.attributes[data.attackAbility].mod + (data.isProficient ? this.actor.data.data.proficiencyLevel : 0) : 0);
-
     }
 
     /** @override
@@ -410,13 +414,16 @@ export default class ItemSg extends Item {
     async displayCard({ rollMode, createMessage = true } = {}) {
         // Render the chat card template
         const token = this.actor.token;
+        const maxAutoCount = this.type !== 'weapon' ? 0 : (this.data.data.autoAttack.maxAutoCount < this.actor?.data.data.maxAutomaticShots ? this.data.data.autoAttack.maxAutoCount : (this.actor?.data.data.maxAutomaticShots ?? 0));
+
         const templateData = {
-            actor: this.actor,
+            actor: this.actor?.data,
             tokenId: token?.uuid || null,
             item: this.data,
             data: this.getChatData(),
             hasAttack: this.hasAttack,
             hasAreaTarget: game.user.can("TEMPLATE_CREATE") && this.hasAreaTarget,
+            maxAutoCount,
             tensionHomebrew: game.settings.get("sgrpg", "allowWeaponTensionOnAttack") || false
         };
         const html = await renderTemplate("systems/sgrpg/templates/chat/item-card.html", templateData);
@@ -457,7 +464,7 @@ export default class ItemSg extends Item {
     static chatListeners(html) {
         html.on('click', '.card-buttons button', this._onChatCardAction.bind(this));
         html.on('click', '.item-name', this._onChatCardToggleContent.bind(this));
-        //html.change
+        html.on('change', '.full-auto-count', this._onChatCardChangeFullAuto.bind(this));
     }
 
     /**
@@ -522,6 +529,45 @@ export default class ItemSg extends Item {
 
         // Re-enable the button
         button.disabled = false;
+    }
+
+    static async _onChatCardChangeFullAuto(event) {
+
+        // Extract card data
+        const field = event.currentTarget;
+        const fieldData = field.parentElement.dataset;
+
+        if (fieldData.useAutoBalance == "false") {
+            // If set to not auto-balance, return out
+            return;
+        }
+
+        const card = field.closest(".chat-card");
+        const messageId = card.closest(".message").dataset.messageId;
+        const message = game.messages.get(messageId);
+        const attackField = $(card).find(".autoAttackCount")[0] ?? null;
+        const damageField = $(card).find(".autoDamageCount")[0] ?? null;
+
+        if (!(attackField && damageField)) {
+            console.warn("Attempted to change the full-auto count without finding all the fields: " + attackField + " " + damageField);
+        }
+        let differential = fieldData.maxFullAuto - field.value;
+
+        if (differential < 0) {
+            ui.notifications.info("Tried adding too many dice, clamping to maximum.");
+            field.value = fieldData.maxFullAuto;
+            differential = 0;
+        } else if (differential > fieldData.maxFullAuto) {
+            ui.notifications.info("Tried to go into negative dice, clamping to zero.");
+            field.value = 0;
+            differential = fieldData.maxFullAuto;
+        }
+
+        if (field.className.includes("autoAttackCount")) {
+            damageField.value = differential;
+        } else if (field.className.includes("autoDamageCount")) {
+            attackField.value = differential;
+        }
     }
 
     /**

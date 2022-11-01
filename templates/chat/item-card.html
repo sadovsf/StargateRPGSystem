@@ -1,4 +1,4 @@
-<div class="sgrpg chat-card item-card" data-actor-id="{{actor.id}}" data-item-id="{{item._id}}" {{#if tokenId}} data-token-id="{{tokenId}}" {{/if}}>
+<div class="sgrpg chat-card item-card" data-actor-id="{{actor._id}}" data-item-id="{{item._id}}" {{#if tokenId}} data-token-id="{{tokenId}}" {{/if}}>
     <header class="card-header flexrow">
         <img src="{{item.img}}" title="{{item.name}}" width="36" height="36" />
         <h3 class="item-name">{{item.name}}</h3>
@@ -26,14 +26,14 @@
             <button data-action="damage" data-mode="fullAuto">Full Auto Damage</button>
         </div>
         {{#if tensionHomebrew}}
-        <div class="flexrow">
-            <input class="autoAttackCount" type="number" value="0" data-dtype="Number" onfocus="this.select();" />
-            <input class="autoDamageCount" type="number" value="{{actor.data.data.maxAutomaticShots}}" data-dtype="Number" onfocus="this.select();" />
+        <div class="flexrow" data-max-full-auto="{{maxAutoCount}}" data-use-auto-balance="{{item.data.autoAttack.autoBalanceFullAuto}}">
+            <input class="autoAttackCount full-auto-count" type="number" value="0" data-dtype="Number" onfocus="this.select();" />
+            <input class="autoDamageCount full-auto-count" type="number" value="{{maxAutoCount}}" data-dtype="Number" onfocus="this.select();" />
         </div>
         {{else}}
         <div class="flexrow">
             <span class="item-name">Full Auto Count</span>
-            <input class="autoDamageCount" type="number" value="{{actor.data.data.maxAutomaticShots}}" data-dtype="Number" onfocus="this.select();" />
+            <input class="autoDamageCount" type="number" value="{{maxAutoCount}}" data-dtype="Number" onfocus="this.select();" />
         </div>
         {{/if}}
         {{/if}}

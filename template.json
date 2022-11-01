@@ -233,7 +233,7 @@
           "max": null,
           "extraMags": null,
           "target": null,
-          "reload": null
+          "reload": 0
         },
         "burstAttack": {
           "able": false,
@@ -246,7 +246,8 @@
           "ammoCost": 10,
           "stabilized": false,
           "atkSnd": null,
-          "dmgSnd": null
+          "dmgSnd": null,
+          "autoBalanceFullAuto": false
         },
         "range": {
           "short": 50,
