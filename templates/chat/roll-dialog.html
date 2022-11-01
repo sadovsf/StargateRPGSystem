@@ -19,15 +19,15 @@
     <div class="form-group">
         <label>Range Bonus</label>
         <select name="rangeBonus">
-            {{selectOptions rangeBonuses selected=rangeDefault inverted=true}}
+            {{selectOptions rangeSelection selected=rangeDefault blank="No Range Bonus"}}
         </select>
     </div>
     {{/if}}
     {{#if canAddTension}}
     <div class="form-group">
-        <label>Add Tension Dice</label>
+        <label>Tension Die?</label>
         <select name="tensionBonus">
-            {{selectOptions tensionSelection selected=tensionDefault inverted=true}}
+            {{selectOptions tensionSelection selected=tensionDefault}}
         </select>
     </div>
     {{/if}}

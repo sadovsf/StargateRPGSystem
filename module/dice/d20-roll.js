@@ -75,13 +75,13 @@ export default class D20Roll extends Roll {
             chooseModifier,
             defaultAbility,
             abilities: CONFIG.SGRPG.abilities,
+            rangeSelection: CONFIG.SGRPG.rangeTypes,
+            tensionSelection: CONFIG.SGRPG.tensionSelection,
 
             weaponRoll: weaponData?.weaponRoll ?? false,
-            rangeBonuses: weaponData?.rangeBonuses ?? {},
-            rangeDefault: weaponData?.rangeDefault ?? "None",
+            rangeDefault: weaponData?.rangeDefault ?? null,
             canAddTension: weaponData?.canAddTension ?? false,
-            tensionSelection: weaponData?.tensionSelection ?? {},
-            tensionDefault: weaponData?.tensionDefault ?? "No"
+            tensionDefault: weaponData?.tensionDefault ?? null
         });
 
         let defaultButton = "normal";
@@ -98,15 +98,15 @@ export default class D20Roll extends Roll {
                 buttons: {
                     advantage: {
                         label: "Advantage",
-                        callback: html => resolve(this._onDialogSubmit(html, D20Roll.ADV_MODE.ADVANTAGE))
+                        callback: html => resolve(this._onDialogSubmit(html, D20Roll.ADV_MODE.ADVANTAGE, weaponData))
                     },
                     normal: {
                         label: "Normal",
-                        callback: html => resolve(this._onDialogSubmit(html, D20Roll.ADV_MODE.NORMAL))
+                        callback: html => resolve(this._onDialogSubmit(html, D20Roll.ADV_MODE.NORMAL, weaponData))
                     },
                     disadvantage: {
                         label: "Disadvantage",
-                        callback: html => resolve(this._onDialogSubmit(html, D20Roll.ADV_MODE.DISADVANTAGE))
+                        callback: html => resolve(this._onDialogSubmit(html, D20Roll.ADV_MODE.DISADVANTAGE, weaponData))
                     }
                 },
                 default: defaultButton,
@@ -122,7 +122,7 @@ export default class D20Roll extends Roll {
      * @param {number} advantageMode    The chosen advantage mode
      * @private
      */
-    _onDialogSubmit(html, advantageMode) {
+    _onDialogSubmit(html, advantageMode, weaponData) {
         const form = html[0].querySelector("form");
 
         // Append a situational bonus term
@@ -133,15 +133,17 @@ export default class D20Roll extends Roll {
         }
 
         // Also append a range bonus term
-        if (form.rangeBonus?.value) {
-            const bonus = new Roll(form.rangeBonus.value, this.data);
+        if (form.rangeBonus?.value && weaponData?.weaponRange) {
+            const value = form.rangeBonus.value === "short" ? weaponData?.weaponRange?.shortBonus : weaponData?.weaponRange?.longBonus;
+            const bonus = new Roll(value, this.data);
             if (!(bonus.terms[0] instanceof OperatorTerm)) this.terms.push(new OperatorTerm({ operator: "+" }));
             this.terms = this.terms.concat(bonus.terms);
         }
 
         // And a tension die bonus
-        if (form.tensionBonus?.value) {
-            const bonus = new Roll(form.rangeBonus.value + "@td", this.data);
+        if (form.tensionBonus?.value === "yes") {
+            const td = game.sgrpg.getTensionDie();
+            const bonus = new Roll("1" + td, this.data);
             if (!(bonus.terms[0] instanceof OperatorTerm)) this.terms.push(new OperatorTerm({ operator: "+" }));
             this.terms = this.terms.concat(bonus.terms);
         }

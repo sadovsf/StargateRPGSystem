@@ -7,6 +7,22 @@ export default class ItemSg extends Item {
     /* Overrides                                    */
     /* -------------------------------------------- */
 
+    /** @inheritdoc */
+    getRollData() {
+        let rollData = super.getRollData();
+
+        // Set the Tension Die from the scene, and if necessary, from the campaign
+        // Multiple different ways of writing to cover spelling errors
+        const tensionDie = game.sgrpg.getTensionDie();
+        rollData.tensionDie = tensionDie;
+        rollData.tensionDice = tensionDie;
+        rollData.TD = tensionDie;
+        rollData.td = tensionDie;
+        rollData.tD = tensionDie;
+
+        return rollData;
+    }
+
     /** @override
      * Augment the basic Item data model with additional dynamic data.
      */
@@ -143,7 +159,9 @@ export default class ItemSg extends Item {
     }
 
     async rollAttack({ mode = "single", fullAutoAttack = 0, fullAutoDamage = 0 } = {}) {
+        const weaponTensionHomebrew = game.settings.get("sgrpg", "allowWeaponTensionOnAttack") || false
         const data = this.data.data;
+        const td = game.sgrpg.getTensionDie();
 
         if (!this.actor) {
             return ui.notifications.warn("You can only roll for owned items!");
@@ -157,7 +175,6 @@ export default class ItemSg extends Item {
             return ui.notifications.warn("No more ammo for this item!");
         }
 
-        const weaponTensionHomebrew = game.settings.get("sgrpg", "allowWeaponTensionOnAttack") || false
         const fullAutoCount = (fullAutoAttack + fullAutoDamage) || 0;
         const abilityMod = this.actor?.data.data.attributes?.[data.attackAbility].mod ?? 0;
         const isProf = data.isProficient;
@@ -174,12 +191,8 @@ export default class ItemSg extends Item {
         }
         const weaponData = {
             weaponRoll: true,
-            rangeBonuses: {
-                "None": "+0",
-                "Short Range": data.range.shortBonus,
-                "Long Range": data.range.longBonus
-            },
-            rangeDefault: "None"
+            rangeDefault: "",
+            weaponRange: data.range
         };
 
         switch (mode) {
@@ -190,11 +203,7 @@ export default class ItemSg extends Item {
             case "burst":
                 if (weaponTensionHomebrew) {
                     weaponData.canAddTension = true;
-                    weaponData.tensionSelection = {
-                        "No": 0,
-                        "Yes": 1
-                    };
-                    weaponData.tensionDefault = "No";
+                    weaponData.tensionDefault = "no";
                 }
                 ammoCost = data.burstAttack.ammoCost;
                 atkSnd = data.burstAttack.atkSnd;
@@ -202,7 +211,7 @@ export default class ItemSg extends Item {
                 break;
             case "fullAuto":
                 if (weaponTensionHomebrew)
-                    rollMacro += " + " + fullAutoAttack.toFixed(0) + "@td";
+                    rollMacro += " + " + fullAutoAttack.toFixed(0) + td;
                 ammoCost = data.autoAttack.ammoCost * fullAutoCount;
                 atkSnd = data.autoAttack.atkSnd;
                 flavorAdd = " in full auto";
@@ -252,8 +261,10 @@ export default class ItemSg extends Item {
     }
 
     async rollDamage({ mode = "single", fullAutoDamage = 0 } = {}) {
+        const weaponTensionHomebrew = game.settings.get("sgrpg", "allowWeaponTensionOnAttack") || false
         const data = this.data.data;
         const abilityMod = this.actor?.data.data.attributes?.[data.attackAbility].mod ?? 0;
+        const td = game.sgrpg.getTensionDie();
         let dmgRoll = data.dmg;
 
         if (this.type !== "weapon") {
@@ -263,6 +274,7 @@ export default class ItemSg extends Item {
         if (parseInt(abilityMod) !== 0) {
             dmgRoll += " + " + abilityMod;
         }
+        const weaponData = {};
 
         let dmgSnd = "", flavorAdd = "";
         switch (mode) {
@@ -270,13 +282,18 @@ export default class ItemSg extends Item {
                 dmgSnd = data.dmgSnd;
                 break;
             case "burst":
+                if (weaponTensionHomebrew) {
+                    weaponData.canAddTension = true;
+                    weaponData.tensionDefault = "yes";
+                } else {
+                    dmgRoll += " + 1" + td;
+                }
                 dmgSnd = data.burstAttack.dmgSnd;
-                dmgRoll += " + 1@td";
                 flavorAdd = " on burst fire";
                 break;
             case "fullAuto":
                 dmgSnd = data.autoAttack.dmgSnd;
-                dmgRoll += " + " + fullAutoDamage.toFixed(0) + "@td";
+                dmgRoll += " + " + fullAutoDamage.toFixed(0) + td;
                 flavorAdd = " on full auto";
                 break;
         }
@@ -285,7 +302,8 @@ export default class ItemSg extends Item {
 
         const configured = await r.configureDialog({
             title: `Damage from ${this.data.name}`,
-            defaultRollMode: game.settings.get("core", "rollMode")
+            defaultRollMode: game.settings.get("core", "rollMode"),
+            weaponData
         });
         if (configured === null) {
             return;
@@ -439,6 +457,7 @@ export default class ItemSg extends Item {
     static chatListeners(html) {
         html.on('click', '.card-buttons button', this._onChatCardAction.bind(this));
         html.on('click', '.item-name', this._onChatCardToggleContent.bind(this));
+        //html.change
     }
 
     /**

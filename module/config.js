@@ -94,3 +94,17 @@ SGRPG.characterFlags = {
         type: Boolean
     }
 };
+
+
+// Configure Optional Character Flags
+SGRPG.rangeTypes = {
+    "short": "Short Range Bonus",
+    "long":"Long Range Bonus"
+};
+
+
+// Configure Optional Character Flags
+SGRPG.tensionSelection = {
+    "no": "No Tension Die",
+    "yes": "Add Tension Die"
+};
