@@ -23,6 +23,14 @@
         </select>
     </div>
     {{/if}}
+    {{#if canAddTension}}
+    <div class="form-group">
+        <label>Add Tension Dice</label>
+        <select name="tensionBonus">
+            {{selectOptions tensionSelection selected=tensionDefault inverted=true}}
+        </select>
+    </div>
+    {{/if}}
     <div class="form-group">
         <label>Roll mode</label>
         <select name="rollMode">

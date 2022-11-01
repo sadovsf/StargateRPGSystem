@@ -87,6 +87,16 @@ Hooks.once("init", function () {
         config: true
     });
 
+    // Pure homebrew
+    game.settings.register("sgrpg", "allowWeaponTensionOnAttack", {
+        name: "Homebrew: Weapon Tension Die can be set for attack rolls",
+        hint: "Homebrew setting: Whether the system allows the burst and automatic fire tension dice to be rolled for the attack roll instead of the damage roll.",
+        scope: "world",
+        type: Boolean,
+        default: false,
+        config: true
+    });
+
 
     preloadHandlebarsTemplates();
     registerHandlebarsHelpersSG();

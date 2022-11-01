@@ -75,9 +75,13 @@ export default class D20Roll extends Roll {
             chooseModifier,
             defaultAbility,
             abilities: CONFIG.SGRPG.abilities,
+
             weaponRoll: weaponData?.weaponRoll ?? false,
             rangeBonuses: weaponData?.rangeBonuses ?? {},
-            rangeDefault: weaponData?.rangeDefault ?? "None"
+            rangeDefault: weaponData?.rangeDefault ?? "None",
+            canAddTension: weaponData?.canAddTension ?? false,
+            tensionSelection: weaponData?.tensionSelection ?? {},
+            tensionDefault: weaponData?.tensionDefault ?? "No"
         });
 
         let defaultButton = "normal";
@@ -131,7 +135,13 @@ export default class D20Roll extends Roll {
         // Also append a range bonus term
         if (form.rangeBonus?.value) {
             const bonus = new Roll(form.rangeBonus.value, this.data);
-            console.log(bonus);
+            if (!(bonus.terms[0] instanceof OperatorTerm)) this.terms.push(new OperatorTerm({ operator: "+" }));
+            this.terms = this.terms.concat(bonus.terms);
+        }
+
+        // And a tension die bonus
+        if (form.tensionBonus?.value) {
+            const bonus = new Roll(form.rangeBonus.value + "@td", this.data);
             if (!(bonus.terms[0] instanceof OperatorTerm)) this.terms.push(new OperatorTerm({ operator: "+" }));
             this.terms = this.terms.concat(bonus.terms);
         }

@@ -142,11 +142,14 @@ export default class ItemSg extends Item {
         }
     }
 
-    async rollAttack({ mode = "single", fullAutoCount = 0 } = {}) {
+    async rollAttack({ mode = "single", fullAutoAttack = 0, fullAutoDamage = 0 } = {}) {
         const data = this.data.data;
 
         if (!this.actor) {
             return ui.notifications.warn("You can only roll for owned items!");
+        }
+        if (this.type !== "weapon") {
+            return console.error("Weapon attack roll attempted on a non-weapon item: " + this.name);
         }
 
         if (data.hasAmmo && parseInt(data.ammo.value) === 0) {
@@ -154,27 +157,13 @@ export default class ItemSg extends Item {
             return ui.notifications.warn("No more ammo for this item!");
         }
 
+        const weaponTensionHomebrew = game.settings.get("sgrpg", "allowWeaponTensionOnAttack") || false
+        const fullAutoCount = (fullAutoAttack + fullAutoDamage) || 0;
         const abilityMod = this.actor?.data.data.attributes?.[data.attackAbility].mod ?? 0;
         const isProf = data.isProficient;
         // If fired on full auto, check whether the weapon is stabilized, if not, set disadvantage as default
         const disadvDefault = mode === "fullAuto" ? (data.autoAttack.stabilized ? false : true) : false;
         let ammoCost = 0, atkSnd = "", flavorAdd = "";
-        switch (mode) {
-            case "single":
-                ammoCost = 1;
-                atkSnd = data.atkSnd;
-                break;
-            case "burst":
-                ammoCost = data.burstAttack.ammoCost;
-                atkSnd = data.burstAttack.atkSnd;
-                flavorAdd = " with burst";
-                break;
-            case "fullAuto":
-                ammoCost = data.autoAttack.ammoCost * fullAutoCount;
-                atkSnd = data.autoAttack.atkSnd;
-                flavorAdd = " in full auto";
-                break;
-        }
 
         let rollMacro = "1d20 + " + data.toHitBonus;
         if (parseInt(abilityMod) !== 0) {
@@ -192,6 +181,34 @@ export default class ItemSg extends Item {
             },
             rangeDefault: "None"
         };
+
+        switch (mode) {
+            case "single":
+                ammoCost = 1;
+                atkSnd = data.atkSnd;
+                break;
+            case "burst":
+                if (weaponTensionHomebrew) {
+                    weaponData.canAddTension = true;
+                    weaponData.tensionSelection = {
+                        "No": 0,
+                        "Yes": 1
+                    };
+                    weaponData.tensionDefault = "No";
+                }
+                ammoCost = data.burstAttack.ammoCost;
+                atkSnd = data.burstAttack.atkSnd;
+                flavorAdd = " with burst";
+                break;
+            case "fullAuto":
+                if (weaponTensionHomebrew)
+                    rollMacro += " + " + fullAutoAttack.toFixed(0) + "@td";
+                ammoCost = data.autoAttack.ammoCost * fullAutoCount;
+                atkSnd = data.autoAttack.atkSnd;
+                flavorAdd = " in full auto";
+                break;
+        }
+
 
         const r = new CONFIG.Dice.D20Roll(rollMacro, this.actor.data.data);
         const configured = await r.configureDialog({
@@ -234,10 +251,14 @@ export default class ItemSg extends Item {
         return r.toMessage(messageData);
     }
 
-    async rollDamage({ mode = "single", fullAutoCount = 0 } = {}) {
+    async rollDamage({ mode = "single", fullAutoDamage = 0 } = {}) {
         const data = this.data.data;
         const abilityMod = this.actor?.data.data.attributes?.[data.attackAbility].mod ?? 0;
         let dmgRoll = data.dmg;
+
+        if (this.type !== "weapon") {
+            return console.error("Weapon damage roll attempted on a non-weapon item: " + this.name);
+        }
 
         if (parseInt(abilityMod) !== 0) {
             dmgRoll += " + " + abilityMod;
@@ -255,7 +276,7 @@ export default class ItemSg extends Item {
                 break;
             case "fullAuto":
                 dmgSnd = data.autoAttack.dmgSnd;
-                dmgRoll += " + " + fullAutoCount.toFixed(0) + "@td";
+                dmgRoll += " + " + fullAutoDamage.toFixed(0) + "@td";
                 flavorAdd = " on full auto";
                 break;
         }
@@ -378,6 +399,7 @@ export default class ItemSg extends Item {
             data: this.getChatData(),
             hasAttack: this.hasAttack,
             hasAreaTarget: game.user.can("TEMPLATE_CREATE") && this.hasAreaTarget,
+            tensionHomebrew: game.settings.get("sgrpg", "allowWeaponTensionOnAttack") || false
         };
         const html = await renderTemplate("systems/sgrpg/templates/chat/item-card.html", templateData);
 
@@ -444,7 +466,8 @@ export default class ItemSg extends Item {
         const message = game.messages.get(messageId);
         const action = button.dataset.action;
         const mode = button.dataset.mode ?? "single";
-        const count = parseInt($(card).find(".autoAttackCount")[0]?.value) || 0;
+        const attackCount = parseInt($(card).find(".autoAttackCount")[0]?.value) || 0;
+        const damageCount = parseInt($(card).find(".autoDamageCount")[0]?.value) || 0;
 
         // Validate permission to proceed with the roll
         //const isTargetted = action === "save";
@@ -464,10 +487,10 @@ export default class ItemSg extends Item {
         // Handle different actions
         switch (action) {
             case "attack":
-                await item.rollAttack({ mode, fullAutoCount: count });
+                await item.rollAttack({ mode, fullAutoAttack: attackCount, fullAutoDamage: damageCount });
                 break;
             case "damage":
-                await item.rollDamage({ mode, fullAutoCount: count });
+                await item.rollDamage({ mode, fullAutoDamage: damageCount });
                 break;
             case "consume":
                 await item.consume(event);

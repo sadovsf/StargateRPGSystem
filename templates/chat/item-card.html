@@ -4,7 +4,7 @@
         <h3 class="item-name">{{item.name}}</h3>
     </header>
 
-    <div class="card-content" {{#if showDescription}}style="display: block;"{{else}}style="display: none;"{{/if}}>
+    <div class="card-content" {{#if showDescription}} style="display: block;" {{else}} style="display: none;" {{/if}}>
         {{{data.description}}}
     </div>
 
@@ -25,10 +25,17 @@
             <button data-action="attack" data-mode="fullAuto">Full Auto Attack</button>
             <button data-action="damage" data-mode="fullAuto">Full Auto Damage</button>
         </div>
+        {{#if tensionHomebrew}}
+        <div class="flexrow">
+            <input class="autoAttackCount" type="number" value="0" data-dtype="Number" onfocus="this.select();" />
+            <input class="autoDamageCount" type="number" value="{{actor.data.data.maxAutomaticShots}}" data-dtype="Number" onfocus="this.select();" />
+        </div>
+        {{else}}
         <div class="flexrow">
             <span class="item-name">Full Auto Count</span>
-            <input class="autoAttackCount" type="number" value="{{actor.data.data.maxAutomaticShots}}" data-dtype="Number" onfocus="this.select();" />
+            <input class="autoDamageCount" type="number" value="{{actor.data.data.maxAutomaticShots}}" data-dtype="Number" onfocus="this.select();" />
         </div>
+        {{/if}}
         {{/if}}
         {{else}}
         <button data-action="consume">Consume</button>
