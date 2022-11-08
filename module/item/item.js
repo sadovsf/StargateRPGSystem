@@ -52,7 +52,11 @@ export default class ItemSg extends Item {
         data.hasAmmo = Number.isInteger(data.ammo.value) && Number.isInteger(data.ammo.max);
         if (data.hasAmmo) {
             // Maximum automatic fire the weapon can take
-            data.autoAttack.maxAutoCount = data.autoAttack.able ? Math.floor(data.ammo.max / data.autoAttack.ammoCost) : 0;
+            if (data.autoAttack.ammoCost !== 0) {
+                data.autoAttack.maxAutoCount = data.autoAttack.able ? Math.floor(data.ammo.value / data.autoAttack.ammoCost) : null;
+            } else {
+                data.autoAttack.maxAutoCount = null;
+            }
 
             // Only consider the ammo bulk calculation if ammo and bulk are set, and either nothing is set as the ammo item, or the item is explicitly set as ammo-item-free with only an action
             if (data.ammo.bulk && (!data.ammo.target || data.ammo.target === CONFIG.SGRPG.actionReloadValue)) {
