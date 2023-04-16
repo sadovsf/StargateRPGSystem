@@ -17,8 +17,8 @@ export default class SGItemSheet extends ItemSheet {
         let sheetData = {};
 
         // Insert the basics
-        sheetData.item = baseData.data;
-        sheetData.data = baseData.data.data;
+        sheetData.item = baseData;
+        sheetData.system = baseData.system;
 
         // Insert necessary misc data
         sheetData.options = baseData.options;
@@ -54,7 +54,7 @@ export default class SGItemSheet extends ItemSheet {
 
         // Ammunition
         return actor.itemTypes.equip.reduce((ammo, i) => {
-            ammo[i.id] = `${i.name} (${i.data.data.quantity})`;
+            ammo[i.id] = `${i.name} (${i.system.quantity})`;
             return ammo;
         }, {});
     }

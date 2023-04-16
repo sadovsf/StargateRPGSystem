@@ -127,7 +127,7 @@ export default class D20Roll extends Roll {
 
         // Append a situational bonus term
         if (form.bonus.value) {
-            const bonus = new Roll(form.bonus.value, this.data);
+            const bonus = new Roll(form.bonus.value, this);
             if (!(bonus.terms[0] instanceof OperatorTerm)) this.terms.push(new OperatorTerm({ operator: "+" }));
             this.terms = this.terms.concat(bonus.terms);
         }
@@ -135,7 +135,7 @@ export default class D20Roll extends Roll {
         // Also append a range bonus term
         if (form.rangeBonus?.value && weaponData?.weaponRange) {
             const value = form.rangeBonus.value === "short" ? weaponData?.weaponRange?.shortBonus : weaponData?.weaponRange?.longBonus;
-            const bonus = new Roll(value, this.data);
+            const bonus = new Roll(value, this);
             if (!(bonus.terms[0] instanceof OperatorTerm)) this.terms.push(new OperatorTerm({ operator: "+" }));
             this.terms = this.terms.concat(bonus.terms);
         }
@@ -143,14 +143,14 @@ export default class D20Roll extends Roll {
         // And a tension die bonus
         if (form.tensionBonus?.value === "yes") {
             const td = game.sgrpg.getTensionDie();
-            const bonus = new Roll("1" + td, this.data);
+            const bonus = new Roll("1" + td, this);
             if (!(bonus.terms[0] instanceof OperatorTerm)) this.terms.push(new OperatorTerm({ operator: "+" }));
             this.terms = this.terms.concat(bonus.terms);
         }
 
         // Customize the modifier
         if (form.ability?.value) {
-            const abl = this.data.abilities[form.ability.value];
+            const abl = this.abilities[form.ability.value];
             this.terms.findSplice(t => t.term === "@mod", new NumericTerm({ number: abl.mod }));
             this.options.flavor += ` (${CONFIG.SGRPG.abilities[form.ability.value]})`;
         }

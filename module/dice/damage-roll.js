@@ -162,7 +162,7 @@ export default class DamageRoll extends Roll {
 
         // Append a situational bonus term
         if (form.bonus.value) {
-            const bonus = new Roll(form.bonus.value, this.data);
+            const bonus = new Roll(form.bonus.value, this);
             if (!(bonus.terms[0] instanceof OperatorTerm)) this.terms.push(new OperatorTerm({ operator: "+" }));
             this.terms = this.terms.concat(bonus.terms);
         }
@@ -170,7 +170,7 @@ export default class DamageRoll extends Roll {
         // And a tension die bonus
         if (form.tensionBonus?.value === "yes") {
             const td = game.sgrpg.getTensionDie();
-            const bonus = new Roll("1" + td, this.data);
+            const bonus = new Roll("1" + td, this);
             if (!(bonus.terms[0] instanceof OperatorTerm)) this.terms.push(new OperatorTerm({ operator: "+" }));
             this.terms = this.terms.concat(bonus.terms);
         }

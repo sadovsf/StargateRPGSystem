@@ -28,11 +28,11 @@ export default class ItemSg extends Item {
      */
     prepareDerivedData() {
         // Get the Item's data
-        const itemData = this.data;
-        const actorData = this.actor ? this.actor.data : {};
+        const itemData = this;
+        const actorData = this.actor ? this.actor : {};
 
         // Bulk calculation
-        const data = itemData.data;
+        const data = itemData.system;
         data.bulkTotal = 0;
         if (data.bulk) {
             data.bulkTotal = data.bulk * data.quantity;
@@ -46,7 +46,7 @@ export default class ItemSg extends Item {
      * Process weapon data
      */
     _processWeapon(itemData) {
-        const data = itemData.data;
+        const data = itemData.system;
 
         // Check to see if there's a proper number in the ammo field
         data.hasAmmo = Number.isInteger(data.ammo.value) && Number.isInteger(data.ammo.max);
@@ -68,14 +68,14 @@ export default class ItemSg extends Item {
         }
 
         // To-hit bonus
-        data.toHit = data.toHitBonus + (this.actor?.data?.data?.attributes ? this.actor.data.data.attributes[data.attackAbility].mod + (data.isProficient ? this.actor.data.data.proficiencyLevel : 0) : 0);
+        data.toHit = data.toHitBonus + (this.actor?.system?.attributes ? this.actor.system.attributes[data.attackAbility].mod + (data.isProficient ? this.actor.system.proficiencyLevel : 0) : 0);
     }
 
     /** @override
      * Add visual data for sheet use to items after everything else has been processed
      */
     prepareVisualData() {
-        const itemData = this.data;
+        const itemData = this;
 
         if (itemData.type === 'armor') this._processArmorVisuals(itemData);
         if (itemData.type === 'weapon') this._processWeaponVisuals(itemData);
@@ -85,7 +85,7 @@ export default class ItemSg extends Item {
      * Process armor data for visuals
      */
     _processArmorVisuals(itemData) {
-        const data = itemData.data;
+        const data = itemDat.system;
 
         // Visual AC modifier
         data.visualAC = data.additive ? (data.acBonus >= 0 ? "+" + data.acBonus.toString() : data.acBonus.toString()) : data.acBonus.toString();
@@ -95,14 +95,14 @@ export default class ItemSg extends Item {
      * Process weapon data for visuals
      */
     _processWeaponVisuals(itemData) {
-        const data = itemData.data;
+        const data = itemData.system;
 
         // Formulate the visual shown for the weapon's magazines on the character sheet, either showing the ammo and the extra mags, ammo and the extra weapons, or just simple ammo
         if (data.hasAmmo) {
-            if (this.actor?.data && this.consumesAmmunition) {
+            if (this.actor?.system && this.consumesAmmunition) {
                 const ammoItem = this.findAmmunition();
-                if (ammoItem?.data)
-                    data.visualAmmo = data.ammo.value.toFixed(0) + " /" + ammoItem.data.data.quantity.toFixed(0) + "mag";
+                if (ammoItem?.system)
+                    data.visualAmmo = data.ammo.value.toFixed(0) + " /" + ammoItem.system.quantity.toFixed(0) + "mag";
                 else {
                     data.visualAmmo = data.ammo.value.toFixed(0);
                     console.error("Somehow, the ammo item was received but turned up null: " + ammoItem);
@@ -129,7 +129,7 @@ export default class ItemSg extends Item {
      * @type {boolean}
      */
     get hasAreaTarget() {
-        const target = this.data.data.target;
+        const target = this.system.target;
         return target && (target.type in CONFIG.SGRPG.areaTargetTypes);
     }
 
@@ -138,20 +138,20 @@ export default class ItemSg extends Item {
      * @type {boolean}
      */
     get hasAttack() {
-        return typeof this.data.data.attackAbility === "string";
+        return typeof this.system.attackAbility === "string";
     }
 
     /**
      * Whether the weapon has a separate ammo item it consumes
      */
     get consumesAmmunition() {
-        if (!this.data.data.ammo) {
+        if (!this.system.ammo) {
             return false;
         }
-        if (this.data.data.ammo.target === CONFIG.SGRPG.actionReloadValue) {
+        if (this.system.ammo.target === CONFIG.SGRPG.actionReloadValue) {
             return false;
         }
-        return this.data.data.ammo.target && Number.isNumeric(this.data.data.ammo.max);
+        return this.system.ammo.target && Number.isNumeric(this.system.ammo.max);
     }
 
     /* -------------------------------------------- */
@@ -159,7 +159,7 @@ export default class ItemSg extends Item {
     /* -------------------------------------------- */
 
     async roll() {
-        if (this.type === "equip" && this.actor && this.data.data.isLightItem) {
+        if (this.type === "equip" && this.actor && this.system.isLightItem) {
             this.actor.changeLightSource(this);
         } else {
             this.displayCard();
@@ -168,7 +168,7 @@ export default class ItemSg extends Item {
 
     async rollAttack({ mode = "single", fullAutoAttack = 0, fullAutoDamage = 0 } = {}) {
         const weaponTensionHomebrew = game.settings.get("sgrpg", "allowWeaponTensionOnAttack") || false
-        const data = this.data.data;
+        const data = this.system;
         const td = game.sgrpg.getTensionDie();
 
         if (!this.actor) {
@@ -184,7 +184,7 @@ export default class ItemSg extends Item {
         }
 
         const fullAutoCount = (fullAutoAttack + fullAutoDamage) || 0;
-        const abilityMod = this.actor?.data.data.attributes?.[data.attackAbility].mod ?? 0;
+        const abilityMod = this.actor?.system.attributes?.[data.attackAbility].mod ?? 0;
         const isProf = data.isProficient;
         // If fired on full auto, check whether the weapon is stabilized, if not, set disadvantage as default
         const disadvDefault = mode === "fullAuto" ? (data.autoAttack.stabilized ? false : true) : false;
@@ -195,7 +195,7 @@ export default class ItemSg extends Item {
             rollMacro += " + " + abilityMod;
         }
         if (isProf) {
-            rollMacro += " + " + (this.actor?.data.data.proficiencyLevel ?? 0);
+            rollMacro += " + " + (this.actor?.system.proficiencyLevel ?? 0);
         }
         const weaponData = {
             weaponRoll: true,
@@ -227,9 +227,9 @@ export default class ItemSg extends Item {
         }
 
 
-        const r = new CONFIG.Dice.D20Roll(rollMacro, this.actor.data.data);
+        const r = new CONFIG.Dice.D20Roll(rollMacro, this.actor.system);
         const configured = await r.configureDialog({
-            title: `Attack by ${this.data.name}`,
+            title: `Attack by ${this.name}`,
             defaultRollMode: game.settings.get("core", "rollMode"),
             defaultAction: disadvDefault ? CONFIG.Dice.D20Roll.ADV_MODE.DISADVANTAGE : CONFIG.Dice.D20Roll.ADV_MODE.NORMAL,
             weaponData
@@ -253,7 +253,7 @@ export default class ItemSg extends Item {
 
         let messageData = {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: "Attacks using " + this.data.name + flavorAdd
+            flavor: "Attacks using " + this.name + flavorAdd
         };
 
         if (atkSnd) { // Check if the sound is set, then check if it exists
@@ -261,7 +261,7 @@ export default class ItemSg extends Item {
             if (resp.ok) {
                 messageData.sound = atkSnd;
             } else {
-                ui.notifications.warn("Attack sound path for " + this.data.name + " could not be resolved: " + atkSnd);
+                ui.notifications.warn("Attack sound path for " + this.name + " could not be resolved: " + atkSnd);
             }
         }
 
@@ -270,8 +270,8 @@ export default class ItemSg extends Item {
 
     async rollDamage({ mode = "single", fullAutoDamage = 0 } = {}) {
         const weaponTensionHomebrew = game.settings.get("sgrpg", "allowWeaponTensionOnAttack") || false
-        const data = this.data.data;
-        const abilityMod = this.actor?.data.data.attributes?.[data.attackAbility].mod ?? 0;
+        const data = this.system;
+        const abilityMod = this.actor?.system.attributes?.[data.attackAbility].mod ?? 0;
         const td = game.sgrpg.getTensionDie();
         let dmgRoll = data.dmg;
 
@@ -306,10 +306,10 @@ export default class ItemSg extends Item {
                 break;
         }
 
-        const r = new CONFIG.Dice.DamageRoll(dmgRoll, this.actor.data.data);
+        const r = new CONFIG.Dice.DamageRoll(dmgRoll, this.actor.system);
 
         const configured = await r.configureDialog({
-            title: `Damage from ${this.data.name}`,
+            title: `Damage from ${this.name}`,
             defaultRollMode: game.settings.get("core", "rollMode"),
             weaponData
         });
@@ -319,7 +319,7 @@ export default class ItemSg extends Item {
 
         let messageData = {
             speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-            flavor: "Done damage using " + this.data.name + flavorAdd
+            flavor: "Done damage using " + this.name + flavorAdd
         };
 
         if (dmgSnd) { // Check if the sound is set, then check if it exists
@@ -327,7 +327,7 @@ export default class ItemSg extends Item {
             if (resp.ok) {
                 messageData.sound = dmgSnd;
             } else {
-                ui.notifications.warn("Damage sound path for " + this.data.name + " could not be resolved: " + dmgSnd);
+                ui.notifications.warn("Damage sound path for " + this.name + " could not be resolved: " + dmgSnd);
             }
         }
 
@@ -335,7 +335,7 @@ export default class ItemSg extends Item {
     }
 
     async consume() {
-        const remainingCount = parseInt(this.data.data.quantity);
+        const remainingCount = parseInt(this.system.quantity);
         if (remainingCount < 1) {
             return ui.notifications.warn("You dont have any more of these items to consume!");
         }
@@ -343,7 +343,7 @@ export default class ItemSg extends Item {
         await this.update({
             "data.quantity": remainingCount - 1
         });
-        return ui.notifications.info(`Item '${this.data.name}' was consumed, ${remainingCount - 1} usages remain.`);
+        return ui.notifications.info(`Item '${this.name}' was consumed, ${remainingCount - 1} usages remain.`);
     }
 
     /**
@@ -354,12 +354,12 @@ export default class ItemSg extends Item {
         if (!this.consumesAmmunition) {
             return null;
         }
-        return this.actor.items.get(this.data.data.ammo.target);
+        return this.actor.items.get(this.system.ammo.target);
     }
 
     async reloadWeapon() {
         const item = this;
-        const data = item.data.data;
+        const data = item.system;
 
         if (data.ammo.value === data.ammo.max) {
             return ui.notifications.info("Weapon is already reloaded.");
@@ -396,7 +396,7 @@ export default class ItemSg extends Item {
             return ui.notifications.info(`Unable to find magazine to reload '${item.name}'.`);
         }
 
-        const magCount = ammoItem.data.data.quantity || 0;
+        const magCount = ammoItem.system.quantity || 0;
         if (magCount <= 0) {
             return ui.notifications.info(`No more magazines left for '${item.name}' in inventory.`);
         }
@@ -418,12 +418,12 @@ export default class ItemSg extends Item {
     async displayCard({ rollMode, createMessage = true } = {}) {
         // Render the chat card template
         const token = this.actor.token;
-        const maxAutoCount = this.type !== 'weapon' ? 0 : (this.data.data.autoAttack.maxAutoCount < this.actor?.data.data.maxAutomaticShots ? this.data.data.autoAttack.maxAutoCount : (this.actor?.data.data.maxAutomaticShots ?? 0));
+        const maxAutoCount = this.type !== 'weapon' ? 0 : (this.system.autoAttack.maxAutoCount < this.actor?.system.maxAutomaticShots ? this.system.autoAttack.maxAutoCount : (this.actor?.system.maxAutomaticShots ?? 0));
 
         const templateData = {
-            actor: this.actor?.data,
+            actor: this.actor,
             tokenId: token?.uuid || null,
-            item: this.data,
+            item: thi,
             data: this.getChatData(),
             hasAttack: this.hasAttack,
             hasAreaTarget: game.user.can("TEMPLATE_CREATE") && this.hasAreaTarget,
@@ -437,7 +437,7 @@ export default class ItemSg extends Item {
             user: game.user.id,
             type: CONST.CHAT_MESSAGE_TYPES.OTHER,
             content: html,
-            flavor: this.data.data.chatFlavor || this.name,
+            flavor: this.system.chatFlavor || this.name,
             speaker: ChatMessage.getSpeaker({ actor: this.actor, token }),
             flags: { "core.canPopout": true },
         };
@@ -455,11 +455,11 @@ export default class ItemSg extends Item {
      * @return {Object}               An object of chat data to render
      */
     getChatData(htmlOptions = {}) {
-        const data = foundry.utils.deepClone(this.data.data);
+        const data = foundry.utils.deepClone(this.system);
 
         // Rich text description
         data.description = TextEditor.enrichHTML(data.description, htmlOptions);
-        data.labels = this._getItemLabels(this.data);
+        data.labels = this._getItemLabels(this);
         data.showDescription = game.settings.get("sgrpg", "showDescriptionDefault");
         return data;
     }
@@ -583,21 +583,21 @@ export default class ItemSg extends Item {
         const labels = [];
 
         if (item.type === "weapon") {
-            if (item.data.ammo && item.data.ammo.target) {
+            if (item.system.ammo && item.system.ammo.target) {
                 // Items consumes some ammo, push reload action informations if any.
-                if (item.data.ammo.reload) {
-                    labels.push("Reload: " + item.data.ammo.reload);
+                if (item.system.ammo.reload) {
+                    labels.push("Reload: " + item.system.ammo.reload);
                 }
             }
-            if (item.data.details.special?.length) {
-                labels.push(item.data.details.special);
+            if (item.system.details.special?.length) {
+                labels.push(item.system.details.special);
             }
 
-            if (item.data.details.type) {
-                labels.push("Damage: " + item.data.details.type);
+            if (item.system.details.type) {
+                labels.push("Damage: " + item.system.details.type);
             }
-            if (item.data.details.sec_type) {
-                labels.push("Sec.damage: " + item.data.details.sec_type);
+            if (item.system.details.sec_type) {
+                labels.push("Sec.damage: " + item.system.details.sec_type);
             }
         }
 

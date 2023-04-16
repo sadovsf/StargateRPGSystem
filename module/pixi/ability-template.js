@@ -12,7 +12,7 @@ export default class AbilityTemplate extends MeasuredTemplate {
      * @return {AbilityTemplate|null}     The template object, or null if the item does not produce a template
      */
     static fromItem(item) {
-        const target = getProperty(item.data, "data.target") || {};
+        const target = getProperty(item.system, "data.target") || {};
         const templateShape = SGRPG.areaTargetTypes[target.type];
         if (!templateShape) return null;
 
@@ -90,7 +90,7 @@ export default class AbilityTemplate extends MeasuredTemplate {
             if (now - moveTime <= 20) return;
             const center = event.data.getLocalPosition(this.layer);
             const snapped = canvas.grid.getSnappedPosition(center.x, center.y, 2);
-            this.data.update({ x: snapped.x, y: snapped.y });
+            this.update({ x: snapped.x, y: snapped.y });
             this.refresh();
             moveTime = now;
         };
@@ -109,9 +109,9 @@ export default class AbilityTemplate extends MeasuredTemplate {
         // Confirm the workflow (left-click)
         handlers.lc = async event => {
             handlers.rc(event);
-            const destination = canvas.grid.getSnappedPosition(this.data.x, this.data.y, 2);
-            await this.data.update(destination);
-            await canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [this.data]);
+            const destination = canvas.grid.getSnappedPosition(this.x, this.y, 2);
+            await this.update(destination);
+            await canvas.scene.createEmbeddedDocuments("MeasuredTemplate", [this]);
         };
 
         // Rotate the template by 3 degree increments (mouse-wheel)
@@ -120,7 +120,7 @@ export default class AbilityTemplate extends MeasuredTemplate {
             event.stopPropagation();
             let delta = canvas.grid.type > CONST.GRID_TYPES.SQUARE ? 30 : 15;
             let snap = event.shiftKey ? delta : 5;
-            this.data.update({ direction: this.data.direction + (snap * Math.sign(event.deltaY)) });
+            this.update({ direction: this.direction + (snap * Math.sign(event.deltaY)) });
             this.refresh();
         };
 

@@ -10,7 +10,7 @@ export const _getInitiativeFormula = function () {
     const actor = this.actor;
     if (!actor) return "1d20";
     const moxie = game.settings.get("sgrpg", "useMoxieCombat"); // Use the raw setting here, since it's where the magic happens
-    const init = moxie ? actor.data.data.moxie : actor.data.data.initiative;
+    const init = moxie ? actor.system.moxie : actor.system.initiative;
 
     // Construct initiative formula parts
     let nd = 1;

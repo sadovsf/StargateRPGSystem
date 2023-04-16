@@ -76,8 +76,8 @@ export default class ActorSg extends Actor {
      * Calculate some base necessities from existing data before moving on to derived proper 
      */
     prepareBaseData() {
-        const actorData = this.data;
-        const data = actorData.data;
+        const actorData = this;
+        const data = actorData.system;
 
         // Common base data for characters
         if (actorData.type === 'player' || actorData.type === 'npc')
@@ -88,7 +88,7 @@ export default class ActorSg extends Actor {
     }
 
     _processBaseCommon(actorData) {
-        const data = actorData.data;
+        const data = actorData.system;
         const autoLevel = game.settings.get("sgrpg", "autoLevelSystem");
 
         // Used level for players
@@ -135,7 +135,7 @@ export default class ActorSg extends Actor {
      * Augment the basic actor data with additional dynamic data.
      */
     prepareDerivedData() {
-        const actorData = this.data;
+        const actorData = this;
 
         // Make separate methods for each Actor type (character, npc, etc.) to keep
         // things organized.
@@ -172,7 +172,7 @@ export default class ActorSg extends Actor {
      * Prepare data based on common template
      */
     _processCommon(actorData) {
-        const data = actorData.data;
+        const data = actorData.system;
 
         // Process skills
         for (let [key, skill] of Object.entries(data.skills)) {
@@ -229,10 +229,10 @@ export default class ActorSg extends Actor {
 
         // Used bulk
         // Only consider carried items that are not part of the base kit or a worn armor
-        const bulkItems = this.items.filter(element => element.data.data.carried && !element.data.data.partOfBaseKit && !element.data.data.worn);
+        const bulkItems = this.items.filter(element => element.system.carried && !element.system.partOfBaseKit && !element.system.worn);
         let usedBulk = 0;
         for (let item of bulkItems) {
-            usedBulk += item.data.data.bulkTotal;
+            usedBulk += item.system.bulkTotal;
         }
         data.bulkUsed = usedBulk;
         data.bulkOverload = usedBulk > data.bulkMax;
@@ -242,7 +242,7 @@ export default class ActorSg extends Actor {
      * Process data for actors with only minimal data
      */
     _processMinimal(actorData) {
-        const data = actorData.data;
+        const data = actorData.system;
 
         // Get max HP
         data.health.max = parseInt(data.health.maxBonus);
@@ -258,10 +258,10 @@ export default class ActorSg extends Actor {
 
         // Used bulk
         // Only consider carried items that are not part of the base kit
-        const bulkItems = this.items.filter(element => element.data.data.carried && !element.data.data.partOfBaseKit);
+        const bulkItems = this.items.filter(element => element.system.carried && !element.system.partOfBaseKit);
         let usedBulk = 0;
         for (let item of bulkItems) {
-            usedBulk += item.data.data.bulk * item.data.data.quantity;
+            usedBulk += item.system.bulk * item.system.quantity;
         }
         data.bulkUsed = usedBulk;
         data.bulkOverload = usedBulk > data.bulkMax;
@@ -271,7 +271,7 @@ export default class ActorSg extends Actor {
      * Process data that's only used for NPC's
      */
     _processNpc(actorData) {
-        const data = actorData.data;
+        const data = actorData.system;
 
         // Get proficient skills
         data.proficientSkills = {};
@@ -286,12 +286,12 @@ export default class ActorSg extends Actor {
      * Process data that has to do with armor
      */
     _processArmor(actorData) {
-        const data = actorData.data;
+        const data = actorData.system;
 
-        const wornArmors = this.items.filter(element => element.data.type === 'armor' && element.data.data.carried && element.data.data.worn);
+        const wornArmors = this.items.filter(element => element.type === 'armor' && element.system.carried && element.system.worn);
         let baseAC = 0, additiveAC = 0, baseBulk = 0, additiveBulk = 0, heavyArmor = false, overStrength = false;
         for (let armor of wornArmors) {
-            const armorData = armor.data.data;
+            const armorData = armor.system;
             if (armorData.additive) {
                 additiveAC += armorData.acBonus;
                 additiveBulk += armorData.bulkBonus;
@@ -350,7 +350,7 @@ export default class ActorSg extends Actor {
         }
         else {
             let tokenarray = actor.getActiveTokens(true);
-            if (tokenarray.length > 0 && tokenarray[0]?.data?.actorLink === true)
+            if (tokenarray.length > 0 && tokenarray[0]?.actorLink === true)
                 foundtoken = tokenarray[0].document;
         }
 
@@ -380,12 +380,12 @@ export default class ActorSg extends Actor {
         amount = Math.floor(parseInt(amount) * multiplier);
 
         // Deduct damage from temp HP first
-        const tmp = parseInt(this.data.data.temp_health.value) || 0;
+        const tmp = parseInt(this.system.temp_health.value) || 0;
         const dt = amount > 0 ? Math.min(tmp, amount) : 0;
 
         // Remaining goes to health
-        // const tmpMax = parseInt(this.data.data.temp_health.max) || 0;
-        const dh = Math.clamped(this.data.data.health.value - (amount - dt), 0, this.data.data.health.max);
+        // const tmpMax = parseInt(this.system.temp_health.max) || 0;
+        const dh = Math.clamped(this.system.health.value - (amount - dt), 0, this.system.health.max);
 
         // Update the Actor
         const updates = {
@@ -419,13 +419,13 @@ export default class ActorSg extends Actor {
             }
         };
 
-        let lightsources = this.items.filter(element => element.type === "equip" && element.data.data.isLightItem);
+        let lightsources = this.items.filter(element => element.type === "equip" && element.system.isLightItem);
 
-        if (!lightsource.data.data.lighted) { // Light the light source
+        if (!lightsource.system.lighted) { // Light the light source
             updatedlightdata = {
-                "dim": lightsource.data.data.dimLight, "bright": lightsource.data.data.brightLight, "angle": lightsource.data.data.lightAngle,
-                "color": lightsource.data.data.lightColor, "alpha": lightsource.data.data.lightAlpha, "animation": {
-                    "type": lightsource.data.data.lightAnimationType, "speed": lightsource.data.data.lightAnimationSpeed, "intensity": lightsource.data.data.lightAnimationIntensity
+                "dim": lightsource.system.dimLight, "bright": lightsource.system.brightLight, "angle": lightsource.system.lightAngle,
+                "color": lightsource.system.lightColor, "alpha": lightsource.system.lightAlpha, "animation": {
+                    "type": lightsource.system.lightAnimationType, "speed": lightsource.system.lightAnimationSpeed, "intensity": lightsource.system.lightAnimationIntensity
                 }
             };
             const index = lightsources.findIndex(element => element.id === lightsource.id);
@@ -452,13 +452,13 @@ export default class ActorSg extends Actor {
             }
         };
 
-        let lightsources = this.items.filter(element => element.type === "equip" && element.data.data.isLightItem);
-        let activesource = lightsources.find(element => element.data.data.lighted === true);
+        let lightsources = this.items.filter(element => element.type === "equip" && element.system.isLightItem);
+        let activesource = lightsources.find(element => element.system.lighted === true);
         if (activesource) {
             updatedlightdata = {
-                "dim": lightsource.data.data.dimLight, "bright": lightsource.data.data.brightLight, "angle": lightsource.data.data.lightAngle,
-                "color": lightsource.data.data.lightColor, "alpha": lightsource.data.data.lightAlpha, "animation": {
-                    "type": lightsource.data.data.lightAnimationType, "speed": lightsource.data.data.lightAnimationSpeed, "intensity": lightsource.data.data.lightAnimationIntensity
+                "dim": lightsource.system.dimLight, "bright": lightsource.system.brightLight, "angle": lightsource.system.lightAngle,
+                "color": lightsource.system.lightColor, "alpha": lightsource.system.lightAlpha, "animation": {
+                    "type": lightsource.system.lightAnimationType, "speed": lightsource.system.lightAnimationSpeed, "intensity": lightsource.system.lightAnimationIntensity
                 }
             };
         }
@@ -474,7 +474,7 @@ export default class ActorSg extends Actor {
             return console.error("Tried to rest heal a non-character: " + this.name);
         }
 
-        const data = this.data.data;
+        const data = this.system;
         if (data.health.value >= data.health.max) {
             return ui.notifications.info("Already at maximum health!");
         }
@@ -541,10 +541,10 @@ export default class ActorSg extends Actor {
         await r.evaluate();
         const rollResult = r.total;
 
-        const data = this.data.data.deathSaves;
+        const data = this.system.deathSaves;
         const curSuccess = parseInt(data.successes);
         const curFails = parseInt(data.fails);
-        const curHealth = parseInt(this.data.data.health.value);
+        const curHealth = parseInt(this.system.health.value);
 
         if (rollResult === 1) {
             // 2 fails.
@@ -559,7 +559,7 @@ export default class ActorSg extends Actor {
         }
         else if (rollResult === 20) {
             // success + heal.
-            const maxHealth = parseInt(this.data.data.health.max);
+            const maxHealth = parseInt(this.system.health.max);
             this.update({
                 "data.deathSaves.fails": 0,
                 "data.deathSaves.successes": 0,

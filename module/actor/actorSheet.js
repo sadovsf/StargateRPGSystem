@@ -13,7 +13,7 @@ export default class SGActorSheet extends ActorSheet {
     }
 
     get template() {
-        return `systems/sgrpg/templates/sheets/${this.actor.data.type}-sheet.hbs`;
+        return `systems/sgrpg/templates/sheets/${this.actor.type}-sheet.hbs`;
     }
 
     getData(options) {
@@ -23,7 +23,7 @@ export default class SGActorSheet extends ActorSheet {
         let sheetData = {};
 
         // Insert the basics
-        sheetData.actor = baseData.data;
+        sheetData.actor = baseData.actor;
         sheetData.items = baseData.items;
 
         // Insert necessary misc data
@@ -35,23 +35,23 @@ export default class SGActorSheet extends ActorSheet {
         sheetData.dtypes = baseData.dtypes;
 
         // Prepare items
-        if (this.actor.data.type == 'player') {
+        if (this.actor.type == 'player') {
             this._prepareCharacterItems(sheetData);
         }
-        if (this.actor.data.type == 'npc') {
+        if (this.actor.type == 'npc') {
             this._prepareCharacterItems(sheetData);
         }
-        if (this.actor.data.type == 'vehicle') {
+        if (this.actor.type == 'vehicle') {
             this._prepareVehicleItems(sheetData);
         }
 
         // Grab the actual template data and effects
-        sheetData.data = baseData.data.data;
+        sheetData.system = baseData.system;
         sheetData.effects = baseData.effects;
 
         // Structural sheet stuff
         sheetData.isGM = game.user.isGM;
-        sheetData.baseKitDisabled = sheetData.data.baseKitDisabled ?? false;
+        sheetData.baseKitDisabled = sheetData.system.baseKitDisabled ?? false;
         sheetData.tensionDie = game.sgrpg.getTensionDie();
         sheetData.selectables = {
             proficiencySelects: {
@@ -61,10 +61,10 @@ export default class SGActorSheet extends ActorSheet {
             }
         };
         sheetData.bulkMeter = {
-            currentBulkPerc: Math.min((sheetData.data.bulkUsed / sheetData.data.bulkMax) * 100, 100),
-            currentBulk: sheetData.data.bulkUsed,
-            maxBulk: sheetData.data.bulkMax,
-            isOverloaded: sheetData.data.bulkOverload
+            currentBulkPerc: Math.min((sheetData.system.bulkUsed / sheetData.system.bulkMax) * 100, 100),
+            currentBulk: sheetData.system.bulkUsed,
+            maxBulk: sheetData.system.bulkMax,
+            isOverloaded: sheetData.system.bulkOverload
         };
         sheetData.autoLevel = game.settings.get("sgrpg", "autoLevelSystem");
 
@@ -100,7 +100,7 @@ export default class SGActorSheet extends ActorSheet {
 
         // Iterate through items, allocating to containers
         for (let i of sheetData.items) {
-            let item = i.data;
+            let item = i;
             i.img = i.img || DEFAULT_TOKEN;
 
             // Switch-case to append the item to the proper list
@@ -143,7 +143,7 @@ export default class SGActorSheet extends ActorSheet {
 
         // Iterate through items, allocating to containers
         for (let i of sheetData.items) {
-            let item = i.data;
+            let item = i;
             i.img = i.img || DEFAULT_TOKEN;
 
             // Switch-case to append the item to the proper list
@@ -223,7 +223,7 @@ export default class SGActorSheet extends ActorSheet {
             });
             if (similarItem) {
                 return similarItem.update({
-                    'data.quantity': similarItem.data.data.quantity + Math.max(itemData.data.quantity, 1)
+                    'data.quantity': similarItem.system.quantity + Math.max(itemData.system.quantity, 1)
                 });
             }
         }
@@ -261,10 +261,10 @@ export default class SGActorSheet extends ActorSheet {
         const itemData = {
             name: name,
             type: type,
-            data: data
+            system: data
         };
         // Remove the type from the dataset since it's in the itemData.type prop.
-        delete itemData.data["type"];
+        delete itemData.system["type"];
 
         // Finally, create the item!
         return await Item.create(itemData, { parent: this.actor });
