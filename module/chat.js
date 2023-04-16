@@ -5,8 +5,8 @@ export const highlightCriticalSuccessFailure = function (message, html, data) {
     if (!message.isRoll || !message.isContentVisible) return;
 
     // Highlight rolls where the first part is a d20 roll
-    const roll = message.roll;
-    if (!roll.dice.length) return;
+    const roll = message.rolls?.[0];
+    if (!roll?.dice?.length) return;
     const d = roll.dice[0];
 
     // Ensure it is an un-modified d20 roll

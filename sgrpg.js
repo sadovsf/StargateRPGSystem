@@ -6,6 +6,7 @@ import "./module/externals.js"; // Setup external module integrations here, so s
 
 import ItemSg from "./module/item/item.js"
 import ActorSg from "./module/actor/actor.js"
+import TokenSg from "./module/token/token.js"
 
 import SGItemSheet from "./module/item/itemSheet.js";
 import SGActorSheet from "./module/actor/actorSheet.js";
@@ -31,6 +32,7 @@ Hooks.once("init", function () {
 
     CONFIG.Item.documentClass = ItemSg;
     CONFIG.Actor.documentClass = ActorSg;
+    CONFIG.Token.documentClass = TokenSg;
 
     // 5e cone RAW should be 53.13 degrees
     CONFIG.MeasuredTemplate.defaults.angle = 53.13;

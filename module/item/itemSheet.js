@@ -17,8 +17,8 @@ export default class SGItemSheet extends ItemSheet {
         let sheetData = {};
 
         // Insert the basics
-        sheetData.item = baseData;
-        sheetData.system = baseData.system;
+        sheetData.item = baseData.data;
+        sheetData.system = baseData.item.system;
 
         // Insert necessary misc data
         sheetData.options = baseData.options;

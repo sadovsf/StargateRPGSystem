@@ -23,7 +23,7 @@ export default class SGActorSheet extends ActorSheet {
         let sheetData = {};
 
         // Insert the basics
-        sheetData.actor = baseData.actor;
+        sheetData.actor = baseData.data;
         sheetData.items = baseData.items;
 
         // Insert necessary misc data
@@ -46,7 +46,7 @@ export default class SGActorSheet extends ActorSheet {
         }
 
         // Grab the actual template data and effects
-        sheetData.system = baseData.system;
+        sheetData.system = baseData.data.system;
         sheetData.effects = baseData.effects;
 
         // Structural sheet stuff
