@@ -77,30 +77,30 @@ export default class ActorSg extends Actor {
      */
     prepareBaseData() {
         const actorData = this;
-        const data = actorData.system;
+        const system = actorData.system;
 
         // Common base data for characters
         if (actorData.type === 'player' || actorData.type === 'npc')
             this._processBaseCommon(actorData);
 
         // Basic visual data container
-        data.visualData = {};
+        system.visualData = {};
     }
 
     _processBaseCommon(actorData) {
-        const data = actorData.system;
+        const system = actorData.system;
         const autoLevel = game.settings.get("sgrpg", "autoLevelSystem");
 
         // Used level for players
         if (actorData.type === "player") {
-            data.level = -1;
+            system.level = -1;
             if (autoLevel) {
-                const spentMP = ActorSg._parseSpentMP(data.spentMP);
+                const spentMP = ActorSg._parseSpentMP(system.spentMP);
                 if (!isNaN(spentMP)) {
-                    data.level = ActorSg._getLevelFromMP(spentMP);
+                    system.level = ActorSg._getLevelFromMP(spentMP);
                 }
             } else {
-                data.level = data.levelInput;
+                system.level = system.levelInput;
             }
         }
 
@@ -108,20 +108,20 @@ export default class ActorSg extends Actor {
         let prof = 0;
         switch (actorData.type) {
             case 'player':
-                prof = 2 + Math.floor((data.level - 1) / 4);
+                prof = 2 + Math.floor((system.level - 1) / 4);
                 break;
             case 'npc':
-                prof = 2 + Math.floor((data.cr - 1) / 4);
+                prof = 2 + Math.floor((system.cr - 1) / 4);
                 break;
             default:
                 break;
         }
         // Set the proficiency level to the calculated value
-        data.proficiencyLevel = prof + data.proficiencyBonus;
-        data.proficiencyFromLevel = prof;
+        system.proficiencyLevel = prof + system.proficiencyBonus;
+        system.proficiencyFromLevel = prof;
 
         // Basic ability score modifiers
-        for (let [key, ability] of Object.entries(data.attributes)) {
+        for (let [key, ability] of Object.entries(system.attributes)) {
             ability.mod = Math.floor((ability.value - 10) / 2);
             ability.modVisual = (ability.mod >= 0 ? "+" : "") + ability.mod.toString();
         }
@@ -172,19 +172,19 @@ export default class ActorSg extends Actor {
      * Prepare data based on common template
      */
     _processCommon(actorData) {
-        const data = actorData.system;
+        const system = actorData.system;
 
         // Process skills
-        for (let [key, skill] of Object.entries(data.skills)) {
+        for (let [key, skill] of Object.entries(system.skills)) {
             // Calculate the modifier using d20 rules.
-            skill.total = data.attributes[skill.attribute].mod + data.proficiencyLevel * skill.proficient;
+            skill.total = system.attributes[skill.attribute].mod + system.proficiencyLevel * skill.proficient;
             skill.totalVisual = (skill.total >= 0 ? "+" : "") + skill.total.toString();
         }
 
         // Process saves
-        for (let [key, save] of Object.entries(data.saves)) {
+        for (let [key, save] of Object.entries(system.saves)) {
             // Calculate the modifier using d20 rules.
-            save.total = data.attributes[key].mod + data.proficiencyLevel * save.proficient;
+            save.total = system.attributes[key].mod + system.proficiencyLevel * save.proficient;
             save.totalVisual = (save.total >= 0 ? "+" : "") + save.total.toString();
         }
 
@@ -193,39 +193,39 @@ export default class ActorSg extends Actor {
         switch (actorData.type) {
             case 'player':
                 let hitDieValue = -1;
-                let index = data.hd.trim().search(/d/i); // Search for the letter d in the string
+                let index = system.hd.trim().search(/d/i); // Search for the letter d in the string
                 if (index >= 0) {
-                    hitDieValue = parseInt(data.hd.trim().slice(index + 1));
+                    hitDieValue = parseInt(system.hd.trim().slice(index + 1));
                 }
-                data.hitDieValue = hitDieValue;
-                hp = data.health.maxBonus + (data.health.maxLevelBonus * data.level) + hitDieValue + (hitDieValue / 2 + 1) * (data.level - 1) + data.attributes.con.mod * data.level;
-                data.visualData.hitDieLevels = (hitDieValue / 2 + 1) * (data.level - 1);
-                data.visualData.hitDieTotal = `${hitDieValue} + ${(hitDieValue / 2 + 1) * (data.level - 1)}`;
-                data.visualData.conBonus = data.attributes.con.mod * data.level;
+                system.hitDieValue = hitDieValue;
+                hp = system.health.maxBonus + (system.health.maxLevelBonus * system.level) + hitDieValue + (hitDieValue / 2 + 1) * (system.level - 1) + system.attributes.con.mod * system.level;
+                system.visualData.hitDieLevels = (hitDieValue / 2 + 1) * (system.level - 1);
+                system.visualData.hitDieTotal = `${hitDieValue} + ${(hitDieValue / 2 + 1) * (system.level - 1)}`;
+                system.visualData.conBonus = system.attributes.con.mod * system.level;
                 break;
             default:
-                hp = parseInt(data.health.maxBonus);
+                hp = parseInt(system.health.maxBonus);
                 break;
         }
-        data.health.max = hp;
+        system.health.max = hp;
 
         // Get max determination
-        data.determination.max = data.proficiencyLevel + data.determination.maxBonus;
+        system.determination.max = system.proficiencyLevel + system.determination.maxBonus;
 
         // Initiative and moxie
-        data.initiative = (data.attributes.dex.mod > data.attributes.wis.mod ? data.attributes.dex.mod : data.attributes.wis.mod) + data.initiativeBonus;
-        data.moxie = (data.attributes.int.mod > data.attributes.cha.mod ? data.attributes.int.mod : data.attributes.cha.mod) + data.moxieBonus;
+        system.initiative = (system.attributes.dex.mod > system.attributes.wis.mod ? system.attributes.dex.mod : system.attributes.wis.mod) + system.initiativeBonus;
+        system.moxie = (system.attributes.int.mod > system.attributes.cha.mod ? system.attributes.int.mod : system.attributes.cha.mod) + system.moxieBonus;
 
-        data.visualData.initiative = `${(data.attributes.dex.mod > data.attributes.wis.mod ? "Dex" : "Wis")}: ${(data.attributes.dex.mod > data.attributes.wis.mod ? data.attributes.dex.mod : data.attributes.wis.mod)}`;
-        data.visualData.moxie = `${(data.attributes.int.mod > data.attributes.cha.mod ? "Int" : "Cha")}: ${(data.attributes.int.mod > data.attributes.cha.mod ? data.attributes.int.mod : data.attributes.cha.mod)}`;
+        system.visualData.initiative = `${(system.attributes.dex.mod > system.attributes.wis.mod ? "Dex" : "Wis")}: ${(system.attributes.dex.mod > system.attributes.wis.mod ? system.attributes.dex.mod : system.attributes.wis.mod)}`;
+        system.visualData.moxie = `${(system.attributes.int.mod > system.attributes.cha.mod ? "Int" : "Cha")}: ${(system.attributes.int.mod > system.attributes.cha.mod ? system.attributes.int.mod : system.attributes.cha.mod)}`;
 
         // Very basic bulk, speed, and AC
-        data.bulkMax = data.bulkBonus + data.attributes.str.mod;
-        data.speed = data.speedBase;
-        data.ac = 10 + data.acBonus + data.attributes.dex.mod;
+        system.bulkMax = system.bulkBonus + system.attributes.str.mod;
+        system.speed = system.speedBase;
+        system.ac = 10 + system.acBonus + system.attributes.dex.mod;
 
         // Max automatic shots
-        data.maxAutomaticShots = data.attributes.str.mod + data.miscSettings.extraAutoFire;
+        system.maxAutomaticShots = system.attributes.str.mod + system.miscSettings.extraAutoFire;
 
         // Used bulk
         // Only consider carried items that are not part of the base kit or a worn armor
@@ -234,27 +234,27 @@ export default class ActorSg extends Actor {
         for (let item of bulkItems) {
             usedBulk += item.system.bulkTotal;
         }
-        data.bulkUsed = usedBulk;
-        data.bulkOverload = usedBulk > data.bulkMax;
+        system.bulkUsed = usedBulk;
+        system.bulkOverload = usedBulk > system.bulkMax;
     }
 
     /**
      * Process data for actors with only minimal data
      */
     _processMinimal(actorData) {
-        const data = actorData.system;
+        const system = actorData.system;
 
         // Get max HP
-        data.health.max = parseInt(data.health.maxBonus);
+        system.health.max = parseInt(system.health.maxBonus);
 
         // Get AC
-        data.ac = parseInt(data.acBonus);
+        system.ac = parseInt(system.acBonus);
 
         // Get speed
-        data.speed = parseInt(data.speedBase);
+        system.speed = parseInt(system.speedBase);
 
         // Get bulk
-        data.bulkMax = parseInt((data.bulkBonus));
+        system.bulkMax = parseInt((system.bulkBonus));
 
         // Used bulk
         // Only consider carried items that are not part of the base kit
@@ -263,21 +263,21 @@ export default class ActorSg extends Actor {
         for (let item of bulkItems) {
             usedBulk += item.system.bulk * item.system.quantity;
         }
-        data.bulkUsed = usedBulk;
-        data.bulkOverload = usedBulk > data.bulkMax;
+        system.bulkUsed = usedBulk;
+        system.bulkOverload = usedBulk > system.bulkMax;
     }
 
     /**
      * Process data that's only used for NPC's
      */
     _processNpc(actorData) {
-        const data = actorData.system;
+        const system = actorData.system;
 
         // Get proficient skills
-        data.proficientSkills = {};
-        for (let [key, skill] of Object.entries(data.skills)) {
+        system.proficientSkills = {};
+        for (let [key, skill] of Object.entries(system.skills)) {
             if (skill.proficient > 0) {
-                data.proficientSkills[key] = skill;
+                system.proficientSkills[key] = skill;
             }
         }
     }
@@ -286,7 +286,7 @@ export default class ActorSg extends Actor {
      * Process data that has to do with armor
      */
     _processArmor(actorData) {
-        const data = actorData.system;
+        const system = actorData.system;
 
         const wornArmors = this.items.filter(element => element.type === 'armor' && element.system.carried && element.system.worn);
         let baseAC = 0, additiveAC = 0, baseBulk = 0, additiveBulk = 0, heavyArmor = false, overStrength = false;
@@ -302,25 +302,25 @@ export default class ActorSg extends Actor {
                 };
             }
             if (armorData.heavyArmor) heavyArmor = true;
-            if (armorData.strRequired > data.attributes.str.value) overStrength = true;
+            if (armorData.strRequired > system.attributes.str.value) overStrength = true;
         }
 
         // Set the proper values
-        data.bulkMax = baseBulk + additiveBulk + data.bulkBonus + data.attributes.str.mod;
-        data.speed = overStrength ? 1 : data.speedBase - (heavyArmor ? 2 : 0);
-        data.ac = baseAC + additiveAC + data.acBonus + (heavyArmor ? 0 : data.attributes.dex.mod);
-        data.bulkOverload = data.usedBulk > data.bulkMax;
+        system.bulkMax = baseBulk + additiveBulk + system.bulkBonus + system.attributes.str.mod;
+        system.speed = overStrength ? 1 : system.speedBase - (heavyArmor ? 2 : 0);
+        system.ac = baseAC + additiveAC + system.acBonus + (heavyArmor ? 0 : system.attributes.dex.mod);
+        system.bulkOverload = system.usedBulk > system.bulkMax;
 
         // Store visual sheet data
-        data.visualData.armorAC = baseAC;
-        data.visualData.armorAdditional = additiveAC;
-        data.visualData.dexBonus = (heavyArmor ? 0 : data.attributes.dex.mod);
-        data.visualData.heavyArmor = heavyArmor;
-        data.visualData.overStrength = overStrength;
-        data.visualData.armorLimitsSpeed = (overStrength ? "Badly" : (heavyArmor ? "Yes" : "No"));
+        system.visualData.armorAC = baseAC;
+        system.visualData.armorAdditional = additiveAC;
+        system.visualData.dexBonus = (heavyArmor ? 0 : system.attributes.dex.mod);
+        system.visualData.heavyArmor = heavyArmor;
+        system.visualData.overStrength = overStrength;
+        system.visualData.armorLimitsSpeed = (overStrength ? "Badly" : (heavyArmor ? "Yes" : "No"));
 
-        data.visualData.armorBulk = baseBulk;
-        data.visualData.armorBulkPlus = additiveBulk;
+        system.visualData.armorBulk = baseBulk;
+        system.visualData.armorBulkPlus = additiveBulk;
     }
 
     /* -------------------------------------------- */
@@ -389,8 +389,8 @@ export default class ActorSg extends Actor {
 
         // Update the Actor
         const updates = {
-            "data.temp_health.value": tmp - dt,
-            "data.health.value": dh
+            "system.temp_health.value": tmp - dt,
+            "system.health.value": dh
         };
 
         // Delegate damage application to a hook
@@ -431,12 +431,12 @@ export default class ActorSg extends Actor {
             const index = lightsources.findIndex(element => element.id === lightsource.id);
             if (index > -1)
                 lightsources.splice(index, 1); // Exclude from dousing
-            await lightsource.update({ "_id": lightsource.id, "data.lighted": true });
+            await lightsource.update({ "_id": lightsource.id, "system.lighted": true });
         }
 
         let doused = [];
         for (let l of lightsources) { // Douse all other light sources, including the caller if it was previously lighted
-            doused.push({ "_id": l.id, "data.lighted": false });
+            doused.push({ "_id": l.id, "system.lighted": false });
         }
         await this.updateEmbeddedDocuments("Item", doused);
         await this._updateTokenLighting(updatedlightdata);
@@ -474,17 +474,17 @@ export default class ActorSg extends Actor {
             return console.error("Tried to rest heal a non-character: " + this.name);
         }
 
-        const data = this.system;
-        if (data.health.value >= data.health.max) {
+        const system = this.system;
+        if (system.health.value >= system.health.max) {
             return ui.notifications.info("Already at maximum health!");
         }
 
-        const betterMod = data.attributes.con.mod > data.proficiencyLevel ? data.attributes.con.mod : data.proficiencyLevel;
+        const betterMod = system.attributes.con.mod > system.proficiencyLevel ? system.attributes.con.mod : system.proficiencyLevel;
         const templateData = {
             "actor": this,
-            "shortRestHeal": `${data.hd} + ${betterMod}`,
-            "longRestHeal": `${data.level}${data.hd} + ${betterMod}`,
-            "fullHeal": `${data.health.max}`
+            "shortRestHeal": `${system.hd} + ${betterMod}`,
+            "longRestHeal": `${system.level}${system.hd} + ${betterMod}`,
+            "fullHeal": `${system.health.max}`
         };
 
         const contents = await renderTemplate("systems/sgrpg/templates/popups/healing-popup.html", templateData);
@@ -550,28 +550,28 @@ export default class ActorSg extends Actor {
             // 2 fails.
             if (curHealth === 0 && curFails >= 1) {
                 this.update({
-                    "data.deathSaves.fails": curFails + 2,
-                    "data.condition": "death"
+                    "system.deathSaves.fails": curFails + 2,
+                    "system.condition": "death"
                 });
             } else {
-                this.update({ ["data.deathSaves.fails"]: curFails + 2 });
+                this.update({ ["system.deathSaves.fails"]: curFails + 2 });
             }
         }
         else if (rollResult === 20) {
             // success + heal.
             const maxHealth = parseInt(this.system.health.max);
             this.update({
-                "data.deathSaves.fails": 0,
-                "data.deathSaves.successes": 0,
-                "data.health.value": curHealth + 1 <= maxHealth ? curHealth + 1 : curHealth
+                "system.deathSaves.fails": 0,
+                "system.deathSaves.successes": 0,
+                "system.health.value": curHealth + 1 <= maxHealth ? curHealth + 1 : curHealth
             });
         }
         else if (rollResult >= 10) {
             // success.
             if (curSuccess >= 2) {
                 this.update({
-                    "data.deathSaves.fails": 0,
-                    "data.deathSaves.successes": 0
+                    "system.deathSaves.fails": 0,
+                    "system.deathSaves.successes": 0
                 });
             }
             else {
@@ -582,11 +582,11 @@ export default class ActorSg extends Actor {
             // fail.
             if (curHealth === 0 && curFails >= 2) {
                 this.update({
-                    "data.deathSaves.fails": curFails + 1,
-                    "data.condition": "death"
+                    "system.deathSaves.fails": curFails + 1,
+                    "system.condition": "death"
                 });
             } else {
-                this.update({ ["data.deathSaves.fails"]: curFails + 1 });
+                this.update({ ["system.deathSaves.fails"]: curFails + 1 });
             }
         }
 

@@ -54,7 +54,7 @@
                     </div>
                     <div class="columnflex nowrap">
                         <label class="w40">Level</label>
-                        <input onfocus="this.select();" {{#unless autoLevel}}name="system.levelInput"{{/unless}} type="number" placeholder="" class="w40" value="{{system.level}}" data-dtype="Number" {{#if autoLevel}}readonly{{/if}} />
+                        <input onfocus="this.select();" {{#unless structural.autoLevel}}name="system.levelInput"{{/unless}} type="number" placeholder="" class="w40" value="{{system.level}}" data-dtype="Number" {{#if structural.autoLevel}}readonly{{/if}} />
                     </div>
                     <div class="columnflex nowrap">
                         <label class="w40" title="Hit Dice">HD</label>
@@ -260,17 +260,17 @@
 
             <section class="racial_abilities columnflex nowrap center">
                 <label>Racial Abilities</label>
-                {{editor content=system.abilities.racial target="system.abilities.racial" button=true owner=owner editable=editable rollData=rollData}}
+                {{editor editorData.racial target="system.abilities.racial" button=true owner=owner editable=editable rollData=rollData}}
             </section>
 
             <section class="feats columnflex nowrap center">
                 <label>Feats</label>
-                {{editor content=system.abilities.feats target="system.abilities.feats" button=true owner=owner editable=editable rollData=rollData}}
+                {{editor editorData.feats target="system.abilities.feats" button=true owner=owner editable=editable rollData=rollData}}
             </section>
 
             <section class="class columnflex nowrap center">
                 <label>Class Abilities</label>
-                {{editor content=system.abilities.class target="system.abilities.class" button=true owner=owner editable=editable rollData=rollData}}
+                {{editor editorData.class target="system.abilities.class" button=true owner=owner editable=editable rollData=rollData}}
             </section>
 
             <section class="equipment columnflex nowrap center item-list">
@@ -281,7 +281,7 @@
 
             <section class="prof columnflex nowrap center">
                 <label>Proficiencies</label>
-                {{editor content=system.abilities.proficiencies target="system.abilities.proficiencies" button=true owner=owner editable=editable rollData=rollData}}
+                {{editor editorData.proficiencies target="system.abilities.proficiencies" button=true owner=owner editable=editable rollData=rollData}}
             </section>
 
             <section class="equipment columnflex nowrap center item-list">

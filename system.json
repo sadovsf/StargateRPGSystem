@@ -1,33 +1,42 @@
 {
-    "name": "sgrpg",
-    "title": "Stargate RPG",
-    "description": "System for Stargate RPG created by Wyvern Gaming, https://stargatetherpg.com/",
-    "version": "1.8.4",
-    "templateVersion": 10,
-    "author": "Filip Sádovský",
-    "minimumCoreVersion": "9",
-    "compatibleCoreVersion": "9.280",
-    "scripts": [
-    ],
-    "esmodules": [
-        "sgrpg.js"
-    ],
-    "styles": [
-        "styles/sgrpg.css",
-        "styles/player-sheet.css",
-        "styles/item-sheet.css"
-    ],
-    "packs": [],
-    "dependencies": [],
-    "languages": [],
-    "socket": false,
-    "initiative": "1d20 + @initiative",
-    "gridDistance": 1,
-    "gridUnits": "m",
-    "primaryTokenAttribute": "health",
-    "secondaryTokenAttribute": null,
-    "url": "https://github.com/Hertzila/StargateRPGSystem",
-    "manifest": "https://github.com/Hertzila/StargateRPGSystem/releases/latest/download/system.json",
-    "download": "https://github.com/Hertzila/StargateRPGSystem/releases/download/v1.7.5/system.zip"
+  "id": "sgrpg",
+  "title": "Stargate RPG",
+  "description": "System for Stargate RPG created by Wyvern Gaming, https://stargatetherpg.com/",
+  "version": "1.8.4",
+  "templateVersion": 10,
+  "authors": [
+    {
+      "name": "Filip Sádovský"
+    },
+    {
+      "name": "Hertzila",
+      "url": "https://github.com/Hertzila"
+    }
+  ],
+  "compatibility": {
+    "minimum": "10.291",
+    "verified": 10,
+    "maximum": 10
+  },
+  "scripts": [
+  ],
+  "esmodules": [
+    "sgrpg.js"
+  ],
+  "styles": [
+    "styles/sgrpg.css",
+    "styles/player-sheet.css",
+    "styles/item-sheet.css"
+  ],
+  "packs": [],
+  "languages": [],
+  "socket": false,
+  "initiative": "1d20 + @initiative",
+  "gridDistance": 1,
+  "gridUnits": "m",
+  "primaryTokenAttribute": "health",
+  "secondaryTokenAttribute": null,
+  "url": "https://github.com/Hertzila/StargateRPGSystem",
+  "manifest": "https://github.com/Hertzila/StargateRPGSystem/releases/latest/download/system.json",
+  "download": "https://github.com/Hertzila/StargateRPGSystem/releases/download/v1.7.5/system.zip"
 }
-

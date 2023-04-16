@@ -32,12 +32,12 @@ export default class ItemSg extends Item {
         const actorData = this.actor ? this.actor : {};
 
         // Bulk calculation
-        const data = itemData.system;
-        data.bulkTotal = 0;
-        if (data.bulk) {
-            data.bulkTotal = data.bulk * data.quantity;
+        const system = itemData.system;
+        system.bulkTotal = 0;
+        if (system.bulk) {
+            system.bulkTotal = system.bulk * system.quantity;
         }
-        if (data.quantity !== 1) data.isStack = true;
+        if (system.quantity !== 1) system.isStack = true;
 
         if (itemData.type === 'weapon') this._processWeapon(itemData);
     }
@@ -46,29 +46,29 @@ export default class ItemSg extends Item {
      * Process weapon data
      */
     _processWeapon(itemData) {
-        const data = itemData.system;
+        const system = itemData.system;
 
         // Check to see if there's a proper number in the ammo field
-        data.hasAmmo = Number.isInteger(data.ammo.value) && Number.isInteger(data.ammo.max);
-        if (data.hasAmmo) {
+        system.hasAmmo = Number.isInteger(system.ammo.value) && Number.isInteger(system.ammo.max);
+        if (system.hasAmmo) {
             // Maximum automatic fire the weapon can take
-            if (data.autoAttack.ammoCost !== 0) {
-                data.autoAttack.maxAutoCount = data.autoAttack.able ? Math.floor(data.ammo.value / data.autoAttack.ammoCost) : null;
+            if (system.autoAttack.ammoCost !== 0) {
+                system.autoAttack.maxAutoCount = system.autoAttack.able ? Math.floor(system.ammo.value / system.autoAttack.ammoCost) : null;
             } else {
-                data.autoAttack.maxAutoCount = null;
+                system.autoAttack.maxAutoCount = null;
             }
 
             // Only consider the ammo bulk calculation if ammo and bulk are set, and either nothing is set as the ammo item, or the item is explicitly set as ammo-item-free with only an action
-            if (data.ammo.bulk && (!data.ammo.target || data.ammo.target === CONFIG.SGRPG.actionReloadValue)) {
+            if (system.ammo.bulk && (!system.ammo.target || system.ammo.target === CONFIG.SGRPG.actionReloadValue)) {
                 // Use the ammo numbers to figure out the total bulk of the carried ammo
-                let ammoBulk = Math.ceil((data.ammo.bulk * (data.ammo.value / data.ammo.max)) + ((data.ammo.extraMags ?? -1) > 0 ? (data.ammo.bulk * data.ammo.extraMags) : 0));
+                let ammoBulk = Math.ceil((system.ammo.bulk * (system.ammo.value / system.ammo.max)) + ((system.ammo.extraMags ?? -1) > 0 ? (system.ammo.bulk * system.ammo.extraMags) : 0));
                 if (ammoBulk < 0) ammoBulk = 0; // Clamp the ammo bulk to non-negatives
-                data.bulkTotal = (data.bulk + ammoBulk) * data.quantity; // Use the weapon and ammo bulk together as the bulk of a single weapon, then multiply by quantity
+                system.bulkTotal = (system.bulk + ammoBulk) * system.quantity; // Use the weapon and ammo bulk together as the bulk of a single weapon, then multiply by quantity
             }
         }
 
         // To-hit bonus
-        data.toHit = data.toHitBonus + (this.actor?.system?.attributes ? this.actor.system.attributes[data.attackAbility].mod + (data.isProficient ? this.actor.system.proficiencyLevel : 0) : 0);
+        system.toHit = system.toHitBonus + (this.actor?.system?.attributes ? this.actor.system.attributes[system.attackAbility].mod + (system.isProficient ? this.actor.system.proficiencyLevel : 0) : 0);
     }
 
     /** @override
@@ -85,39 +85,39 @@ export default class ItemSg extends Item {
      * Process armor data for visuals
      */
     _processArmorVisuals(itemData) {
-        const data = itemDat.system;
+        const system = itemDat.system;
 
         // Visual AC modifier
-        data.visualAC = data.additive ? (data.acBonus >= 0 ? "+" + data.acBonus.toString() : data.acBonus.toString()) : data.acBonus.toString();
+        system.visualAC = system.additive ? (system.acBonus >= 0 ? "+" + system.acBonus.toString() : system.acBonus.toString()) : system.acBonus.toString();
     }
 
     /**
      * Process weapon data for visuals
      */
     _processWeaponVisuals(itemData) {
-        const data = itemData.system;
+        const system = itemData.system;
 
         // Formulate the visual shown for the weapon's magazines on the character sheet, either showing the ammo and the extra mags, ammo and the extra weapons, or just simple ammo
-        if (data.hasAmmo) {
+        if (system.hasAmmo) {
             if (this.actor?.system && this.consumesAmmunition) {
                 const ammoItem = this.findAmmunition();
                 if (ammoItem?.system)
-                    data.visualAmmo = data.ammo.value.toFixed(0) + " /" + ammoItem.system.quantity.toFixed(0) + "mag";
+                    system.visualAmmo = system.ammo.value.toFixed(0) + " /" + ammoItem.system.quantity.toFixed(0) + "mag";
                 else {
-                    data.visualAmmo = data.ammo.value.toFixed(0);
+                    system.visualAmmo = system.ammo.value.toFixed(0);
                     console.error("Somehow, the ammo item was received but turned up null: " + ammoItem);
                 }
             }
-            else if ((data.ammo.extraMags ?? -2) >= 0)
-                data.visualAmmo = data.ammo.value.toFixed(0) + " /" + data.ammo.extraMags.toFixed(0) + "mag";
-            else if ((data.ammo.extraMags ?? -2) === -1 && data.quantity > 1)
-                data.visualAmmo = data.ammo.value.toFixed(0) + " + " + (data.quantity - 1).toFixed(0) + "pcs";
+            else if ((system.ammo.extraMags ?? -2) >= 0)
+                system.visualAmmo = system.ammo.value.toFixed(0) + " /" + system.ammo.extraMags.toFixed(0) + "mag";
+            else if ((system.ammo.extraMags ?? -2) === -1 && system.quantity > 1)
+                system.visualAmmo = system.ammo.value.toFixed(0) + " + " + (system.quantity - 1).toFixed(0) + "pcs";
             else
-                data.visualAmmo = data.ammo.value.toFixed(0);
-        } else { data.visualAmmo = ""; }
+                system.visualAmmo = system.ammo.value.toFixed(0);
+        } else { system.visualAmmo = ""; }
 
         // Visual to-hit bonus
-        data.visualToHit = data.toHit >= 0 ? "+" + data.toHit.toString() : data.toHit.toString();
+        system.visualToHit = system.toHit >= 0 ? "+" + system.toHit.toString() : system.toHit.toString();
     }
 
     /* -------------------------------------------- */
@@ -168,7 +168,7 @@ export default class ItemSg extends Item {
 
     async rollAttack({ mode = "single", fullAutoAttack = 0, fullAutoDamage = 0 } = {}) {
         const weaponTensionHomebrew = game.settings.get("sgrpg", "allowWeaponTensionOnAttack") || false
-        const data = this.system;
+        const system = this.system;
         const td = game.sgrpg.getTensionDie();
 
         if (!this.actor) {
@@ -178,19 +178,19 @@ export default class ItemSg extends Item {
             return console.error("Weapon attack roll attempted on a non-weapon item: " + this.name);
         }
 
-        if (data.hasAmmo && parseInt(data.ammo.value) === 0) {
+        if (system.hasAmmo && parseInt(system.ammo.value) === 0) {
             // Item is using ammo but no ammunition is left.
             return ui.notifications.warn("No more ammo for this item!");
         }
 
         const fullAutoCount = (fullAutoAttack + fullAutoDamage) || 0;
-        const abilityMod = this.actor?.system.attributes?.[data.attackAbility].mod ?? 0;
-        const isProf = data.isProficient;
+        const abilityMod = this.actor?.system.attributes?.[system.attackAbility].mod ?? 0;
+        const isProf = system.isProficient;
         // If fired on full auto, check whether the weapon is stabilized, if not, set disadvantage as default
-        const disadvDefault = mode === "fullAuto" ? (data.autoAttack.stabilized ? false : true) : false;
+        const disadvDefault = mode === "fullAuto" ? (system.autoAttack.stabilized ? false : true) : false;
         let ammoCost = 0, atkSnd = "", flavorAdd = "";
 
-        let rollMacro = "1d20 + " + data.toHitBonus;
+        let rollMacro = "1d20 + " + system.toHitBonus;
         if (parseInt(abilityMod) !== 0) {
             rollMacro += " + " + abilityMod;
         }
@@ -200,28 +200,28 @@ export default class ItemSg extends Item {
         const weaponData = {
             weaponRoll: true,
             rangeDefault: "",
-            weaponRange: data.range
+            weaponRange: system.range
         };
 
         switch (mode) {
             case "single":
                 ammoCost = 1;
-                atkSnd = data.atkSnd;
+                atkSnd = system.atkSnd;
                 break;
             case "burst":
                 if (weaponTensionHomebrew) {
                     weaponData.canAddTension = true;
                     weaponData.tensionDefault = "no";
                 }
-                ammoCost = data.burstAttack.ammoCost;
-                atkSnd = data.burstAttack.atkSnd;
+                ammoCost = system.burstAttack.ammoCost;
+                atkSnd = system.burstAttack.atkSnd;
                 flavorAdd = " with burst";
                 break;
             case "fullAuto":
                 if (weaponTensionHomebrew)
                     rollMacro += " + " + fullAutoAttack.toFixed(0) + td;
-                ammoCost = data.autoAttack.ammoCost * fullAutoCount;
-                atkSnd = data.autoAttack.atkSnd;
+                ammoCost = system.autoAttack.ammoCost * fullAutoCount;
+                atkSnd = system.autoAttack.atkSnd;
                 flavorAdd = " in full auto";
                 break;
         }
@@ -239,8 +239,8 @@ export default class ItemSg extends Item {
         }
 
         // If item has some ammunition defined, consume as needed
-        if (data.hasAmmo) {
-            const remainingAmmo = parseInt(data.ammo.value);
+        if (system.hasAmmo) {
+            const remainingAmmo = parseInt(system.ammo.value);
             if (remainingAmmo <= 0) {
                 // Double check that ammo count did not change while in dialog.
                 return ui.notifications.warn("No more ammo for this item!");
@@ -248,7 +248,7 @@ export default class ItemSg extends Item {
             if (remainingAmmo - ammoCost < 0) {
                 return ui.notifications.warn("Not enough ammo for the attack mode!");
             }
-            await this.update({ "data.ammo.value": remainingAmmo - ammoCost });
+            await this.update({ "system.ammo.value": remainingAmmo - ammoCost });
         }
 
         let messageData = {
@@ -270,10 +270,10 @@ export default class ItemSg extends Item {
 
     async rollDamage({ mode = "single", fullAutoDamage = 0 } = {}) {
         const weaponTensionHomebrew = game.settings.get("sgrpg", "allowWeaponTensionOnAttack") || false
-        const data = this.system;
-        const abilityMod = this.actor?.system.attributes?.[data.attackAbility].mod ?? 0;
+        const system = this.system;
+        const abilityMod = this.actor?.system.attributes?.[system.attackAbility].mod ?? 0;
         const td = game.sgrpg.getTensionDie();
-        let dmgRoll = data.dmg;
+        let dmgRoll = system.dmg;
 
         if (this.type !== "weapon") {
             return console.error("Weapon damage roll attempted on a non-weapon item: " + this.name);
@@ -287,7 +287,7 @@ export default class ItemSg extends Item {
         let dmgSnd = "", flavorAdd = "";
         switch (mode) {
             case "single":
-                dmgSnd = data.dmgSnd;
+                dmgSnd = system.dmgSnd;
                 break;
             case "burst":
                 if (weaponTensionHomebrew) {
@@ -296,11 +296,11 @@ export default class ItemSg extends Item {
                 } else {
                     dmgRoll += " + 1" + td;
                 }
-                dmgSnd = data.burstAttack.dmgSnd;
+                dmgSnd = system.burstAttack.dmgSnd;
                 flavorAdd = " on burst fire";
                 break;
             case "fullAuto":
-                dmgSnd = data.autoAttack.dmgSnd;
+                dmgSnd = system.autoAttack.dmgSnd;
                 dmgRoll += " + " + fullAutoDamage.toFixed(0) + td;
                 flavorAdd = " on full auto";
                 break;
@@ -341,7 +341,7 @@ export default class ItemSg extends Item {
         }
 
         await this.update({
-            "data.quantity": remainingCount - 1
+            "system.quantity": remainingCount - 1
         });
         return ui.notifications.info(`Item '${this.name}' was consumed, ${remainingCount - 1} usages remain.`);
     }
@@ -359,36 +359,36 @@ export default class ItemSg extends Item {
 
     async reloadWeapon() {
         const item = this;
-        const data = item.system;
+        const system = item.system;
 
-        if (data.ammo.value === data.ammo.max) {
+        if (system.ammo.value === system.ammo.max) {
             return ui.notifications.info("Weapon is already reloaded.");
         }
 
         const ammoItem = item.findAmmunition();
         if (!ammoItem) {
             // If no ammo item is found, check if the target matches the standard action reload value or is empty for a reload that doesn't consume separate items
-            if (data.ammo.target === CONFIG.SGRPG.actionReloadValue || data.ammo.target === null) {
-                if (data.ammo.extraMags === null || data.ammo.extraMags === undefined || data.ammo.extraMags <= -2) {
+            if (system.ammo.target === CONFIG.SGRPG.actionReloadValue || system.ammo.target === null) {
+                if (system.ammo.extraMags === null || system.ammo.extraMags === undefined || system.ammo.extraMags <= -2) {
                     // Weapon has no magazines set, allow free reloading without consuming anything
-                    return item.update({ "data.ammo.value": data.ammo.max });
+                    return item.update({ "system.ammo.value": system.ammo.max });
                 } else {
-                    if (data.ammo.extraMags === -1) {
+                    if (system.ammo.extraMags === -1) {
                         // If mags are set to negative 1, check if there is an extra weapon, then consume that
                         // In place for single shot weapons, like the common disposable anti-tank launchers
-                        if (data.quantity > 1) {
+                        if (system.quantity > 1) {
                             ui.notifications.info(`Single shot weapon, reloading by consuming one quantity.`);
-                            return item.update({ "data.ammo.value": data.ammo.max, "data.quantity": data.quantity - 1 });
+                            return item.update({ "system.ammo.value": system.ammo.max, "system.quantity": system.quantity - 1 });
                         } else {
                             return ui.notifications.info(`Single shot weapon, no more remain.`);
                         }
                     }
-                    else if (data.ammo.extraMags === 0) {
+                    else if (system.ammo.extraMags === 0) {
                         // Weapon has a set number of additional magazines in store
                         return ui.notifications.info(`No extra magazines remaining for '${item.name}'.`);
                     } else {
                         // Decrease the number of mags by one and fill the ammo
-                        return item.update({ "data.ammo.value": data.ammo.max, "data.ammo.extraMags": data.ammo.extraMags - 1 });
+                        return item.update({ "system.ammo.value": system.ammo.max, "system.ammo.extraMags": system.ammo.extraMags - 1 });
                     }
                 }
 
@@ -402,10 +402,10 @@ export default class ItemSg extends Item {
         }
 
         await ammoItem.update({
-            "data.quantity": magCount - 1
+            "system.quantity": magCount - 1
         }, { render: false });
 
-        return item.update({ "data.ammo.value": data.ammo.max });
+        return item.update({ "system.ammo.value": system.ammo.max });
     }
 
     /**
@@ -423,8 +423,8 @@ export default class ItemSg extends Item {
         const templateData = {
             actor: this.actor,
             tokenId: token?.uuid || null,
-            item: thi,
-            data: this.getChatData(),
+            item: this,
+            data: await this.getChatData(),
             hasAttack: this.hasAttack,
             hasAreaTarget: game.user.can("TEMPLATE_CREATE") && this.hasAreaTarget,
             maxAutoCount,
@@ -454,11 +454,12 @@ export default class ItemSg extends Item {
      * @param {Object} htmlOptions    Options used by the TextEditor.enrichHTML function
      * @return {Object}               An object of chat data to render
      */
-    getChatData(htmlOptions = {}) {
+    async getChatData(htmlOptions = {}) {
         const data = foundry.utils.deepClone(this.system);
 
         // Rich text description
-        data.description = TextEditor.enrichHTML(data.description, htmlOptions);
+        htmlOptions.async = true;
+        data.description = await TextEditor.enrichHTML(data.description, htmlOptions);
         data.labels = this._getItemLabels(this);
         data.showDescription = game.settings.get("sgrpg", "showDescriptionDefault");
         return data;

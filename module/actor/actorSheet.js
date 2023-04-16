@@ -16,7 +16,7 @@ export default class SGActorSheet extends ActorSheet {
         return `systems/sgrpg/templates/sheets/${this.actor.type}-sheet.hbs`;
     }
 
-    getData(options) {
+    async getData(options) {
         const baseData = super.getData();
         baseData.dtypes = ["String", "Number", "Boolean"];
 
@@ -34,20 +34,30 @@ export default class SGActorSheet extends ActorSheet {
         sheetData.title = baseData.title;
         sheetData.dtypes = baseData.dtypes;
 
-        // Prepare items
-        if (this.actor.type == 'player') {
-            this._prepareCharacterItems(sheetData);
-        }
-        if (this.actor.type == 'npc') {
-            this._prepareCharacterItems(sheetData);
-        }
-        if (this.actor.type == 'vehicle') {
-            this._prepareVehicleItems(sheetData);
-        }
-
         // Grab the actual template data and effects
         sheetData.system = baseData.data.system;
         sheetData.effects = baseData.effects;
+
+        // Prepare items
+        const editorData = {};
+        if (this.actor.type == 'player') {
+            this._prepareCharacterItems(sheetData);
+            editorData.description = await TextEditor.enrichHTML(sheetData.system.description, { async: true });
+            editorData.racial = await TextEditor.enrichHTML(sheetData.system.abilities.racial, { async: true });
+            editorData.feats = await TextEditor.enrichHTML(sheetData.system.abilities.feats, { async: true });
+            editorData.class = await TextEditor.enrichHTML(sheetData.system.abilities.class, { async: true });
+            editorData.proficiencies = await TextEditor.enrichHTML(sheetData.system.abilities.proficiencies, { async: true });
+        }
+        if (this.actor.type == 'npc') {
+            this._prepareCharacterItems(sheetData);
+            editorData.details = await TextEditor.enrichHTML(sheetData.system.details, { async: true });
+            editorData.gm_notes = await TextEditor.enrichHTML(sheetData.system.gm_notes, { async: true });
+        }
+        if (this.actor.type == 'vehicle') {
+            this._prepareVehicleItems(sheetData);
+            editorData.description = await TextEditor.enrichHTML(sheetData.system.description, { async: true });
+        }
+        sheetData.editorData = editorData;
 
         // Structural sheet stuff
         sheetData.isGM = game.user.isGM;
@@ -60,13 +70,15 @@ export default class SGActorSheet extends ActorSheet {
                 2: "Exceptional"
             }
         };
-        sheetData.bulkMeter = {
-            currentBulkPerc: Math.min((sheetData.system.bulkUsed / sheetData.system.bulkMax) * 100, 100),
-            currentBulk: sheetData.system.bulkUsed,
-            maxBulk: sheetData.system.bulkMax,
-            isOverloaded: sheetData.system.bulkOverload
+        sheetData.structural = {
+            bulkMeter: {
+                currentBulkPerc: Math.min((sheetData.system.bulkUsed / sheetData.system.bulkMax) * 100, 100),
+                currentBulk: sheetData.system.bulkUsed,
+                maxBulk: sheetData.system.bulkMax,
+                isOverloaded: sheetData.system.bulkOverload
+            },
+            autoLevel: game.settings.get("sgrpg", "autoLevelSystem")
         };
-        sheetData.autoLevel = game.settings.get("sgrpg", "autoLevelSystem");
 
         // Configuration data
         sheetData.config = mergeObject(CONFIG.SGRPG, {
@@ -254,14 +266,14 @@ export default class SGActorSheet extends ActorSheet {
         // Get the type of item to create.
         const type = header.dataset.type;
         // Grab any data associated with this control.
-        const data = duplicate(header.dataset);
+        const system = duplicate(header.dataset);
         // Initialize a default name.
         const name = `New ${type.capitalize()}`;
         // Prepare the item object.
         const itemData = {
             name: name,
             type: type,
-            system: data
+            system: system
         };
         // Remove the type from the dataset since it's in the itemData.type prop.
         delete itemData.system["type"];
@@ -372,8 +384,8 @@ export default class SGActorSheet extends ActorSheet {
     _reset_deathsave(event) {
         event.preventDefault();
         return this.actor.update({
-            "data.deathSaves.fails": 0,
-            "data.deathSaves.successes": 0
+            "system.deathSaves.fails": 0,
+            "system.deathSaves.successes": 0
         });
     }
 
@@ -419,10 +431,10 @@ export default class SGActorSheet extends ActorSheet {
         const value = checked ? event.currentTarget.value : event.currentTarget.value - 1;
 
         if (isSuccess) {
-            return this.actor.update({ "data.deathSaves.successes": value });
+            return this.actor.update({ "system.deathSaves.successes": value });
         }
         else {
-            return this.actor.update({ "data.deathSaves.fails": value });
+            return this.actor.update({ "system.deathSaves.fails": value });
         }
     }
 }

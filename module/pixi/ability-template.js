@@ -12,7 +12,7 @@ export default class AbilityTemplate extends MeasuredTemplate {
      * @return {AbilityTemplate|null}     The template object, or null if the item does not produce a template
      */
     static fromItem(item) {
-        const target = getProperty(item.system, "data.target") || {};
+        const target = getProperty(item.system, "system.target") || {};
         const templateShape = SGRPG.areaTargetTypes[target.type];
         if (!templateShape) return null;
 

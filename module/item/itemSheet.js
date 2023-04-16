@@ -12,7 +12,7 @@ export default class SGItemSheet extends ItemSheet {
         return `systems/sgrpg/templates/sheets/item-sheet.hbs`;
     }
 
-    getData(options) {
+    async getData(options) {
         const baseData = super.getData();
         let sheetData = {};
 
@@ -33,6 +33,9 @@ export default class SGItemSheet extends ItemSheet {
         sheetData.isGM = game.user.isGM;
         sheetData.homebrewSettings = {
             allowWeaponTensionOnAttack: game.settings.get("sgrpg", "allowWeaponTensionOnAttack")
+        };
+        sheetData.editorData = {
+            description: await TextEditor.enrichHTML(sheetData.system.description, { async: true })
         };
 
         // Potential consumption targets

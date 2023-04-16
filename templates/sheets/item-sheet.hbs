@@ -44,7 +44,7 @@
 
     <section class="sheet-body flexcol">
         <div class="tab flexrow description" data-tab="description">
-            {{editor content=system.description target="system.description" button=true owner=owner editable=editable rollData=rollData}}
+            {{editor editorData.description target="system.description" button=true owner=owner editable=editable rollData=rollData}}
         </div>
         <div class="tab flexrow details" data-tab="details">
             {{#if (equalTo item.type "weapon")}}
