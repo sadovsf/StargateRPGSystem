@@ -2,8 +2,8 @@
     <div class="flexcol details-column">
         {{!-- Left column --}}
         <div class="details-entry grid grid-2col">
-            <label class="attribute-label" for="data.bulk">Bulk</label>
-            <input type="text" name="data.bulk" value="{{data.bulk}}" data-dtype="Number"/>
+            <label class="attribute-label" for="system.bulk">Bulk</label>
+            <input type="text" name="system.bulk" value="{{system.bulk}}" data-dtype="Number"/>
         </div>
         <div class="flex1"></div>
     </div>
@@ -11,44 +11,44 @@
     <div class="flexcol details-column">
         {{!-- Right column --}}
         <div class="details-entry grid grid-2col">
-            <label class="attribute-label" for="data.additive">Is a Light Source?</label>
-            <input type="checkbox" name="data.isLightItem" {{checked data.isLightItem}} />
+            <label class="attribute-label" for="system.additive">Is a Light Source?</label>
+            <input type="checkbox" name="system.isLightItem" {{checked system.isLightItem}} />
         </div>
 
-        {{#if data.isLightItem}}
+        {{#if system.isLightItem}}
         <div class="details-entry grid grid-2col">
-            <label class="attribute-label" for="data.dimLight">Dim / Bright</label>
+            <label class="attribute-label" for="system.dimLight">Dim / Bright</label>
             <div class="flexrow flex-center flex-between">
-                <input type="text" name="data.dimLight" value="{{data.dimLight}}" data-dtype="Number" />
+                <input type="text" name="system.dimLight" value="{{system.dimLight}}" data-dtype="Number" />
                 <span> / </span>
-                <input type="text" name="data.brightLight" value="{{data.brightLight}}" data-dtype="Number" />
+                <input type="text" name="system.brightLight" value="{{system.brightLight}}" data-dtype="Number" />
             </div>
         </div>
         <div class="details-entry grid grid-2col">
-            <label class="attribute-label" for="data.lightAngle">Light Angle</label>
-            <input type="text" name="data.lightAngle" value="{{data.lightAngle}}" data-dtype="Number" />
+            <label class="attribute-label" for="system.lightAngle">Light Angle</label>
+            <input type="text" name="system.lightAngle" value="{{system.lightAngle}}" data-dtype="Number" />
         </div>
         <div class="details-entry grid grid-2col">
-            <label class="attribute-label" for="data.lightColor">Light Color</label>
-            <input type="text" is="colorpicker-input" name="data.lightColor" value="{{data.lightColor}}" data-dtype="String" />
+            <label class="attribute-label" for="system.lightColor">Light Color</label>
+            <input type="text" is="colorpicker-input" name="system.lightColor" value="{{system.lightColor}}" data-dtype="String" />
         </div>
         <div class="details-entry grid grid-2col">
-            <label class="attribute-label" for="data.lightAlpha">Intensity</label>
-            <input type="text" name="data.lightAlpha" value="{{data.lightAlpha}}" data-dtype="Number" />
+            <label class="attribute-label" for="system.lightAlpha">Intensity</label>
+            <input type="text" name="system.lightAlpha" value="{{system.lightAlpha}}" data-dtype="Number" />
         </div>
         <div class="details-entry grid grid-2col">
-            <label class="attribute-label" for="data.lightAnimationType">Animation</label>
-            <select name="data.lightAnimationType" data-dtype="String">
-                {{selectOptions lightAnimations selected=data.lightAnimationType labelAttr="label" localize=true blank="None"}}
+            <label class="attribute-label" for="system.lightAnimationType">Animation</label>
+            <select name="system.lightAnimationType" data-dtype="String">
+                {{selectOptions lightAnimations selected=system.lightAnimationType labelAttr="label" localize=true blank="None"}}
             </select>
         </div>
-        {{#if data.lightAnimationType}}
+        {{#if system.lightAnimationType}}
         <div class="details-entry grid grid-2col">
-            <label class="attribute-label" for="data.lightAnimationSpeed">Speed / Intensity</label>
+            <label class="attribute-label" for="system.lightAnimationSpeed">Speed / Intensity</label>
             <div class="flexrow flex-center flex-between">
-                <input type="text" name="data.lightAnimationSpeed" value="{{data.lightAnimationSpeed}}" data-dtype="Number" />
+                <input type="text" name="system.lightAnimationSpeed" value="{{system.lightAnimationSpeed}}" data-dtype="Number" />
                 <span> / </span>
-                <input type="text" name="data.lightAnimationIntensity" value="{{data.lightAnimationIntensity}}" data-dtype="Number" />
+                <input type="text" name="system.lightAnimationIntensity" value="{{system.lightAnimationIntensity}}" data-dtype="Number" />
             </div>
         </div>
         {{/if}}

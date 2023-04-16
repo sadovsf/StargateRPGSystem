@@ -8,9 +8,9 @@
         <div class="header-fields">
             <div class="flexrow nowrap">
                 <div class="compact-header-field">
-                    <label for="data.handling" class="resource-label">CR</label>
+                    <label for="system.handling" class="resource-label">CR</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input onfocus="this.select();" type="number" name="data.cr" value="{{data.cr}}" data-dtype="Number" />
+                        <input onfocus="this.select();" type="number" name="system.cr" value="{{system.cr}}" data-dtype="Number" />
                     </div>
                 </div>
                 <h1 class="charname flexrow">
@@ -19,29 +19,29 @@
             </div>
             <div class="resources grid grid-4col">
                 <div class="resource flex-group-center">
-                    <label for="data.prof" class="resource-label">Prof</label>
+                    <label for="system.prof" class="resource-label">Prof</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" value="{{data.proficiencyLevel}}" data-dtype="Number" readonly />
+                        <input type="text" value="{{system.proficiencyLevel}}" data-dtype="Number" readonly />
                     </div>
                 </div>
                 <div class="resource flex-group-center">
-                    <label for="data.health.value" class="resource-label">HP</label>
+                    <label for="system.health.value" class="resource-label">HP</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input onfocus="this.select();" type="number" name="data.health.value" value="{{data.health.value}}" data-dtype="Number" />
+                        <input onfocus="this.select();" type="number" name="system.health.value" value="{{system.health.value}}" data-dtype="Number" />
                         <label>/</label>
-                        <input onfocus="this.select();" type="number" name="data.health.maxBonus" value="{{data.health.maxBonus}}" data-dtype="Number" />
+                        <input onfocus="this.select();" type="number" name="system.health.maxBonus" value="{{system.health.maxBonus}}" data-dtype="Number" />
                     </div>
                 </div>
                 <div class="resource flex-group-center">
-                    <label for="data.ac" class="resource-label">AC</label>
+                    <label for="system.ac" class="resource-label">AC</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" value="{{data.ac}}" data-dtype="Number" readonly />
+                        <input type="text" value="{{system.ac}}" data-dtype="Number" readonly />
                     </div>
                 </div>
                 <div class="resource flex-group-center">
-                    <label for="data.speed" class="resource-label">Speed</label>
+                    <label for="system.speed" class="resource-label">Speed</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" value="{{data.speed}}" data-dtype="Number" readonly/>
+                        <input type="text" value="{{system.speed}}" data-dtype="Number" readonly/>
                     </div>
                 </div>
             </div>
@@ -60,12 +60,12 @@
         <div class="tab flexcol description" data-tab="description">
             {{! ATTRIBUTES }}
             <div class="flexrow" style="flex: 0">
-                {{#each data.attributes as |attr a|}}
+                {{#each system.attributes as |attr a|}}
                 <div class="flex-group-center" data-attr="{{a}}">
-                    <label class="resource-label" for="data.attributes.{{a}}.value">
-                        <a type="roll" class="txt-btn large" data-bonus="data.attributes.{{a}}.mod">{{a}}</a>
+                    <label class="resource-label" for="system.attributes.{{a}}.value">
+                        <a type="roll" class="txt-btn large" data-bonus="system.attributes.{{a}}.mod">{{a}}</a>
                     </label>
-                    <input data_type="ability_value" name="data.attributes.{{a}}.value" type="number" value="{{attr.value}}">
+                    <input data_type="ability_value" name="system.attributes.{{a}}.value" type="number" value="{{attr.value}}">
                     <span class="mod">{{attr.modVisual}}</span>
                 </div>
                 {{/each}}
@@ -74,31 +74,31 @@
             {{! Proficient SKILLS }}
             <div class="flex0 margin-top">
                 <label class="resource-label">Skills:</label>
-                {{#each data.proficientSkills as |skill s|}}
-                <a type="roll" class="txt-btn" data-bonus="data.skills.{{s}}.total">{{s}} ({{skill.totalVisual}})</a>
+                {{#each system.proficientSkills as |skill s|}}
+                <a type="roll" class="txt-btn" data-bonus="system.skills.{{s}}.total">{{s}} ({{skill.totalVisual}})</a>
                 {{/each}}
             </div>
 
             {{! SAVES}}
             <div class="flex0 margin-top">
                 <label class="resource-label">Saves:</label>
-                {{#each data.saves as |save s|}}
-                <a type="roll" class="txt-btn" data-bonus="data.saves.{{s}}.total">{{lookup ../config.saves s}} ({{save.totalVisual}})</a>
+                {{#each system.saves as |save s|}}
+                <a type="roll" class="txt-btn" data-bonus="system.saves.{{s}}.total">{{lookup ../config.saves s}} ({{save.totalVisual}})</a>
                 {{/each}}
             </div>
 
             {{! CONDITION}}
             <div class="flex0 margin-top">
                 <label class="resource-label">Condition:</label>
-                {{radioBoxes "data.condition" config.conditions checked=data.condition localize=false}}
+                {{radioBoxes "system.condition" config.conditions checked=system.condition localize=false}}
             </div>
 
             {{! DEATH }}
             <div class="flex0 margin-top">
                 <a title="Reset death saves counter" class="txt-btn" type="reset_deathsave"><i class="fa fa-undo"></i></a>
                 <a type="roll_deathsave" class="txt-btn resource-label large">Death Save:</a>
-                <i class="fa fa-check" style="color: green">{{data.deathSaves.sucesses}}</i>
-                <i class="fa fa-cross" style="color: red">{{data.deathSaves.fails}}</i>
+                <i class="fa fa-check" style="color: green">{{system.deathSaves.sucesses}}</i>
+                <i class="fa fa-cross" style="color: red">{{system.deathSaves.fails}}</i>
             </div>
 
             {{! ARMOR INVENTORY }}
@@ -123,13 +123,13 @@
                 <div class="flex-group-center editor-wrapper">
                     <h2>GM notes</h2>
                     {{#if isGM}}
-                    {{editor content=data.gm_notes target="data.gm_notes" button=true owner=owner editable=editable rollData=rollData}}
+                    {{editor content=system.gm_notes target="system.gm_notes" button=true owner=owner editable=editable rollData=rollData}}
                     {{/if}}
                 </div>
 
                 <div class="flex-group-center editor-wrapper">
                     <h2>Feats &#38; abilities</h2>
-                    {{editor content=data.details target="data.details" button=true owner=owner editable=editable rollData=rollData}}
+                    {{editor content=system.details target="system.details" button=true owner=owner editable=editable rollData=rollData}}
                 </div>
 
                 <div class="flex-group-center">
@@ -140,13 +140,13 @@
                 <div class="flex-group-center">
                     <h2>Base Bonuses</h2>
                     <div class="grid grid-2col">
-                        <span>Determination: <input onfocus="this.select();" type="number" name="data.determination.maxBonus" value="{{data.determination.maxBonus}}" data-dtype="Number" /></span>
-                        <span>Armor Class: <input onfocus="this.select();" type="number" name="data.acBonus" value="{{data.acBonus}}" data-dtype="Number" /></span>
-                        <span>Bulk Capacity: <input onfocus="this.select();" type="number" name="data.bulkBonus" value="{{data.bulkBonus}}" data-dtype="Number" /></span>
-                        <span>Proficiency: <input onfocus="this.select();" type="number" name="data.proficiencyBonus" value="{{data.proficiencyBonus}}" data-dtype="Number" /></span>
-                        <span>Speed: <input onfocus="this.select();" type="number" name="data.speedBase" value="{{data.speedBase}}" data-dtype="Number" /></span>
-                        <span>Initiative: <input onfocus="this.select();" type="number" name="data.initiativeBonus" value="{{data.initiativeBonus}}" data-dtype="Number" /></span>
-                        <span>Moxie: <input onfocus="this.select();" type="number" name="data.moxieBonus" value="{{data.moxieBonus}}" data-dtype="Number" /></span>
+                        <span>Determination: <input onfocus="this.select();" type="number" name="system.determination.maxBonus" value="{{system.determination.maxBonus}}" data-dtype="Number" /></span>
+                        <span>Armor Class: <input onfocus="this.select();" type="number" name="system.acBonus" value="{{system.acBonus}}" data-dtype="Number" /></span>
+                        <span>Bulk Capacity: <input onfocus="this.select();" type="number" name="system.bulkBonus" value="{{system.bulkBonus}}" data-dtype="Number" /></span>
+                        <span>Proficiency: <input onfocus="this.select();" type="number" name="system.proficiencyBonus" value="{{system.proficiencyBonus}}" data-dtype="Number" /></span>
+                        <span>Speed: <input onfocus="this.select();" type="number" name="system.speedBase" value="{{system.speedBase}}" data-dtype="Number" /></span>
+                        <span>Initiative: <input onfocus="this.select();" type="number" name="system.initiativeBonus" value="{{system.initiativeBonus}}" data-dtype="Number" /></span>
+                        <span>Moxie: <input onfocus="this.select();" type="number" name="system.moxieBonus" value="{{system.moxieBonus}}" data-dtype="Number" /></span>
                     </div>
                 </div>
             </div>

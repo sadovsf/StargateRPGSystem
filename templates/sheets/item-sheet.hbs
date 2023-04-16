@@ -13,13 +13,13 @@
                 <div class="resource flex-center flexrow" style="max-width:40%">
                     <label class="resource-label">Carried</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input name="data.carried" type="checkbox" {{checked data.carried}} data-dtype="Boolean" />
+                        <input name="system.carried" type="checkbox" {{checked system.carried}} data-dtype="Boolean" />
                     </div>
                 </div>
                 <div class="resource flex-center flexrow">
                     <label class="resource-label">Part of Base Kit</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input name="data.partOfBaseKit" type="checkbox" {{checked data.partOfBaseKit}} data-dtype="Boolean" />
+                        <input name="system.partOfBaseKit" type="checkbox" {{checked system.partOfBaseKit}} data-dtype="Boolean" />
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
 
     <section class="sheet-body flexcol">
         <div class="tab flexrow description" data-tab="description">
-            {{editor content=data.description target="data.description" button=true owner=owner editable=editable rollData=rollData}}
+            {{editor content=system.description target="system.description" button=true owner=owner editable=editable rollData=rollData}}
         </div>
         <div class="tab flexrow details" data-tab="details">
             {{#if (equalTo item.type "weapon")}}
