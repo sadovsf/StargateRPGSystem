@@ -1,8 +1,9 @@
 {
   "id": "sgrpg",
+  "name": "sgrpg",
   "title": "Stargate RPG",
   "description": "System for Stargate RPG created by Wyvern Gaming, https://stargatetherpg.com/",
-  "version": "1.8.4",
+  "version": "1.9.0",
   "templateVersion": 10,
   "authors": [
     {
@@ -18,6 +19,7 @@
     "verified": 10,
     "maximum": 10
   },
+  "minimumCoreVersion": "10",
   "scripts": [
   ],
   "esmodules": [
