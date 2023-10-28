@@ -343,7 +343,7 @@ export default class SGActorSheet extends ActorSheet {
     async _onRollCheck(event) {
         event.preventDefault();
 
-        let actorData = this.getData();
+        let actorData = await this.getData();
         let bonusDataPath = event.currentTarget.dataset.bonus;
 
         let rollData = parseInt(getProperty(actorData, bonusDataPath));
@@ -351,7 +351,6 @@ export default class SGActorSheet extends ActorSheet {
             // Make sure there is always sign.
             rollData = "+" + rollData;
         }
-
 
         let r = new CONFIG.Dice.D20Roll("1d20 @prof", { prof: rollData });
         const configured = await r.configureDialog({

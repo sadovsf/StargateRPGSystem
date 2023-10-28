@@ -85,7 +85,7 @@ export default class ItemSg extends Item {
      * Process armor data for visuals
      */
     _processArmorVisuals(itemData) {
-        const system = itemDat.system;
+        const system = itemData.system;
 
         // Visual AC modifier
         system.visualAC = system.additive ? (system.acBonus >= 0 ? "+" + system.acBonus.toString() : system.acBonus.toString()) : system.acBonus.toString();
