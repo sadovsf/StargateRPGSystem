@@ -118,7 +118,7 @@ export default class SGActorSheet extends ActorSheet {
             // Switch-case to append the item to the proper list
             switch (i.type) {
                 case 'equip':
-                    if (item.partOfBaseKit && actorData.type === "player")
+                    if (item.system.partOfBaseKit && actorData.type === "player")
                         basekit.push(i);
                     else
                         gear.push(i);
