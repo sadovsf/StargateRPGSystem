@@ -94,8 +94,12 @@ export default class ActorSg extends Actor {
         // Used level for players
         if (actorData.type === "player") {
             system.level = -1;
+
+            const spentMP = ActorSg._parseSpentMP(system.spentMP);
+            system.usedMPCount = spentMP;
+            system.allMPCount = spentMP + parseInt(system.mp);
+
             if (autoLevel) {
-                const spentMP = ActorSg._parseSpentMP(system.spentMP);
                 if (!isNaN(spentMP)) {
                     system.level = ActorSg._getLevelFromMP(spentMP);
                 }

@@ -424,7 +424,7 @@ export default class ItemSg extends Item {
             actor: this.actor,
             tokenId: token?.uuid || null,
             item: this,
-            data: await this.getChatData(),
+            system: await this.getChatData(),
             hasAttack: this.hasAttack,
             hasAreaTarget: game.user.can("TEMPLATE_CREATE") && this.hasAreaTarget,
             maxAutoCount,
